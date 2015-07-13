@@ -13,5 +13,7 @@
 ##### 매일매일 적자
 ##### (Latest diary should be on the top)
 ----------
+###7월 13일
+
 ###7월 10일
  
