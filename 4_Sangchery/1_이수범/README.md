@@ -13,7 +13,7 @@
 ##### (Latest diary should be on the top)
 ----------
 ###7월 15일
+  - 영상처리 팀 폴더 추가
+###7월 16일
   - 
-###7월 10일
-  - MarkdownPad2 배움
  
