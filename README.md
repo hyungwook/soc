@@ -10,7 +10,8 @@
   - 김태훈
   - 이희영
   - 김병국
- 
+# 변경사항
+  - 이미지로드 테스트 사용법 documentation에 추가함(150715-신현기)
 # To Do list
   - Mark Down  사용법 익히기
   - FPGA 올리기
