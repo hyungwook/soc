@@ -8,6 +8,7 @@
 #include <sys/ioctl.h>
 #include <math.h>
 
+
 #include "amazon2_sdk.h"
 #include "graphic_api.h"
 
@@ -208,10 +209,13 @@ int main(void)
 	while (b_loop)
 	{
 		direct_camera_display_off();
-
+		input = '0';
+		
 		while (1)
 		{
+			
 			//input = getchar();
+			/*
 			if (input == 'a'){
 				printf("enter the min value\n");
 				printf("now hum_min: %d, hue_max: %d, sat_min: %d\n", hue_min, hue_max, sat_min);
@@ -224,15 +228,17 @@ int main(void)
 				b_loop = 0;
 				break;
 			}
-			read_fpga_video_data(fpga_videodata);
+			*/
 
-			printf("3\n");
+			read_fpga_video_data(fpga_videodata);
+			
+		
 
 			line = 0;
 
-			printf("4\n");
+			
 
-			for (i = 0; i<180 * 120/1.5; i++)
+			for (i = 0; i<180 * 120/1.5; i++) // 여기가 문제!!!!!!!!!!!!!!!!!
 			{
 				//printf("5");
 				//*(g+i) = *(fpga_videodata+i);
@@ -242,10 +248,11 @@ int main(void)
 				//printf("6");
 				/*   if(i == 180* 60+90)
 				printf("%f %f %f \n",r, g, b);*/
+
 				int graay = (int)(b + g + r)/3;
 				int gray1 = (graay << 11);
 				int gray2 = (graay << 6);
-				*(gray + i) = gray1 + gray2 + graay;
+				*(gray + i) = gray1 + gray2 + graay; // 그레이하는과정
 
 				if (r>g)
 					if (r>b)
@@ -307,9 +314,9 @@ int main(void)
 			}
 
 			/////////////////////마스크 추가///////////////////////////
-			printf("mask start\n");
+			printf("mask start\n"); // 외곽선추출 
 			int n = 1;
-			//int x = 0;
+			
 			Mask[0] = -1.0f; Mask[1] = 0.0f; Mask[2] = 1.0f;
 			Mask[3] = -1.0f; Mask[4] = 0.0f; Mask[5] = 1.0f;
 			Mask[6] = -1.0f; Mask[7] = 0.0f; Mask[8] = 1.0f;
@@ -332,7 +339,7 @@ int main(void)
 							sum2 += gray[index2 + (j + l)] * Mask1[index3 + l + n];
 						}
 					}
-					*(lcd + i * 180 + j) = sum1 + sum2;
+					//*(lcd + i * 180 + j) = sum1 + sum2;
 				}
 			}
 			printf("mask end");
@@ -340,16 +347,16 @@ int main(void)
 			//////////////////////////////////////////////////////////
 			cnt = 0;
 
-			//printf("10\n");
 
 			for (i = 0; i<120; i++)
 			{
-				cnt = 0;
+				
 				for (j = 0; j<180; j++){
 					//tmpchar = (char)(*(v+i)*255.0f); tmpchar+(tmpchar<<6)+(tmpchar<<11);
 					//if( ( 45.0f < *(h+i) < 75.0f ) && ( 12.0f < *(s+i)  ) && ( 7.0f < *(v+i) < 23.0f ))
 					//노란색if((60.0f < *(h+i)) && (*(h+i) < 75.0f) && ( 20.0f < *(s+i)  ) )
 					//파란색 if(220.0f < (*(h+i) ) && (*(h+i) < 260.0f) && ( 10.0f < *(s+i)  ) )
+
 					/*
 					if((hue_min < (int)(*(hue_joon+i*180+j))) && ((int)(*(hue_joon+i*180+j)) < hue_max) && ( sat_min < (int)(*(satur_tmp+i*180+j) )) )
 					{
@@ -357,13 +364,19 @@ int main(void)
 					cnt++;
 					}
 					*/
-					/*
-					if ((170 < (int)(*(hue_joon + i * 180 + j))) && ((int)(*(hue_joon + i * 180 + j)) < 171) && (sat_min < (int)(*(satur_tmp + i * 180 + j))))
+
+					
+					if ((170 < (int)(*(hue_joon + i * 180 + j))) && ((int)(*(hue_joon + i * 180 + j)) < 240) && (sat_min < (int)(*(satur_tmp + i * 180 + j))))
 					{
 						*(lcd + i * 180 + j) = 0x07E0;
-					} // 코드 추가
+						cnt++;
+					} 
 					else
-						*(lcd + i * 180 + j) = *(fpga_videodata + i * 180 + j);*/
+					{
+						*(lcd + i * 180 + j) = *(fpga_videodata + i * 180 + j);
+					}
+					
+					/*
 					if (i == 60)
 					{
 						*(lcd + i * 180 + j) = 0x7000;//lcd에 가로줄 빨간줄 표시코드
@@ -372,15 +385,20 @@ int main(void)
 					}
 					if (j == 90)
 						*(lcd + i * 180 + j) = 0x7000;//lcd에 세로줄 빨간줄 표시코드
-
+					*/
+					printf("%d\n", cnt);
 				}
 				
-				if (cnt > 40) line++;
+				//if (cnt > 40) line++;
 			}
-			if (line >= 20){
-				printf("barricade\n");
-				state_1 = 1;
+			if (cnt >= 300){
+				//printf("barricade\n");
+				//state_1 = 1;
+				break;
+				b_loop = 0;
 			}
+
+			/*
 			else{
 				if (state_1 == 1){
 					printf("state_1 pass\n");
@@ -388,10 +406,11 @@ int main(void)
 					state_1 = 0;
 				}
 			}
+			*/
+
 			//printf("%f \n",*(h+180*60+90));
 			//printf("%f %f %f \n",r, g, b);
-
-
+		
 
 			//printf("Full < Expension(x2.66), Rotate(90) > (320 x 480)\n");
 			//printf("%d\n", cnt);
@@ -400,6 +419,7 @@ int main(void)
 			draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
 			flip();
 		}
+		break;
 	}
 
 
