@@ -155,6 +155,7 @@ void init_console(void)
 int main(void)
 {
 	int i = 0, j = 0, k = 0, l = 0, cnt = 0, line = 0;
+	int x = 0;
 	int state_1 = 0;
 	float r = 0, g = 0, b = 0;
 	float max = 0.0f, min = 0.0f;
@@ -163,7 +164,7 @@ int main(void)
 	float delta;
 	char input;
 	int hue_min = 45, hue_max = 70, sat_min = 2;
-	unsigned char tmpchar;
+//	unsigned char tmpchar;
 	int ret;
 	int b_loop = 0;
 	int centerx = 0, centery = 0, centercnt = 0;//(x,y)의 중심값
@@ -178,6 +179,11 @@ int main(void)
 	float* satur_tmp = (float*)malloc(180 * 120 * 4);
 	float* v_compare = (float*)malloc(180 * 120 * 4);
 	float* s_temp = (float*)malloc(180 * 120 * 4);
+	float* red = (float*)malloc(180 * 120 * 4);
+	float* green = (float*)malloc(180 * 120 * 4);
+	float* blue = (float*)malloc(180 * 120 * 4);
+	int* xxx = (int*)malloc(180 * 120 * 4);
+
 
 	float Mask[9] = { 0 };
 	float Mask1[9] = { 0 };//마스크하기 위한 변수
@@ -213,26 +219,10 @@ int main(void)
 
 		while (1)
 		{
-			//input = getchar();
-			if (input == 'a'){
-				printf("enter the min value\n");
-				printf("now hum_min: %d, hue_max: %d, sat_min: %d\n", hue_min, hue_max, sat_min);
-				//scanf("%d %d %d", &hue_min, &hue_max, &sat_min);
-				printf("press the 'b' button to break loop\n"); // 코드 추가
-			}
-
-
-			if (input == 'b'){
-				b_loop = 0;
-				break;
-			}
+			
 			read_fpga_video_data(fpga_videodata);
 
-			//printf("3\n");
-
 			line = 0;
-
-			//printf("4\n");
 
 			for (i = 0; i<180 * 120; i++)
 			{
@@ -241,6 +231,11 @@ int main(void)
 				b = ((*(fpga_videodata + i)) & 31);
 				g = (((*(fpga_videodata + i)) >> 6) & 31);
 				r = (((*(fpga_videodata + i)) >> 11) & 31);
+				*(red + i) = r;
+				*(green + i) = g;
+				*(blue + i) = b;
+
+
 				//printf("6");
 				/*   if(i == 180* 60+90)
 				printf("%f %f %f \n",r, g, b);*/
@@ -276,7 +271,7 @@ int main(void)
 				delta = max - min;
 				vf = (r + g + b) / 3.0f;                  // 명도(V) = max(r,g,b)
 				sf = (max != 0.0F) ? delta / max : 0.0F;   // 채도(S)을 계산, S=0이면 R=G=B=0
-
+				
 				if (sf == 0.0f)
 					hf = 0.0f;
 				else
@@ -309,7 +304,7 @@ int main(void)
 				//printf("%d\n", i);
 			}
 
-			/////////////////////마스크 추가///////////////////////////
+	/*		/////////////////////마스크 추가///////////////////////////
 			//printf("mask start\n");
 			int n = 1;
 			//int x = 0;
@@ -336,31 +331,20 @@ int main(void)
 						}
 					}
 					*(lcd + i * 180 + j) = sum1 + sum2;
+
 				}
 			}
 			//printf("mask end");
 
-			//////////////////////////////////////////////////////////
+			//////////////////////////////////////////////////////////*/
 			cnt = 0;
-
-			printf("10\n");
 
 			for (i = 0; i<120; i++)
 			{
 				cnt = 0;
 				for (j = 0; j<180; j++){
-					//tmpchar = (char)(*(v+i)*255.0f); tmpchar+(tmpchar<<6)+(tmpchar<<11);
-					//if( ( 45.0f < *(h+i) < 75.0f ) && ( 12.0f < *(s+i)  ) && ( 7.0f < *(v+i) < 23.0f ))
-					//노란색if((60.0f < *(h+i)) && (*(h+i) < 75.0f) && ( 20.0f < *(s+i)  ) )
-					//파란색 if(220.0f < (*(h+i) ) && (*(h+i) < 260.0f) && ( 10.0f < *(s+i)  ) )
+			
 					/*
-					if((hue_min < (int)(*(hue_joon+i*180+j))) && ((int)(*(hue_joon+i*180+j)) < hue_max) && ( sat_min < (int)(*(satur_tmp+i*180+j) )) )
-					{
-					*(lcd+i*180+j) = 0x700f;
-					cnt++;
-					}
-					*/
-					
 					if ((200 < (int)(*(hue_joon + i * 180 + j))) && ((int)(*(hue_joon + i * 180 + j)) < 240))// && (sat_min < (int)(*(satur_tmp + i * 180 + j))))
 					{
 						*(lcd + i * 180 + j) =  0x07E0;
@@ -373,25 +357,54 @@ int main(void)
 					else
 						*(lcd + i * 180 + j) = *(fpga_videodata + i * 180 + j);
 
-
+					*/
 					
+					if ((((int)*(red + i * 180 + j) + (int)*(green + i * 180 + j) + (int)*(blue + i * 180 + j)) > 80) || (int)(*(v_compare + i * 180 + j))>20)
+						*(xxx + i * 180 + j) = 1;
+
+					else if ((((int)*(red + i * 180 + j) + (int)*(green + i * 180 + j) + (int)*(blue + i * 180 + j)) < 20) || (int)(*(v_compare + i * 180 + j))<10)
+						*(xxx + i * 180 + j) = 2;
+
+					else
+						*(xxx + i * 180 + j) = 3;// *(lcd + i * 180 + j) = *(fpga_videodata + i * 180 + j);
+
+
+					/*
 					if (i == 60)
 					{
-						*(lcd + i * 180 + j) = 0x7000;//lcd에 가로줄 빨간줄 표시코드
+						//*(lcd + i * 180 + j) = 0x7000;//lcd에 가로줄 빨간줄 표시코드
 						if (j == 90)
+						{
 							printf("hue: %.1f  sat: %.1f v_: %.1f\n", *(hue_joon + i * 180 + j), *(s_temp + i * 180 + j), *(v_compare + i * 180 + j));
-					}
-					if (j == 90)
-						*(lcd + i * 180 + j) = 0x7000;//lcd에 세로줄 빨간줄 표시코드
-					
+							printf("red : %.1f	green : %.1f	blue : %.1f\n", *(red + i * 180 + j), *(green + i * 180 + j), *(blue + i * 180 + j));
+						}
+							
+					}*/
+					//if (j == 90)
+						//*(lcd + i * 180 + j) = 0x7000;//lcd에 세로줄 빨간줄 표시코드
+				
 				}
 				
 				if (cnt > 40) line++;
 			}
+//////////////중심값 구하기 코드
+		//	cx = centerx / centercnt;
+		//	cy = centery / centercnt;
+		//	printf("%d,%d\n", cx, cy);
+/////////////////////
+			
+			for (i = 0; i < 120; i++)
+			{
+				for (j = 0; j < 180; j++){
 
-			cx = centerx / centercnt;
-			cy = centery / centercnt;
-			printf("%d,%d\n", cx, cy);
+					if ((*(xxx + 180 * i + j) + *(xxx + 180 * i + j - 1))==3) *(lcd + i * 180 + j) = 0x7000;
+					else if ((*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j))==3) *(lcd + i * 180 + j) = 0x7000;
+					else if ((*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j-1)) == 3) *(lcd + i * 180 + j) = 0x7000;
+
+					else *(lcd + i * 180 + j) = 0;
+				}
+			}
+			
 
 			if (line >= 20){
 				printf("barricade\n");
@@ -428,6 +441,10 @@ int main(void)
 	free(satur_tmp);
 	free(v_compare);
 	free(s_temp);
+	free(red);
+	free(green);
+	free(blue);
+	free(xxx);
 	uart_close();
 	if (bmpsurf != 0)
 		release_surface(bmpsurf);
