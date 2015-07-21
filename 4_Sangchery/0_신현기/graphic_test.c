@@ -77,6 +77,12 @@ int main(int argc, char **argv)
 		int ch = getchar();
 		switch (ch)
 		{
+		case 'B':
+		case 'b':
+			printf("HW is Dumb");
+			break;
+						
+
 		case 'q':
 		case 'Q':
 		case 'x':

@@ -166,16 +166,18 @@ int main(void)
 	unsigned char tmpchar;
 	int ret;
 	int b_loop = 0;
+	int centerx = 0, centery = 0, centercnt = 0;//(x,y)의 중심값
+	int cx = 0, cy = 0;
 
 	SURFACE* bmpsurf = 0;
 	U16* fpga_videodata = (U16*)malloc(180 * 120 * 2);
 	U16* lcd = (U16*)malloc(180 * 120 * 2);
 	U16* gray = (U16*)malloc(180 * 120 * 2);
 
-	float* hue_joon = (float*)malloc(180 * 120 * 2);
-	float* satur_tmp = (float*)malloc(180 * 120 * 2);
-	float* v_compare = (float*)malloc(180 * 120 * 2);
-	float* s_temp = (float*)malloc(180 * 120 * 2);
+	float* hue_joon = (float*)malloc(180 * 120 * 4);
+	float* satur_tmp = (float*)malloc(180 * 120 * 4);
+	float* v_compare = (float*)malloc(180 * 120 * 4);
+	float* s_temp = (float*)malloc(180 * 120 * 4);
 
 	float Mask[9] = { 0 };
 	float Mask1[9] = { 0 };//마스크하기 위한 변수
@@ -226,13 +228,13 @@ int main(void)
 			}
 			read_fpga_video_data(fpga_videodata);
 
-			printf("3\n");
+			//printf("3\n");
 
 			line = 0;
 
-			printf("4\n");
+			//printf("4\n");
 
-			for (i = 0; i<180 * 120/1.5; i++)
+			for (i = 0; i<180 * 120; i++)
 			{
 				//printf("5");
 				//*(g+i) = *(fpga_videodata+i);
@@ -288,7 +290,8 @@ int main(void)
 				//printf("8");
 				if (hf < 0.0F) hf += 360.0F;           // 색상값을 각도로 바꾼다.
 				*(hue_joon + i) = hf;      //0 ~ 360
-				sf = sf * 100;
+				
+				;
 				*(satur_tmp + i) = sf;   //0 ~ 32
 				*(v_compare + i) = vf;   //0 ~ 31
 				*(s_temp + i) = *(satur_tmp + i);
@@ -307,7 +310,7 @@ int main(void)
 			}
 
 			/////////////////////마스크 추가///////////////////////////
-			printf("mask start\n");
+			//printf("mask start\n");
 			int n = 1;
 			//int x = 0;
 			Mask[0] = -1.0f; Mask[1] = 0.0f; Mask[2] = 1.0f;
@@ -335,12 +338,12 @@ int main(void)
 					*(lcd + i * 180 + j) = sum1 + sum2;
 				}
 			}
-			printf("mask end");
+			//printf("mask end");
 
 			//////////////////////////////////////////////////////////
 			cnt = 0;
 
-			//printf("10\n");
+			printf("10\n");
 
 			for (i = 0; i<120; i++)
 			{
@@ -357,13 +360,21 @@ int main(void)
 					cnt++;
 					}
 					*/
-					/*
-					if ((170 < (int)(*(hue_joon + i * 180 + j))) && ((int)(*(hue_joon + i * 180 + j)) < 171) && (sat_min < (int)(*(satur_tmp + i * 180 + j))))
+					
+					if ((200 < (int)(*(hue_joon + i * 180 + j))) && ((int)(*(hue_joon + i * 180 + j)) < 240))// && (sat_min < (int)(*(satur_tmp + i * 180 + j))))
 					{
-						*(lcd + i * 180 + j) = 0x07E0;
+						*(lcd + i * 180 + j) =  0x07E0;
+						centerx += j;
+						centery += i;
+						centercnt += 1;
+
+
 					} // 코드 추가
 					else
-						*(lcd + i * 180 + j) = *(fpga_videodata + i * 180 + j);*/
+						*(lcd + i * 180 + j) = *(fpga_videodata + i * 180 + j);
+
+
+					
 					if (i == 60)
 					{
 						*(lcd + i * 180 + j) = 0x7000;//lcd에 가로줄 빨간줄 표시코드
@@ -372,11 +383,16 @@ int main(void)
 					}
 					if (j == 90)
 						*(lcd + i * 180 + j) = 0x7000;//lcd에 세로줄 빨간줄 표시코드
-
+					
 				}
 				
 				if (cnt > 40) line++;
 			}
+
+			cx = centerx / centercnt;
+			cy = centery / centercnt;
+			printf("%d,%d\n", cx, cy);
+
 			if (line >= 20){
 				printf("barricade\n");
 				state_1 = 1;
@@ -396,7 +412,7 @@ int main(void)
 			//printf("Full < Expension(x2.66), Rotate(90) > (320 x 480)\n");
 			//printf("%d\n", cnt);
 			//draw_img_from_buffer(lcd, 320, 0, 0, 0, 2.67, 90);
-			draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
+			draw_img_from_buffer(fpga_videodata, 0, 0, 0, 0, 1.77, 0);
 			draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
 			flip();
 		}
