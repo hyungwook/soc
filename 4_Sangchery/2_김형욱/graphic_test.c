@@ -173,10 +173,17 @@ int main(void)
 	U16* lcd = (U16*)malloc(180 * 120 * 2);
 	U16* gray = (U16*)malloc(180 * 120 * 2);
 
-	float* hue_joon = (float*)malloc(180 * 120 * 2);
-	float* satur_tmp = (float*)malloc(180 * 120 * 2);
-	float* v_compare = (float*)malloc(180 * 120 * 2);
-	float* s_temp = (float*)malloc(180 * 120 * 2);
+	float* hue_joon = (float*)malloc(180 * 120 * 4);
+	float* satur_tmp = (float*)malloc(180 * 120 * 4);
+	float* v_compare = (float*)malloc(180 * 120 * 4);
+	float* s_temp = (float*)malloc(180 * 120 * 4);
+	int* rgb = (int*)malloc(180 * 120 * 4);
+	float* red = (float*)malloc(180 * 120 * 4);
+	float* green = (float*)malloc(180 * 120 * 4);
+	float* blue = (float*)malloc(180 * 120 * 4);
+	int* xxx = (int*)malloc(180 * 120 * 4);
+
+
 
 	float Mask[9] = { 0 };
 	float Mask1[9] = { 0 };//마스크하기 위한 변수
@@ -209,7 +216,7 @@ int main(void)
 	while (b_loop)
 	{
 		direct_camera_display_off();
-		input = '0';
+	
 		
 		while (1)
 		{
@@ -232,27 +239,26 @@ int main(void)
 
 			read_fpga_video_data(fpga_videodata);
 			
-		
 
-			line = 0;
-
-			
-
-			for (i = 0; i<180 * 120/1.5; i++) // 여기가 문제!!!!!!!!!!!!!!!!!
+			for (i = 0; i<180 * 120; i++) 
 			{
-				//printf("5");
-				//*(g+i) = *(fpga_videodata+i);
+				
 				b = ((*(fpga_videodata + i)) & 31);
 				g = (((*(fpga_videodata + i)) >> 6) & 31);
 				r = (((*(fpga_videodata + i)) >> 11) & 31);
-				//printf("6");
-				/*   if(i == 180* 60+90)
-				printf("%f %f %f \n",r, g, b);*/
+
+				*(rgb + i) = b + g + r; //rgb값의 합
 
 				int graay = (int)(b + g + r)/3;
 				int gray1 = (graay << 11);
 				int gray2 = (graay << 6);
 				*(gray + i) = gray1 + gray2 + graay; // 그레이하는과정
+
+				*(red + i) = r;
+				*(green + i) = g;
+				*(blue) = b;
+
+
 
 				if (r>g)
 					if (r>b)
@@ -277,7 +283,6 @@ int main(void)
 						min = r;
 					}
 
-				//printf("7");
 				delta = max - min;
 				vf = (r + g + b) / 3.0f;                  // 명도(V) = max(r,g,b)
 				sf = (max != 0.0F) ? delta / max : 0.0F;   // 채도(S)을 계산, S=0이면 R=G=B=0
@@ -292,7 +297,6 @@ int main(void)
 					else if (b == max) hf = 4.0F + (r - g) / delta; // 색상이 Magenta와 Cyan사이
 				}
 				hf *= 57.295F;
-				//printf("8");
 				if (hf < 0.0F) hf += 360.0F;           // 색상값을 각도로 바꾼다.
 				*(hue_joon + i) = hf;      //0 ~ 360
 				sf = sf * 100;
@@ -300,31 +304,20 @@ int main(void)
 				*(v_compare + i) = vf;   //0 ~ 31
 				*(s_temp + i) = *(satur_tmp + i);
 
-				/**(h_compare+i) = *(s+i);
-				if (i == 180 * 60 + 90)
-				{
-					//printf("r: %f, g: %f, b: %f, sat: %f\n",r,g,b,sf);
-					point_h = *(hue_joon + i);
-					point_s = *(satur_tmp + i);
-					point_v = *(v_compare + i);
-				}
-				*/
-				//printf("9\n");
-				//printf("%d\n", i);
 			}
 
 			/////////////////////마스크 추가///////////////////////////
 			printf("mask start\n"); // 외곽선추출 
 			int n = 1;
 			
-			Mask[0] = -1.0f; Mask[1] = 0.0f; Mask[2] = 1.0f;
-			Mask[3] = -1.0f; Mask[4] = 0.0f; Mask[5] = 1.0f;
-			Mask[6] = -1.0f; Mask[7] = 0.0f; Mask[8] = 1.0f;
-
+			Mask[0] = -1.0f; Mask[1] = -1.0f; Mask[2] = -1.0f;
+			Mask[3] = -1.0f; Mask[4] = 8.0f; Mask[5] = -1.0f;
+			Mask[6] = -1.0f; Mask[7] = -1.0f; Mask[8] = -1.0f;
+			/*
 			Mask1[0] = 1.0f; Mask1[1] = 1.0f; Mask1[2] = 1.0f;
 			Mask1[3] = 0.0f; Mask1[4] = 0.0f; Mask1[5] = 0.0f;
 			Mask1[6] = -1.0f; Mask1[7] = -1.0f; Mask1[8] = -1.0f;
-
+			*/
 			for (i = n; i < 120 - n; i++){
 				index1 = i * 180;
 				for (j = n; j < 180 - n; j++){
@@ -336,68 +329,73 @@ int main(void)
 						index3 = (k + n) * 3;
 						for (l = -n; l <= n; l++){
 							sum1 += gray[index2 + (j + l)] * Mask[index3 + l + n];
-							sum2 += gray[index2 + (j + l)] * Mask1[index3 + l + n];
+							//sum2 += gray[index2 + (j + l)] * Mask1[index3 + l + n];
 						}
 					}
-					//*(lcd + i * 180 + j) = sum1 + sum2;
+					*(lcd + i * 180 + j) = sum1 ;
 				}
 			}
-			printf("mask end");
+			printf("mask end\n");
 
 			//////////////////////////////////////////////////////////
 			cnt = 0;
-
+			int m = 0;
+			float grad = 0;
 
 			for (i = 0; i<120; i++)
 			{
 				
 				for (j = 0; j<180; j++){
-					//tmpchar = (char)(*(v+i)*255.0f); tmpchar+(tmpchar<<6)+(tmpchar<<11);
-					//if( ( 45.0f < *(h+i) < 75.0f ) && ( 12.0f < *(s+i)  ) && ( 7.0f < *(v+i) < 23.0f ))
-					//노란색if((60.0f < *(h+i)) && (*(h+i) < 75.0f) && ( 20.0f < *(s+i)  ) )
-					//파란색 if(220.0f < (*(h+i) ) && (*(h+i) < 260.0f) && ( 10.0f < *(s+i)  ) )
+				
+					if ((((int)*(red + i * 180 + j) + (int)*(green + i * 180 + j) + (int)*(blue + i * 180 + j)) > 80) || (int)(*(v_compare + i * 180 + j))>20)
+						*(xxx + i * 180 + j) = 1;
+
+					else if ((((int)*(red + i * 180 + j) + (int)*(green + i * 180 + j) + (int)*(blue + i * 180 + j)) < 20) || (int)(*(v_compare + i * 180 + j))<10)
+						*(xxx + i * 180 + j) = 2;
+
+					else
+						*(xxx + i * 180 + j) = 3;// *(lcd + i * 180 + j) = *(fpga_videodata + i * 180 + j);
 
 					/*
-					if((hue_min < (int)(*(hue_joon+i*180+j))) && ((int)(*(hue_joon+i*180+j)) < hue_max) && ( sat_min < (int)(*(satur_tmp+i*180+j) )) )
-					{
-					*(lcd+i*180+j) = 0x700f;
-					cnt++;
-					}
-					*/
-
-					
 					if ((170 < (int)(*(hue_joon + i * 180 + j))) && ((int)(*(hue_joon + i * 180 + j)) < 240) && (sat_min < (int)(*(satur_tmp + i * 180 + j))))
 					{
-						*(lcd + i * 180 + j) = 0x07E0;
+					//	*(lcd + i * 180 + j) = 0x07E0;
 						cnt++;
 					} 
 					else
 					{
 						*(lcd + i * 180 + j) = *(fpga_videodata + i * 180 + j);
 					}
-					
+					*/
 					/*
 					if (i == 60)
 					{
 						*(lcd + i * 180 + j) = 0x7000;//lcd에 가로줄 빨간줄 표시코드
-						if (j == 90)
-							printf("hue: %.1f  sat: %.1f v_: %.1f\n", *(hue_joon + i * 180 + j), *(s_temp + i * 180 + j), *(v_compare + i * 180 + j));
+						//if (j == 90)
+						//	printf("hue: %.1f  sat: %.1f v_: %.1f\n", *(hue_joon + i * 180 + j), *(s_temp + i * 180 + j), *(v_compare + i * 180 + j));
+				
 					}
 					if (j == 90)
 						*(lcd + i * 180 + j) = 0x7000;//lcd에 세로줄 빨간줄 표시코드
-					*/
-					printf("%d\n", cnt);
+				    */
 				}
 				
 				//if (cnt > 40) line++;
 			}
-			if (cnt >= 300){
-				//printf("barricade\n");
-				//state_1 = 1;
-				break;
-				b_loop = 0;
-			}
 
+			
+			for (i = 0; i < 120; i++)
+			{
+				for (j = 0; j < 180; j++){
+
+					if ((*(xxx + 180 * i + j) + *(xxx + 180 * i + j - 1)) == 3) *(lcd + i * 180 + j) = 0x7000;
+					else if ((*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j)) == 3) *(lcd + i * 180 + j) = 0x7000;
+					else if ((*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j - 1)) == 3) *(lcd + i * 180 + j) = 0x7000;
+
+					else *(lcd + i * 180 + j) = 0;
+				}
+			}
+			
 			/*
 			else{
 				if (state_1 == 1){
@@ -419,7 +417,7 @@ int main(void)
 			draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
 			flip();
 		}
-		break;
+		
 	}
 
 
