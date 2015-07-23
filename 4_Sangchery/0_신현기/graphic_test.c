@@ -155,7 +155,7 @@ void init_console(void)
 
 int main(void)
 {
-	int i = 0, j = 0, k = 0, l = 0, cnt = 0, line = 0;
+	int i = 0, j = 0, k = 0, l = 0, cnt1 = 0, line = 0;
 	int state_1 = 0;
 	float r = 0, g = 0, b = 0;
 	float max = 0.0f, min = 0.0f;
@@ -168,6 +168,7 @@ int main(void)
 	int ret;
 	int b_loop = 0;
 	int sum_left = 0, sum_right = 0;
+	int sum_i = 0, sum_j = 0;
 
 
 	SURFACE* bmpsurf = 0;
@@ -258,7 +259,7 @@ int main(void)
 
 				*(red + i) = r;
 				*(green + i) = g;
-				*(blue) = b;
+				*(blue + i) = b;
 
 
 
@@ -340,52 +341,58 @@ int main(void)
 			printf("mask end\n");
 			*/
 			//////////////////////////////////////////////////////////
-			cnt = 0;
-			int m = 0;
-			float grad = 0;
-
+			
+		
 			for (i = 0; i<120; i++)
 			{
-				
+
 				for (j = 0; j<180; j++){
-				
-					if ((((int)*(red + i * 180 + j) + (int)*(green + i * 180 + j) + (int)*(blue + i * 180 + j)) > 80) || (int)(*(v_compare + i * 180 + j))>20)
-						*(xxx + i * 180 + j) = 1;   //흰색일때 
 
-					else if ((((int)*(red + i * 180 + j) + (int)*(green + i * 180 + j) + (int)*(blue + i * 180 + j)) < 20) || (int)(*(v_compare + i * 180 + j))<10)
-						*(xxx + i * 180 + j) = 2; //검정색일때
+					*(lcd + i * 180 + j) = *(fpga_videodata + i * 180 + j);
+
+					if (((int)*(red + i * 180 + j) >17) && ((int)*(green + i * 180 + j) >17) && ((int)*(blue + i * 180 + j) > 17) && ((int)*(v_compare + i * 180 + j) > 17))
+						*(xxx + i * 180 + j) = 1;//흰색을표시
+
+					else if (((int)*(red + i * 180 + j) < 10) && ((int)*(green + i * 180 + j) < 10) && ((int)*(blue + i * 180 + j) < 10) && ((int)*(v_compare + i * 180 + j) < 10))
+						*(xxx + i * 180 + j) = 2;//검정을표시
+
+					else if (((int)*(red + i * 180 + j) > 15) && ((int)*(green + i * 180 + j) < 15) && ((int)*(blue + i * 180 + j) < 15) && ((((int)*(hue_joon + i * 180 + j) > 300)) || ((int)*(hue_joon + i * 180 + j) < 60)))
+						*(xxx + i * 180 + j) = 3;//빨강을표시
+
+					else if (((int)*(red + i * 180 + j) > 18) && ((int)*(green + i * 180 + j) > 18) && ((int)*(blue + i * 180 + j) < 15) && ((int)*(v_compare + i * 180 + j) > 15) && ((int)*(hue_joon + i * 180 + j) > 50) && ((int)*(hue_joon + i * 180 + j) < 80))
+						*(xxx + i * 180 + j) = 4;//노랑을표시
+
+					else if (((int)*(red + i * 180 + j) < 15) && ((int)*(green + i * 180 + j) > 15) && ((int)*(blue + i * 180 + j) < 15) && ((int)*(hue_joon + i * 180 + j) > 80) && ((int)*(hue_joon + i * 180 + j) < 120))
+						*(xxx + i * 180 + j) = 5;//초록을표시
+
+					else if (((int)*(blue + i * 180 + j) > 15) && ((int)*(hue_joon + i * 180 + j) > 180) && ((int)*(hue_joon + i * 180 + j) < 250))
+						*(xxx + i * 180 + j) = 6;//파랑을표시
 
 					else
-						*(xxx + i * 180 + j) = 3;// *(lcd + i * 180 + j) = *(fpga_videodata + i * 180 + j);
+						*(xxx + i * 180 + j) = 7;//나머지
 
-					/*
-					if ((170 < (int)(*(hue_joon + i * 180 + j))) && ((int)(*(hue_joon + i * 180 + j)) < 240) && (sat_min < (int)(*(satur_tmp + i * 180 + j))))
-					{
-					//	*(lcd + i * 180 + j) = 0x07E0;
-						cnt++;
-					} 
-					else
-					{
-						*(lcd + i * 180 + j) = *(fpga_videodata + i * 180 + j);
-					}
-					*/
 					/*
 					if (i == 60)
 					{
-						*(lcd + i * 180 + j) = 0x7000;//lcd에 가로줄 빨간줄 표시코드
-						//if (j == 90)
-						//	printf("hue: %.1f  sat: %.1f v_: %.1f\n", *(hue_joon + i * 180 + j), *(s_temp + i * 180 + j), *(v_compare + i * 180 + j));
-				
+					*(lcd + i * 180 + j) = 0x7000;//lcd에 가로줄 빨간줄 표시코드
+					if (j == 90)
+					{
+					printf("hue: %.1f  sat: %.1f v_: %.1f\n", *(hue_joon + i * 180 + j), *(s_temp + i * 180 + j), *(v_compare + i * 180 + j));
+					printf("red : %d, green : %d, blue : %d\n", (int)*(red + i * 180 + j), (int)*(green + i * 180 + j), (int)*(blue + i * 180 + j));
+					}
+
 					}
 					if (j == 90)
-						*(lcd + i * 180 + j) = 0x7000;//lcd에 세로줄 빨간줄 표시코드
-				    */
+					*(lcd + i * 180 + j) = 0x7000;//lcd에 세로줄 빨간줄 표시코드
+					*/
 				}
 				
-				//if (cnt > 40) line++;
 			}
 
-			
+
+				
+
+			/*///////////////////////////////외곽선 추출 코드///////////////////////////////
 			for (i = 0; i < 120; i++)
 			{
 				for (j = 0; j < 180; j++){
@@ -403,7 +410,7 @@ int main(void)
 
 			for (j = 0; j < 180; j++)
 			{
-				for (i = 119; i > 0 ; i--)
+				for (i = 119; i >= 0 ; i--)
 				{
 					if (j < 90)
 						sum_left++;
@@ -418,7 +425,45 @@ int main(void)
 					
 			printf("%d %d\n", sum_left, sum_right);
 
+			///////////////////////////////////////////////////////////////////////////////*/
+
+			//stage1
+			//앞만 보고 가다가 파란 픽셀이 화면에 많이 잡히면 stop
+			//고개를 숙이고 파란 픽셀의 평균값을 확인 후 좌우로 이동
+			//고개를 숙인 채로 가운데값을 찾으면 앞으로 다시 이동
+			cnt1 = 0;
+			for (i = 0; i < 120; i++)
+				for (j = 0; j < 180; j++)
+					if (*(xxx + 180 * i + j) == 6)
+					{
+						cnt1++;
+						*(lcd + i * 180 + j) = 0xFFFF;
+					}
 			
+			printf("%d\n", cnt1);
+
+			/*
+			for (i =60; i < 120; i++)
+				for (j = 0; j < 180; j++)
+				{
+					if (*(xxx + 180 * i + j) == 6)
+					{
+						sum_j = sum_j + j;
+						cnt1++;
+						*(lcd + i * 180 + j) = 0xFFFF;
+					}
+
+				}
+			
+			sum_j = sum_j / (cnt1+1);
+			
+			printf("%d", sum_j);
+			if (sum_j>120) printf("right\n");
+			else if (sum_j < 60) printf("left\n");
+			else printf("center\n");
+			*/
+			
+
 			/*
 			else{
 				if (state_1 == 1){
@@ -434,7 +479,6 @@ int main(void)
 		
 
 			//printf("Full < Expension(x2.66), Rotate(90) > (320 x 480)\n");
-			//printf("%d\n", cnt);
 			//draw_img_from_buffer(lcd, 320, 0, 0, 0, 2.67, 90);
 			draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
 			draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
@@ -453,6 +497,10 @@ int main(void)
 	free(satur_tmp);
 	free(v_compare);
 	free(s_temp);
+	free(red);
+	free(green);
+	free(blue);
+	free(rgb);
 	uart_close();
 	if (bmpsurf != 0)
 		release_surface(bmpsurf);
