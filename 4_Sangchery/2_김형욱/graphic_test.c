@@ -35,6 +35,7 @@ void DelayLoop(int delay_time)
 		delay_time--;
 }
 
+
 void Send_Command(unsigned char Ldata, unsigned char Ldata1)
 {
 	unsigned char Command_Buffer[6] = {0,};
@@ -168,6 +169,8 @@ int main(void)
 	int ret;
 	int b_loop = 0;
 	int sum_left = 0, sum_right = 0;
+	//int face_left = 0; face_right = 0;
+	int motion2=0;
 
 	SURFACE* bmpsurf = 0;
 	U16* fpga_videodata = (U16*)malloc(180 * 120 * 2);
@@ -196,7 +199,7 @@ int main(void)
 	ret = uart_open();
 	if (ret < 0) return EXIT_FAILURE;
 
-	uart_config(UART1, 57600, 8, UART_PARNONE, 1);
+	uart_config(UART1, 9600, 8, UART_PARNONE, 1);
 
 	if (open_graphic() < 0) {
 		return -1;
@@ -222,21 +225,9 @@ int main(void)
 		while (1)
 		{
 			
-			//input = getchar();
-			/*
-			if (input == 'a'){
-				printf("enter the min value\n");
-				printf("now hum_min: %d, hue_max: %d, sat_min: %d\n", hue_min, hue_max, sat_min);
-				//scanf("%d %d %d", &hue_min, &hue_max, &sat_min);
-				printf("press the 'b' button to break loop\n"); // 코드 추가
-			}
-
-
-			if (input == 'b'){
-				b_loop = 0;
-				break;
-			}
-			*/
+			
+			
+			
 
 			read_fpga_video_data(fpga_videodata);
 			
@@ -352,7 +343,8 @@ int main(void)
 				for (j = 0; j<180; j++){
 
 					*(lcd + i * 180 + j) = *(fpga_videodata + i * 180 + j);
-				
+
+
 					if (((int)*(red + i * 180 + j) >17) && ((int)*(green + i * 180 + j) >17) && ((int)*(blue + i * 180 + j) > 17) && ((int)*(v_compare + i * 180 + j) > 17))
 						*(xxx + i * 180 + j) = 1;//흰색을표시
 
@@ -406,26 +398,95 @@ int main(void)
 				}
 			}
 			*/
+			/*/
+			///////////////////// 1번째 장애물 /////////////////////////////
+			//앞만 보고 가다가 파란 픽셀이 화면에 많이 잡히면 stop
+			//고개를 숙이고 파란 픽셀의 평균값을 확인 후 좌우로 이동
+			//고개를 숙인 채로 가운데값을 찾으면 앞으로 다시 이동
+			cnt1 = 0;
+			for (i = 0; i < 120; i++)
+				for (j = 0; j < 180; j++)
+					if (*(xxx + 180 * i + j) == 6)
+					{
+						cnt1++;
+						*(lcd + i * 180 + j) = 0xFFFF;
+					}
+
+			if (cnt1>파란색개수) 고개숙이기;
+
 
 			
+			for (i =60; i < 120; i++)
+			for (j = 0; j < 180; j++)
+			{
+			if (*(xxx + 180 * i + j) == 6)
+			{
+			sum_j = sum_j + j;
+			cnt1++;
+			*(lcd + i * 180 + j) = 0xFFFF;
+			}
+
+			}
+
+			sum_j = sum_j / (cnt1+1);
+
+			printf("%d", sum_j);
+			if (sum_j>120) printf("right\n");
+			else if (sum_j < 60) printf("left\n");
+			else printf("center\n");
+			
+
+			///////////////////////////////////////////////////////////////
+			*/
+
+			///////////////////// 2번째 장애물 /////////////////////////////  ***i값 나중에 추가!***
+			int cnt2 = 0;
 			for (i = 0; i < 120; i++)
 			{
 				for (j = 0; j < 180; j++)
 				{
-					if (*(xxx + 180 * i + j) == 1) *(lcd + i * 180 + j) = 0xffff;//흰
-					else if (*(xxx + 180 * i + j) == 2) *(lcd + i * 180 + j) = 0x7777;//검
-					else if (*(xxx + 180 * i + j) == 3) *(lcd + i * 180 + j) = 0xf800;//빨
-					else if (*(xxx + 180 * i + j) == 4) *(lcd + i * 180 + j) = 0xfbe0;//노
-					else if (*(xxx + 180 * i + j) == 5) *(lcd + i * 180 + j) = 0x07e0;//초
-					else if (*(xxx + 180 * i + j) == 6) *(lcd + i * 180 + j) = 0x001f;//파
-					//else *(lcd + i * 180 + j) = *(fpga_videodata + i * 180 + j);
-
+					if (((*(xxx + i * 180 + j) - *(xxx + i * 180 + j + 1)) == 2) && *(xxx + i * 180 + j) == 4)
+					{
+						cnt2++;
+						*(lcd + 180 * i + j) = 0x7000;
+					}
+					else
+						*(lcd + 180 * i + j) = 0x0000;
 				}
 			}
-			
 
+			if (cnt2 > 50)
+				motion2 = 1;//멈춰
+
+			if (motion2 == 1)
+			{
+				if (cnt2 < 50)
+					motion2 = 2;//가
+				
+			}
+
+			if (motion2 == 1)
+			{
+				printf("STOP!!!!!!!!!!!!!!\n");
+				Send_Command(0x04, 0xfb);
+				DelayLoop(1000000);
+			}
+
+			else if (motion2 == 2 || motion2 == 0)
+			{
+				printf("GOGOGOGOGO!!!!!!!!!!!\n");
+				Send_Command(0x03, 0xfc);
+				DelayLoop(200000);
+				
+			}
+
+			///////////////////////////////////////////////////////////////
+				/*
+			////////////////////////외곽선(로봇중앙맞추기)///////////////////////
 			sum_left = 0;
 			sum_right = 0;
+			face_left = 0;
+			face_right = 0;
 
 			for (j = 0; j < 180; j++)
 			{
@@ -441,7 +502,22 @@ int main(void)
 				}
 			}
 			
-			// printf("%d %d\n", sum_left, sum_right);
+			if (sum_left>sum_right+20)
+				printf("오른쪽으로 15도 돌아라\n");
+			else if (sum_right>sum_left + 20)
+				printf("왼쪽으로 15도 돌아라\n"); // 고개어디로돌리든 상관없음
+
+			
+			//고개를 왼쪽으로 돌렸을때 face_left = sum_left + sum_right;
+			//고개를 오른쪽으로 돌렷을때 face_right = sum_left + sum_right;
+			if (face_left > face_right + 30)
+				printf("왼쪽으로 한걸음 평행이동해라\n");
+			else if (face_right > face_left + 30)
+				printf("오른쪽으로 한걸음 평행이동해라\n");
+			
+			////////////////////////////////////////////////////////////////
+			*/
+
 			/*
 			else{
 				if (state_1 == 1){
@@ -478,6 +554,7 @@ int main(void)
 	free(satur_tmp);
 	free(v_compare);
 	free(s_temp);
+	free(xxx);
 	uart_close();
 	if (bmpsurf != 0)
 		release_surface(bmpsurf);
