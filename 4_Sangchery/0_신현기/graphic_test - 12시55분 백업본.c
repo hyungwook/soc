@@ -137,10 +137,6 @@ void uart1_buffer_read(unsigned char *buf, int size)
 	}	
 }
 
-void success(void)
-{
-	printf("success\n");
-}
 
 void init_console(void)
 {
@@ -161,7 +157,7 @@ int main(void)
 {
 	int i = 0, j = 0, k = 0, l = 0, line = 0;
 	int cnt1 = 0, cnt2 = 0;
-	int stage= 1;
+	int state_1 = 0;
 
 	int motion2 = 0;
 
@@ -439,10 +435,7 @@ int main(void)
 			//앞만 보고 가다가 파란 픽셀이 화면에 많이 잡히면 stop
 			//고개를 숙이고 파란 픽셀의 평균값을 확인 후 좌우로 이동
 			//고개를 숙인 채로 가운데값을 찾으면 앞으로 다시 이동
-			/*
-			if(stage==1)
-			{
-			cnt1 = 0;
+			/*cnt1 = 0;
 			for (i = 0; i < 120; i++)
 				for (j = 0; j < 180; j++)
 					if (*(xxx + 180 * i + j) == 6)
@@ -472,57 +465,51 @@ int main(void)
 			if (sum_j>120) printf("right\n");
 			else if (sum_j < 60) printf("left\n");
 			else printf("center\n");
-
-			printf("success\n");
-			stage=2;
-			}
 			*/
-			success();
+			
 			
 
 			///////////////////
 			//stage2
 			/////////////////////////////  ***i값 나중에 추가!***
-			if (stage == 2)
+			cnt2 = 0;
+			for (i = 0; i < 120; i++)
 			{
-				cnt2 = 0;
-				for (i = 0; i < 120; i++)
+				for (j = 0; j < 180; j++)
 				{
-					for (j = 0; j < 180; j++)
+					if (((*(xxx + i * 180 + j) - *(xxx + i * 180 + j + 1)) == 2) && *(xxx + i * 180 + j) == 4)
 					{
-						if (((*(xxx + i * 180 + j) - *(xxx + i * 180 + j + 1)) == 2) && *(xxx + i * 180 + j) == 4)
-						{
-							cnt2++;
-							*(lcd + 180 * i + j) = 0x7000;
-						}
-						else
-							*(lcd + 180 * i + j) = 0x0000;
+						cnt2++;
+						*(lcd + 180 * i + j) = 0x7000;
 					}
+					else
+						*(lcd + 180 * i + j) = 0x0000;
 				}
-				printf("%d\n", cnt2);
-				if (cnt2 > 60)
-					motion2 = 1;//멈춰
+			}
+			printf("%d\n", cnt2);
+			if (cnt2 > 60)
+				motion2 = 1;//멈춰
 
-				if (motion2 == 1)
-				{
-					if (cnt2 < 60)
-						motion2 = 2;//가
+			if (motion2 == 1)
+			{
+				if (cnt2 < 60)
+					motion2 = 2;//가
 
-				}
+			}
 
-				if (motion2 == 1)
-				{
-					printf("STOP!!!!!!!!!!!!!!\n");
-					//	Send_Command(0x04, 0xfb);
-					//	DelayLoop(1000000);
-				}
+			if (motion2 == 1)
+			{
+				printf("STOP!!!!!!!!!!!!!!\n");
+			//	Send_Command(0x04, 0xfb);
+			//	DelayLoop(1000000);
+			}
 
-				else if (motion2 == 2 || motion2 == 0)
-				{
-					printf("GOGOGOGOGO!!!!!!!!!!!\n");
-					//	Send_Command(0x03, 0xfc);
-					//	DelayLoop(200000);
-				}
+			else if (motion2 == 2 || motion2 == 0)
+			{
+				printf("GOGOGOGOGO!!!!!!!!!!!\n");
+			//	Send_Command(0x03, 0xfc);
+			//	DelayLoop(200000);
+
 			}
 
 			///////////////////////////////////////////////////////////////
