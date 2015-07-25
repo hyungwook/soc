@@ -18,7 +18,7 @@
 
 
 
-#define AMAZON2_GRAPHIC_VERSION		"v0.5"
+#define AMAZON2_GRAPHIC_VERSION      "v0.5"
 
 static struct termios inittio, newtio;
 
@@ -40,7 +40,7 @@ void Send_Command(unsigned char Ldata, unsigned char Ldata1)
 {
 	unsigned char Command_Buffer[6] = { 0, };
 
-	Command_Buffer[0] = START_CODE;	// Start Byte -> 0xff
+	Command_Buffer[0] = START_CODE;   // Start Byte -> 0xff
 	Command_Buffer[1] = START_CODE1; // Start Byte1 -> 0x55
 	Command_Buffer[2] = Ldata;
 	Command_Buffer[3] = Ldata1;
@@ -161,8 +161,8 @@ int main(void)
 	float r = 0, g = 0, b = 0;
 	float max = 0.0f, min = 0.0f;
 	float hf = 0.0f, sf = 0.0f, vf = 0.0f;
-	//	float point_h = 0.0f, point_s = 0.0f, point_v = 0.0f; //중앙점의 hsv값
-	float delta,degree=0;
+	//   float point_h = 0.0f, point_s = 0.0f, point_v = 0.0f; //중앙점의 hsv값
+	float delta, degree = 0;
 	char input;
 	int hue_min = 45, hue_max = 70, sat_min = 2;
 	unsigned char tmpchar;
@@ -172,8 +172,7 @@ int main(void)
 	int sum_i = 0, sum_j = 0;
 	int cnt0 = 0;
 	float first_x = 0, first_y = 0, second_x = 0, second_y = 0, outline_x = 0, outline_y = 0;
-	int result = 0;
-	
+
 	int motion2 = 0;
 
 	SURFACE* bmpsurf = 0;
@@ -227,10 +226,8 @@ int main(void)
 	{
 		direct_camera_display_off();
 
-
 		while (1)
 		{
-
 
 			read_fpga_video_data(fpga_videodata);
 
@@ -405,31 +402,34 @@ int main(void)
 			
 			////////////////////////외곽선(로봇중앙맞추기)///////////////////////
 
-			result = 0;
+
 			cnt0 = 0;
 			sum_left = 0;
 			sum_right = 0;
-			int firstx = 0, firsty = 0, secondx = 0, secondy = 0;
 			if (face == 0)
 			{
 				Send_Command(0x04, 0xfb);
-				DelayLoop(100000);
+				DelayLoop(1000000);
+				read_fpga_video_data(fpga_videodata);
 				draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
 				draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
 				flip();
-				face = 1;//오
+				face = 1;
+				continue;
 			}
-
 			else if (face == 1)
 			{
 				for (j = 30; j < 150; j++)
 				{
 					for (i = 119; i >= 0; i--)
 					{
-						if (j < 90)
-						sum_left++;
-						else
-						sum_right++;
+						if (*(xxx + i * 180 + j) == 1)
+						{
+							if (j < 90)
+								sum_left++;
+							else
+								sum_right++;
+						}
 						
 						if ((*(xxx + 180 * i + j) + *(xxx + 180 * i + j - 1) == 3)
 							|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j) == 3)
@@ -439,28 +439,18 @@ int main(void)
 							*(out_j + cnt0) = j;
 							cnt0++;
 							*(lcd + i * 180 + j) = 0x7000;
-
 						}
 						else
 							*(lcd + i * 180 + j) = 0;
-
 						if (*(xxx + 180 * i + j) == 2)
 							break;
 					}
 				}
 
-				for (i = 0; i < 10; i++)
-				{
-					firsty += *(out_i + cnt0 / 2 - 20 + i);
-					firstx += *(out_j + cnt0 / 2 - 20 + i);
-					secondy += *(out_i + cnt0 / 2 + 10 + i);
-					secondx += *(out_j + cnt0 / 2 + 10 + i);
-				}
-				first_y = firsty / 10;
-				first_x = firstx / 10;
-				second_y = secondy / 10;
-				second_x = secondx / 10;
-
+				first_y = *(out_i + cnt0 / 2 - 10);
+				first_x = *(out_j + cnt0 / 2 - 10);
+				second_y = *(out_i + cnt0 / 2 + 10);
+				second_x = *(out_j + cnt0 / 2 + 10);
 
 				outline_y = second_y - first_y;
 				outline_x = second_x - first_x;
@@ -471,70 +461,79 @@ int main(void)
 				draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
 				draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
 				flip();
-				
 
-				if (degree > 45 && degree < 90 )
+				/*
+				if (degree > 45 && degree < 90)
 				{
 					Send_Command(0x07, 0xf8);
-					DelayLoop(100000);
+					DelayLoop(1000000);
 					printf("turn left\n");
-					
 				}
 				else if (degree < -45 && degree > -90)
 				{
 					Send_Command(0x08, 0xf7);
-					DelayLoop(100000);
+					DelayLoop(1000000);
 					printf("turn right\n");
-					
 				}
-				else if (degree > 15&& degree < 45)
+				else if (degree > 15 && degree < 45)
 				{
 					Send_Command(0x09, 0xf6);
-					DelayLoop(100000);
-				printf("turn left little\n");
+					DelayLoop(1000000);
+					printf("turn left little\n");
 				}
-				else if (degree < -15&& degree > -45 )
+				else if (degree < -15 && degree > -45)
 				{
-					Send_Command(0x0a, 0xf5);
-					DelayLoop(100000);
+					Send_Command(0x10, 0xf5);
+					DelayLoop(1000000);
 					printf("turn right little\n");
 				}
-				else
-					result++;
 
-				if (result == 1)
-				{
-					if (sum_left + sum_right < 2000)
-					{//오른쪽을 봤을 때 흰색이 적게 보이면 왼쪽으로 이동
-						Send_Command(0x05, 0xfa);
-						DelayLoop(100000);
-						printf("go left\n");
+				printf("%.2f\n", sum_left,sum_right,sum_left+sum_right);
 
-					}
-					else if (sum_left + sum_right > 19000)
-					{//오른쪽을 봤을 때 흰색이 많이 보이면 오른쪽으로 이동
-						Send_Command(0x06, 0xf9);
-						DelayLoop(100000);
-						printf("go right\n");
-					}
-					else
-						result++;
+				if (sum_left + sum_right<500)
+				{//오른쪽을 봤을 때 흰색이 적게 보이면 왼쪽으로 이동
+					Send_Command(0x05, 0xfa);
+					DelayLoop(1000000);
+					printf("go left\n");
 				}
-
-				if (result == 2)
+				else if (sum_left + sum_right>3000)
+				{//오른쪽을 봤을 때 흰색이 많이 보이면 오른쪽으로 이동
+					Send_Command(0x06, 0xf9);
+					DelayLoop(1000000);
+					printf("go right\n");
+				}
+				else
 				{
 					Send_Command(0x02, 0xfd);
-					DelayLoop(100000);
+					DelayLoop(1000000);
 					face = 0;
 					printf("Go\n");
 				}
+				*/
 
+				if (sum_right - sum_left < 0 && sum_right - sum_left > -2000)
+				{
+					Send_Command(0x10, 0xf5);
+					DelayLoop(1000000);
+					printf("turn left\n");
+				}
+				else if (sum_left - sum_right < 0 && sum_left - sum_right > -2000)
+					{
+						Send_Command(0x09, 0xf6);
+						DelayLoop(1000000);
+						printf("turn right\n");
+					}
+				else
+				{
+					Send_Command(0x02, 0xfd);
+					DelayLoop(1000000);
+					face = 0;
+					printf("Go\n");
+				}
 			}
 
-			
 
 			////////////////////////////////////////////////////////////////
-			
 
 			/*
 			///////////////////// 1번째 장애물 /////////////////////////////
@@ -550,7 +549,7 @@ int main(void)
 			*(lcd + i * 180 + j) = 0xFFFF;
 			}
 
-			
+			if (cnt1>파란색개수) 고개숙이기;
 
 
 
@@ -576,52 +575,50 @@ int main(void)
 
 			///////////////////////////////////////////////////////////////
 			*/
-
 			/*
 			///////////////////// 2번째 장애물 /////////////////////////////  ***i값 나중에 추가!***
 			int cnt2 = 0;
 			for (i = 0; i < 120; i++)
 			{
-				for (j = 0; j < 180; j++)
-				{
-					if (((*(xxx + i * 180 + j) - *(xxx + i * 180 + j + 1)) == 2) && *(xxx + i * 180 + j) == 4)
-					{
-						cnt2++;
-						*(lcd + 180 * i + j) = 0x7000;
-					}
-					else
-						*(lcd + 180 * i + j) = 0x0000;
-				}
+			for (j = 0; j < 180; j++)
+			{
+			if (((*(xxx + i * 180 + j) - *(xxx + i * 180 + j + 1)) == 2) && *(xxx + i * 180 + j) == 4)
+			{
+			cnt2++;
+			*(lcd + 180 * i + j) = 0x7000;
+			}
+			else
+			*(lcd + 180 * i + j) = 0x0000;
+			}
 			}
 
 			if (cnt2 > 50)
-				motion2 = 1;//멈춰
+			motion2 = 1;//멈춰
 
 			if (motion2 == 1)
 			{
-				if (cnt2 < 50)
-					motion2 = 2;//가
+			if (cnt2 < 50)
+			motion2 = 2;//가
 
 			}
 
 			if (motion2 == 1)
 			{
-				printf("STOP!!!!!!!!!!!!!!\n");
-				Send_Command(0x04, 0xfb);
-				DelayLoop(1000000);
+			printf("STOP!!!!!!!!!!!!!!\n");
+			Send_Command(0x04, 0xfb);
+			DelayLoop(1000000);
 			}
 
 			else if (motion2 == 2 || motion2 == 0)
 			{
-				printf("GOGOGOGOGO!!!!!!!!!!!\n");
-				Send_Command(0x03, 0xfc);
-				DelayLoop(200000);
+			printf("GOGOGOGOGO!!!!!!!!!!!\n");
+			Send_Command(0x03, 0xfc);
+			DelayLoop(200000);
 
 			}
 
 			///////////////////////////////////////////////////////////////
 			*/
-
 
 
 
