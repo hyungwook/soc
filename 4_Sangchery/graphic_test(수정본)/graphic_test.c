@@ -154,7 +154,7 @@ void init_console(void)
 
 int main(void)
 {
-	int i=0,j=0,cnt=0, line=0;
+	int i=0,j=0,k=0, l=0,cnt=0, line=0;
 	int state_1=0;
 	float r=0,g=0,b=0;
 	float max=0.0f, min=0.0f;
@@ -175,6 +175,8 @@ int main(void)
 	float* v_compare		= (float*)malloc(180 * 120 * 2);
 	float* s_temp		= (float*)malloc(180 * 120 * 2);
 
+	float Mask[9] = { 0 };//마스크하기 위한 변수
+	int index1 = 0, index2 = 0, index3 = 0;
 	
 
 	init_console();
@@ -188,8 +190,8 @@ int main(void)
 		return -1;
 	}
 
-	printf("press the 'x' button to off display\n");	// 코드 추가
-	printf("press the 'z' button to on display\n");		// 코드 추가
+//	printf("press the 'x' button to off display\n");	// 코드 추가
+//	printf("press the 'z' button to on display\n");		// 코드 추가
 	scanf("%c", &input);
 
 	if (input == 'x')
@@ -200,14 +202,13 @@ int main(void)
 	if (input == 'z') // 코드 추가
 		direct_camera_display_on();
 
-	printf("1\n");
-
 	while(b_loop)
 	{
-		direct_camera_display_off();
+//		direct_camera_display_off();
 		
 		while(1)
 		{
+			/*
 			input = getchar();
 			if(input=='a'){
 				printf("enter the min value\n");
@@ -216,12 +217,11 @@ int main(void)
 				printf("press the 'b' button to break loop\n"); // 코드 추가
 			}
 
-			printf("2\n");
-
+		
 			if(input=='b'){
 				b_loop=0;
 				break;
-			}
+			}*/
 			read_fpga_video_data(fpga_videodata);
 
 			printf("3\n");
@@ -262,19 +262,14 @@ int main(void)
 						max = b;
 						min = r;
 					}
-				/*
-				max = r>b? r : b;
-				max = max>g? max : g;
-				min = r<b? r : b;
-				min = min<g? min : g;
-				*/
+				
 				//printf("7");
 				delta = max - min; 
 				vf = (r+g+b)/3.0f;						// 명도(V) = max(r,g,b)
 				sf = (max != 0.0F) ? delta/max : 0.0F;	// 채도(S)을 계산, S=0이면 R=G=B=0
 				
 				if (sf == 0.0f)
-					hf = 0.0f;
+					hf = 0.0f; 
 				else
 				{
 				    // 색상(H)를 구한다.
@@ -292,19 +287,61 @@ int main(void)
 				*(s_temp+i) = *(satur_tmp+i);
 
 				//*(h_compare+i) = *(s+i);
-				if(i==180*60+90) 
+				
+				
+				/*if(i==180*60+90) //정가운데의 hsi값
 				{
 					//printf("r: %f, g: %f, b: %f, sat: %f\n",r,g,b,sf);
 					point_h=*(hue_joon+i);
 					point_s=*(satur_tmp+i);
 					point_v=*(v_compare+i);
-				}
+				}*/
+
 				//printf("9\n");
-				//printf("%d\n", i);
+				
 			}
+
+			/////////////////////선명하게 하기 마스크 추가///////////////////////////
+			printf("mask start\n");
+			int n = 1;
+			//int x = 0;
+			Mask[0] = 0.0f; Mask[1] = -1.0f; Mask[2] = 0.0f;//Y마스크
+			Mask[3] = -1.0f; Mask[4] = 5.0f; Mask[5] = -1.0f;
+			Mask[6] = 0.0f; Mask[7] = -1.0f; Mask[8] = 0.0f;
+
+
+//			Mask2[0] = -1.0f; Mask2[1] = 0.0f; Mask2[2] = 1.0f;//X마스크
+//			Mask2[3] = -1.0f; Mask2[4] = 0.0f; Mask2[5] = 1.0f;
+//			Mask2[6] = -1.0f; Mask2[7] = 0.0f; Mask2[8] = 1.0f;
+
+
+			for (i = n; i < 120 - n; i++){
+				index1 = i*180;
+				for (j = n; j < 180 - n; j++){
+					float sum1 = 0.0f;
+					//float sum2 = 0.0f;
+
+					for (k = -n; k <= n; k++){
+						index2 = (i + k)*180;
+						index3 = (k + n)*3;
+						for (l = -n; l <= n; l++){
+							sum1 += v_compare[index2 + (j + l)] * Mask[index3 + l + n];
+							//sum2 += v_compare[index2 + (j + l)] * Mask2[index3 + l + n];
+						}
+					}
+
+					//if (sum1>20)
+						*(lcd + i * 180 + j) = sum1;
+					//else
+					//	*(lcd + i * 180 + j) = *(fpga_videodata + i * 180 + j);
+				}
+			}
+			printf("mask end\n");
+
+			//////////////////////////////////////////////////////////
 			cnt=0;
 
-			printf("10\n");
+			//printf("10\n");
 
 			for(i=0;i<120;i++)
 			{
@@ -314,27 +351,32 @@ int main(void)
 					//if( ( 45.0f < *(h+i) < 75.0f ) && ( 12.0f < *(s+i)  ) && ( 7.0f < *(v+i) < 23.0f ))
 					//노란색if((60.0f < *(h+i)) && (*(h+i) < 75.0f) && ( 20.0f < *(s+i)  ) )
 					//파란색 if(220.0f < (*(h+i) ) && (*(h+i) < 260.0f) && ( 10.0f < *(s+i)  ) )
-					/*
+					/* 
 					if((hue_min < (int)(*(hue_joon+i*180+j))) && ((int)(*(hue_joon+i*180+j)) < hue_max) && ( sat_min < (int)(*(satur_tmp+i*180+j) )) )
 					{
 						*(lcd+i*180+j) = 0x700f;
 						cnt++;
 					}
 					*/
+				/////////////////////////////////////파란색->초록색바꾸기	
+					/*
 					if ((170 < (int)(*(hue_joon + i * 180 + j))) && ((int)(*(hue_joon + i * 180 + j)) < 240) && (sat_min < (int)(*(satur_tmp + i * 180 + j))))
 					{
 						*(lcd + i * 180 + j) = 0x07E0;
 					} // 코드 추가
 					else
 						*(lcd+i*180+j) = *(fpga_videodata+i*180+j);
+
+						*/
+
 					if(i==60)
 					{
-						*(lcd+i*180+j) = 0x7000;
+						*(lcd+i*180+j) = 0x7000;//lcd에 가로줄 빨간줄 표시코드
 						if(j==90)
 							printf("hue: %.1f  sat: %.1f v_: %.1f\n", *(hue_joon+i*180+j), *(s_temp+i*180+j), *(v_compare+i*180+j));
 					}
 					if(j==90)
-						*(lcd+i*180+j) = 0x7000;
+						*(lcd+i*180+j) = 0x7000;//lcd에 세로줄 빨간줄 표시코드
 
 				}
 				if(cnt > 40) line++;
