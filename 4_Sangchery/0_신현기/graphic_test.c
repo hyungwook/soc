@@ -239,7 +239,7 @@ int main(void)
 			break;
 			}
 			*/
-
+			/*
 			read_fpga_video_data(fpga_videodata);
 
 
@@ -307,7 +307,7 @@ int main(void)
 
 			}
 
-			/*////////////////////마스크 추가///////////////////////////
+			////////////////////마스크 추가///////////////////////////
 			printf("mask start\n"); // 외곽선추출
 			int n = 1;
 
@@ -338,7 +338,7 @@ int main(void)
 			}
 			printf("mask end\n");
 
-			/////////////////////////////////////////////////////////*/
+			/////////////////////////////////////////////////////////
 
 
 			for (i = 0; i < 120; i++)
@@ -382,10 +382,10 @@ int main(void)
 					}
 					if (j == 90)
 					*(lcd + i * 180 + j) = 0x7000;//lcd에 세로줄 빨간줄 표시코드
-					********************************************************/
+					*******************************************************
 				}
 
-			}
+			}*/
 
 			/*
 			for (i = 0; i < 120; i++)
@@ -403,6 +403,112 @@ int main(void)
 			sum_left = 0;
 			sum_right = 0;
 
+			Send_Command(0x03, 0xfc);//오른쪽보기
+			DelayLoop(200000);
+
+
+			///////////
+			read_fpga_video_data(fpga_videodata);
+
+
+			for (i = 0; i < 180 * 120; i++)
+			{
+
+				b = ((*(fpga_videodata + i)) & 31);
+				g = (((*(fpga_videodata + i)) >> 6) & 31);
+				r = (((*(fpga_videodata + i)) >> 11) & 31);
+
+				*(rgb + i) = b + g + r; //rgb값의 합
+
+				int graay = (int)(b + g + r) / 3;
+				int gray1 = (graay << 11);
+				int gray2 = (graay << 6);
+				*(gray + i) = gray1 + gray2 + graay; // 그레이하는과정
+
+				*(red + i) = r;
+				*(green + i) = g;
+				*(blue + i) = b;
+
+				if (r > g)
+					if (r > b)
+					{
+						max = r;
+						min = g > b ? b : g;
+					}
+					else
+					{
+						max = b;
+						min = g;
+					}
+				else
+					if (g > b)
+					{
+						max = g;
+						min = r > b ? b : r;
+					}
+					else
+					{
+						max = b;
+						min = r;
+					}
+
+				delta = max - min;
+				vf = (r + g + b) / 3.0f;                  // 명도(V) = max(r,g,b)
+				sf = (max != 0.0F) ? delta / max : 0.0F;   // 채도(S)을 계산, S=0이면 R=G=B=0
+
+				if (sf == 0.0f)
+					hf = 0.0f;
+				else
+				{
+					// 색상(H)를 구한다.
+					if (r == max) hf = (g - b) / delta;     // 색상이 Yello와 Magenta사이 
+					else if (g == max) hf = 2.0F + (b - r) / delta; // 색상이 Cyan와 Yello사이 
+					else if (b == max) hf = 4.0F + (r - g) / delta; // 색상이 Magenta와 Cyan사이
+				}
+				hf *= 57.295F;
+				if (hf < 0.0F) hf += 360.0F;           // 색상값을 각도로 바꾼다.
+				*(hue_joon + i) = hf;      //0 ~ 360
+				sf = sf * 100;
+				*(satur_tmp + i) = sf;   //0 ~ 32
+				*(v_compare + i) = vf;   //0 ~ 31
+				*(s_temp + i) = *(satur_tmp + i);
+
+			}
+
+			for (i = 0; i < 120; i++)
+			{
+
+				for (j = 0; j < 180; j++){
+
+					*(lcd + i * 180 + j) = *(fpga_videodata + i * 180 + j);
+
+					if (((int)*(red + i * 180 + j) >17) && ((int)*(green + i * 180 + j) >17) && ((int)*(blue + i * 180 + j) > 17) && ((int)*(v_compare + i * 180 + j) > 17))
+						*(xxx + i * 180 + j) = 1;//흰색을표시
+
+					else if (((int)*(red + i * 180 + j) < 10) && ((int)*(green + i * 180 + j) < 10) && ((int)*(blue + i * 180 + j) < 10) && ((int)*(v_compare + i * 180 + j) < 10))
+						*(xxx + i * 180 + j) = 2;//검정을표시
+
+					else if (((int)*(red + i * 180 + j) > 15) && ((int)*(green + i * 180 + j) < 15) && ((int)*(blue + i * 180 + j) < 15) && ((((int)*(hue_joon + i * 180 + j) > 300)) || ((int)*(hue_joon + i * 180 + j) < 60)))
+						*(xxx + i * 180 + j) = 3;//빨강을표시
+
+					else if (((int)*(red + i * 180 + j) > 18) && ((int)*(green + i * 180 + j) > 18) && ((int)*(blue + i * 180 + j) < 15) && ((int)*(v_compare + i * 180 + j) > 15) && ((int)*(hue_joon + i * 180 + j) > 50) && ((int)*(hue_joon + i * 180 + j) < 80))
+						*(xxx + i * 180 + j) = 4;//노랑을표시
+
+					else if (((int)*(red + i * 180 + j) < 15) && ((int)*(green + i * 180 + j) > 15) && ((int)*(blue + i * 180 + j) < 15) && ((int)*(hue_joon + i * 180 + j) > 80) && ((int)*(hue_joon + i * 180 + j) < 120))
+						*(xxx + i * 180 + j) = 5;//초록을표시
+
+					else if (((int)*(blue + i * 180 + j) > 15) && ((int)*(hue_joon + i * 180 + j) > 180) && ((int)*(hue_joon + i * 180 + j) < 250))
+						*(xxx + i * 180 + j) = 6;//파랑을표시
+
+					else
+						*(xxx + i * 180 + j) = 7;//나머지
+				}
+			}
+			///////////////
+
+
+
+
 			for (j = 0; j < 180; j++)
 			{
 				for (i = 119; i >= 0; i--)
@@ -418,30 +524,29 @@ int main(void)
 				}
 			}
 
-			//printf("%d %d\n", sum_left, sum_right);
-			while ((sum_left < sum_right + 200) || (sum_right > sum_left + 200))
+			printf("%d %d\n", sum_left, sum_right);
+			/*
+			if (sum_left > sum_right + 500)
 			{
-				if (sum_left > sum_right + 500)
-				{
-					Send_Command(0x01, 0xfe);//정지 후
-					DelayLoop(200000);
-					Send_Command(0x08, 0xf7);//오른쪽돌기
-					DelayLoop(200000);
-				}
-				else if (sum_right > sum_left + 500)
-				{
-					Send_Command(0x01, 0xfe);//정지 후
-					DelayLoop(200000);
-					Send_Command(0x07, 0xf8);//왼쪽돌기
-					DelayLoop(200000);
-				}
-				
+				Send_Command(0x01, 0xfe);//정지 후
+				DelayLoop(200000);
+				Send_Command(0x08, 0xf7);//오른쪽돌기
+				DelayLoop(200000);
 			}
+			else if (sum_right > sum_left + 500)
+			{
+				Send_Command(0x01, 0xfe);//정지 후
+				DelayLoop(200000);
+				Send_Command(0x07, 0xf8);//왼쪽돌기
+				DelayLoop(200000);
+			}
+				
+			
 			Send_Command(0x02, 0xfd);
 			DelayLoop(200000);
 
 			face_left = sum_left + sum_right;
-			/*sum_left = 0;
+			sum_left = 0;
 			sum_right = 0;
 
 			Send_Command(0x04, 0xfb);//오른쪽보기
