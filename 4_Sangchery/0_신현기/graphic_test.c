@@ -223,22 +223,6 @@ int main(void)
 
 		while (1)
 		{
-
-			//input = getchar();
-			/*
-			if (input == 'a'){
-			printf("enter the min value\n");
-			printf("now hum_min: %d, hue_max: %d, sat_min: %d\n", hue_min, hue_max, sat_min);
-			//scanf("%d %d %d", &hue_min, &hue_max, &sat_min);
-			printf("press the 'b' button to break loop\n"); // 코드 추가
-			}
-
-
-			if (input == 'b'){
-			b_loop = 0;
-			break;
-			}
-			*/
 			/*
 			read_fpga_video_data(fpga_videodata);
 
@@ -506,98 +490,49 @@ int main(void)
 			}
 			///////////////
 
+			cnt0 = 0;
 
-
-
-			for (j = 0; j < 180; j++)
+			for (j = 30; j < 150; j++)
 			{
 				for (i = 119; i >= 0; i--)
 				{
-					if (j < 90)
-						sum_left++;
+					/*if (j < 90)
+					sum_left++;
 					else
-						sum_right++;
+					sum_right++;
+					*/
+					if ((*(xxx + 180 * i + j) + *(xxx + 180 * i + j - 1) == 3)
+						|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j) == 3)
+						|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j - 1) == 3))
+					{
+						*(out_i + cnt0) = i;
+						*(out_j + cnt0) = j;
+						cnt0++;
+						*(lcd + i * 180 + j) = 0x7000;
 
-
+					}
+					else
+						*(lcd + i * 180 + j) = 0;
 					if (*(xxx + 180 * i + j) == 2)
 						break;
 				}
 			}
 
+			first_y = *(out_i + cnt0 / 2 - 5);
+			first_x = *(out_j + cnt0 / 2 - 5);
+			second_y = *(out_i + cnt0 / 2 + 5);
+			second_x = *(out_j + cnt0 / 2 + 5);
+
+
+			outline_y = second_y - first_y;
+			outline_x = second_x - first_x;
+			degree = atan2(outline_y, outline_x) * 180 / 3.14;
+
+			printf("%.2f\n", degree);
+
 			printf("%d %d\n", sum_left, sum_right);
-			/*
-			if (sum_left > sum_right + 500)
-			{
-				Send_Command(0x01, 0xfe);//정지 후
-				DelayLoop(200000);
-				Send_Command(0x08, 0xf7);//오른쪽돌기
-				DelayLoop(200000);
-			}
-			else if (sum_right > sum_left + 500)
-			{
-				Send_Command(0x01, 0xfe);//정지 후
-				DelayLoop(200000);
-				Send_Command(0x07, 0xf8);//왼쪽돌기
-				DelayLoop(200000);
-			}
-				
+		
 			
-			Send_Command(0x02, 0xfd);
-			DelayLoop(200000);
-
-			face_left = sum_left + sum_right;
-			sum_left = 0;
-			sum_right = 0;
-
-			Send_Command(0x04, 0xfb);//오른쪽보기
-			DelayLoop(200000);
-
-			for (j = 0; j < 180; j++)
-			{
-				for (i = 119; i >= 0; i--)
-				{
-					if (j < 90) // 가로를 반으로 나눠서 픽셀값 더함
-						sum_left++;
-					else
-						sum_right++;
-
-					if ((*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j)) == 3)
-						break;
-				}
-			}
-			if (sum_left > sum_right + 500)
-			{
-				Send_Command(0x01, 0xfe);//정지 후
-				DelayLoop(200000);
-				Send_Command(0x08, 0xf7);//오른쪽돌기
-				DelayLoop(200000);
-			}
-			else if (sum_right>sum_left + 500)
-			{
-				Send_Command(0x01, 0xfe);//정지 후
-				DelayLoop(200000);
-				Send_Command(0x07, 0xf8);//왼쪽돌기
-				DelayLoop(200000);
-			}
-			face_right = sum_left + sum_right;
-
-			if (face_left > face_right + 700)
-			{
-				Send_Command(0x05, 0xfa); // 왼쪽으로 한걸음
-				DelayLoop(200000);
-			}
-			else if (face_right > face_left + 700)
-			{
-				Send_Command(0x06, 0xf9); // 오른쪽으로 한걸음
-				DelayLoop(200000);
-			}
-
-			Send_Command(0x01, 0xfe);//정면보기
-			DelayLoop(200000);
-
-			Send_Command(0x02, 0xfd);
-			DelayLoop(200000);*/
-
 			///////////////////////////////////////////////////////////////////////////////*/
 
 			//stage1
@@ -634,13 +569,13 @@ int main(void)
 				sum_j = sum_j / (cnt1 + 1);
 				printf("%d", sum_j);
 
-				if (sum_j > 120)//오른쪽에 파란픽셀이 많을 때
+				if (sum_j > 100)//오른쪽에 파란픽셀이 많을 때
 				{
 					printf("right\n");
 					Send_Command(0x06, 0xf9);//오른쪽으로 한걸음
 					DelayLoop(200000);
 				}
-				else if (sum_j < 60)//왼쪽에 파란픽셀이 많을 때
+				else if (sum_j < 80)//왼쪽에 파란픽셀이 많을 때
 				{
 					printf("left\n");
 					Send_Command(0x05, 0xfa);//왼쪽으로 한걸음
