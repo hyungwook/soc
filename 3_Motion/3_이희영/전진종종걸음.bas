@@ -10,10 +10,6 @@ DIM A_old AS BYTE
 DIM X AS BYTE
 DIM Y AS BYTE
 DIM 보행순서 AS BYTE
-DIM 보행속도 AS BYTE
-DIM 좌우속도 AS BYTE
-DIM 좌우속도2 AS BYTE
-
 '**** 기울기센서포트 설정
 
 CONST 앞뒤기울기AD포트 = 2
@@ -66,15 +62,12 @@ MAIN:
 
     IF 보행순서=1 THEN
         'GOTO 오른쪽턴45
-        'GOTO 왼쪽턴451
+        'GOTO 왼쪽턴45
         'GOTO 전진달리기50
         'GOTO 앞으로덤블링2
         'GOTO 기어가기
         'GOTO 계단오른발오르기1cm
-        'GOTO 기어서올라가기
-        'GOTO 허들넘기
-        GOTO 전진보행50
-        'GOTO 전진종종걸음
+        GOTO 기어서올라가기
     ENDIF
 
 
@@ -134,7 +127,7 @@ MAIN:
 
 
     '**********************
-    FOR I = 0 TO 100
+    FOR I = 0 TO 10
 전진종종걸음_1:
         MOVE G6A,95,  95, 120, 100, 104
         MOVE G6D,104,  77, 146,  91,  102
@@ -278,7 +271,7 @@ MAIN:
     보행순서=0
     GOTO MAIN
 
-왼쪽옆으로70: 'USE
+왼쪽옆으로70:
 
 
     SPEED 10
@@ -302,7 +295,7 @@ MAIN:
     GOSUB 기본자세
     보행순서=0
     GOTO MAIN
-오른쪽턴45: 'USE
+오른쪽턴45:
 
     GOSUB Leg_motor_mode2
     SPEED 8
@@ -374,7 +367,7 @@ MAIN:
 
 
     '**********************
-    FOR I = 0 TO 5
+    FOR I = 0 TO 3
 전진달리기50_1:
         MOVE G6A,96,  95, 100, 120, 104
         MOVE G6D,103, 78, 146,  91, 102
@@ -428,10 +421,10 @@ MAIN:
 
     GOSUB Leg_motor_mode1
     보행순서=0
-    GOTO 전진달리기50
+    GOTO MAIN
 
     '******************************************
-허들넘기: 'USE
+앞으로덤블링2:
 
     SPEED 15
     MOVE G6B, 190, 100, 100
@@ -582,7 +575,7 @@ MAIN:
     WAIT
 
     SPEED 5	
-    MOVE G6A, 100, 155,  57, 160, 100, 100'
+    MOVE G6A, 100, 155,  53, 160, 100, 100
     MOVE G6D, 100, 155,  53, 160, 100, 100
     MOVE G6B,186,  30, 80
     MOVE G6C,190,  30, 80
@@ -623,7 +616,7 @@ MAIN:
 
     MOVE G6D, 100, 160,  55, 160, 100
     MOVE G6A, 100, 145,  75, 160, 100
-    MOVE G6C, 180,  25,  70
+    MOVE G6C, 175,  25,  70
     MOVE G6B, 190,  50,  40
     WAIT
 
@@ -637,13 +630,13 @@ MAIN:
 기어가기_2:
     MOVE G6D, 100, 140,  80, 160, 100
     MOVE G6A, 100, 140, 120, 120, 100
-    MOVE G6C, 170,  25,  70
+    MOVE G6C, 160,  25,  70
     MOVE G6B, 190,  25,  70
     WAIT
 
     GOTO 기어가기_LOOP
 
-계단오른발오르기1cm: 'UPSTAIR GREEN
+계단오른발오르기1cm:
     GOSUB All_motor_mode3
     GOSUB All_motor_mode3
 
@@ -675,7 +668,7 @@ MAIN:
     GOSUB Leg_motor_mode3
 
     SPEED 7
-    MOVE G6D, 105, 75, 100, 155, 105,
+    MOVE G6D, 105, 75, 100, 155, 100,
     MOVE G6A,95,  90, 165,  70, 100
     MOVE G6C,160,50
     MOVE G6B,160,40
@@ -731,7 +724,7 @@ MAIN:
     보행순서=0
     GOTO MAIN
 
-기어서올라가기: 'UPSTAIR RED
+기어서올라가기:
 
     SPEED 15
     MOVE G6B, 190, 100, 100
@@ -821,7 +814,7 @@ MAIN:
     HIGHSPEED SETON
     '기어가기_LOOP
 
-    FOR I = 0 TO 5
+    FOR I = 0 TO 2
         MOVE G6D, 100, 160,  55, 160, 100
         MOVE G6A, 100, 145,  75, 160, 100
         MOVE G6C, 175,  25,  70
@@ -924,135 +917,6 @@ MAIN:
     '************************************************
     '******************************************
     '***************************************
-
-왼쪽턴45_1:
-
-    GOSUB Leg_motor_mode2
-    SPEED 8
-    MOVE G6A,95,  106, 145,  63, 105, 100
-    MOVE G6D,95,  46, 145,  123, 105, 100
-    MOVE G6B,115,,,,,190
-    MOVE G6C,85,,,,128,100
-    WAIT
-
-
-
-    SPEED 10
-    MOVE G6A,93,  106, 145,  63, 105, 100
-    MOVE G6D,93,  46, 145,  123, 105, 100
-    MOVE G6B,115,,,,,190
-    MOVE G6C,85,,,,128,100
-
-    WAIT
-
-    SPEED 8
-    GOSUB 기본자세2
-    GOSUB Leg_motor_mode1
-    GOTO MAIN
-
-전진보행50:
-
-    보행속도 = 10'5
-    좌우속도 = 5'8'3
-    좌우속도2 = 4'5'2
-    '넘어진확인 = 0
-    GOSUB Leg_motor_mode3
-
-    SPEED 4
-    '오른쪽기울기
-    MOVE G6A, 88,  71, 152,  91, 116
-    MOVE G6D,108,  76, 146,  93,  94
-    MOVE G6B,100,35
-    MOVE G6C,100,35
-    WAIT
-
-    SPEED 10'보행속도
-    '왼발들기
-    MOVE G6A, 90, 100, 115, 105, 116
-    MOVE G6D,111,  78, 146,  93,  92
-    MOVE G6B,90
-    MOVE G6C,110
-    WAIT
-
-
-
-    '*******************************
-
-
-전진보행50_1:
-    FOR I = 0 TO 50
-        SPEED 보행속도
-        '왼발뻣어착지
-        MOVE G6A, 85,  44, 163, 113, 114
-        MOVE G6D,110,  77, 146,  93,  94
-        WAIT
-
-
-
-        SPEED 좌우속도
-        'GOSUB Leg_motor_mode3
-        '왼발중심이동
-        MOVE G6A,110,  76, 144, 100,  93
-        MOVE G6D,85, 93, 155,  71, 112
-        WAIT
-
-        'GOSUB 앞뒤기울기측정
-        'IF 넘어진확인 = 1 THEN
-        '    넘어진확인 = 0
-        '    GOTO MAIN
-        'ENDIF
-
-
-        SPEED 보행속도
-        'GOSUB Leg_motor_mode2
-        '오른발들기10
-        MOVE G6A,111,  77, 146,  93, 94
-        MOVE G6D,90, 100, 105, 110, 114
-        MOVE G6B,110
-        MOVE G6C,90
-        WAIT
-
-
-
-전진보행50_2:
-
-
-        SPEED 보행속도
-        '오른발뻣어착지
-        MOVE G6D,85,  44, 163, 113, 114
-        MOVE G6A,110,  77, 146,  93,  94
-        WAIT
-
-
-
-        SPEED 좌우속도
-        'GOSUB Leg_motor_mode3
-        '오른발중심이동
-        MOVE G6D,110,  76, 144, 100,  93
-        MOVE G6A, 85, 93, 155,  71, 112
-        WAIT
-
-
-        SPEED 보행속도
-        'GOSUB Leg_motor_mode2
-        '왼발들기10
-        MOVE G6A, 90, 100, 105, 110, 114
-        MOVE G6D,111,  77, 146,  93,  94
-        MOVE G6B, 90
-        MOVE G6C,110
-        WAIT
-    NEXT I
-
-    GOSUB 기본자세
-    보행순서=0
-    GOTO MAIN
-
-
-    '************************************************
-    '************************************************
-
-
-
 MOTOR_ON: '전포트서보모터사용설정
     MOTOR G24
     RETURN
@@ -1081,15 +945,6 @@ MOTOR_GET: '위치값피드백
     MOVE G6C,100,  30,  80, 100, 100, 100
     WAIT
     RETURN
-기본자세2:
-    MOVE G6A,100,  74, 148,  91, 102, 100
-    MOVE G6D,100,  74, 148,  91, 102, 100
-    MOVE G6B,100,  30,  80, 100, 100, 190
-    MOVE G6C,100,  30,  80, 100, 128, 100
-    WAIT
-    RETURN
-
-
     '*************************************	
 차렷자세:
     MOVE G6A,100, 56, 182, 76, 100, 100

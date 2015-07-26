@@ -158,7 +158,7 @@ int main(void)
 	int i = 0, j = 0, k = 0, l = 0, line = 0;
 
 	int face = 0, face_left = 0, face_right = 0;//face = 0 center, 1 left, 2 right
-	int cnt1 = 0, cnt2 = 0;//각 stage별로 cnt1, cnt2 ... 변수 추가 예정
+	int cnt0=0,cnt1 = 0, cnt2 = 0;//각 stage별로 cnt1, cnt2 ... 변수 추가 예정
 	int stage = 0;
 
 	int motion2 = 0;
@@ -168,11 +168,15 @@ int main(void)
 	float hf = 0.0f, sf = 0.0f, vf = 0.0f;
 	//	float point_h = 0.0f, point_s = 0.0f, point_v = 0.0f; //중앙점의 hsv값
 	float delta;
+	double degree;
+
 	char input;
 	int ret;
 	int b_loop = 0;
 	int sum_left = 0, sum_right = 0;
 	int sum_i = 0, sum_j = 0;
+	float first_x=0, first_y=0, second_x=0, second_y=0;
+	float outline_x = 0, outline_y = 0;
 	
 	SURFACE* bmpsurf = 0;
 	U16* fpga_videodata = (U16*)malloc(180 * 120 * 2);
@@ -208,8 +212,7 @@ int main(void)
 	printf("press the 'z' button to on display\n");      // 코드 추가
 	scanf("%c", &input);
 
-	if (input == 'x')
-	{
+	if (input == 'x')	{
 		b_loop = 1;
 		printf("press the 'a' button to enter values\n"); // 코드 추가
 	}
@@ -492,21 +495,41 @@ int main(void)
 
 			cnt0 = 0;
 
+<<<<<<< HEAD
+			sum_i = 0;
+			sum_j = 0;
+			cnt0 = 0;
+
+			for (j = 0; j < 180; j++)
+=======
 			for (j = 30; j < 150; j++)
+>>>>>>> 2175c02f6e2df1eb6e7c5d4172dedaaff8e0d47d
 			{
 				for (i = 119; i >= 0; i--)
 				{
 					/*if (j < 90)
+<<<<<<< HEAD
+						sum_left++;
+					else
+						sum_right++;
+						*/
+=======
 					sum_left++;
 					else
 					sum_right++;
 					*/
+>>>>>>> 2175c02f6e2df1eb6e7c5d4172dedaaff8e0d47d
 					if ((*(xxx + 180 * i + j) + *(xxx + 180 * i + j - 1) == 3)
 						|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j) == 3)
 						|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j - 1) == 3))
 					{
+<<<<<<< HEAD
+						sum_i = sum_i + i;
+						sum_j = sum_j + j;
+=======
 						*(out_i + cnt0) = i;
 						*(out_j + cnt0) = j;
+>>>>>>> 2175c02f6e2df1eb6e7c5d4172dedaaff8e0d47d
 						cnt0++;
 						*(lcd + i * 180 + j) = 0x7000;
 
@@ -517,11 +540,55 @@ int main(void)
 						break;
 				}
 			}
+			sum_i = sum_i / (cnt0 + 1);
+			sum_j = sum_j / (cnt0 + 1);
 
+			first_x = sum_j * 2 / 3;
+			first_y = sum_i * 2 / 3;
+			second_x = sum_j * 4 / 3;
+			second_y = sum_i * 4 / 3;
+
+			outline_y = second_y - first_y;
+			outline_x = second_x - first_x;
+			degree = atan2(outline_y,outline_x)*180/3.14;
+			
+			printf("%.2f\n", degree);
+
+
+<<<<<<< HEAD
+			//printf("%d %d\n", sum_left, sum_right);
+			/*
+			if (sum_left > sum_right + 500)
+			{
+				Send_Command(0x01, 0xfe);//정지 후
+				DelayLoop(200000);
+				Send_Command(0x08, 0xf7);//오른쪽돌기
+				DelayLoop(200000);
+			}
+			else if (sum_right > sum_left + 500)
+			{
+				Send_Command(0x01, 0xfe);//정지 후
+				DelayLoop(200000);
+				Send_Command(0x07, 0xf8);//왼쪽돌기
+				DelayLoop(200000);
+			}
+				
+			
+			Send_Command(0x02, 0xfd);
+			DelayLoop(200000);
+
+			face_left = sum_left + sum_right;
+			sum_left = 0;
+			sum_right = 0;
+
+			Send_Command(0x04, 0xfb);//오른쪽보기
+			DelayLoop(200000);
+=======
 			first_y = *(out_i + cnt0 / 2 - 5);
 			first_x = *(out_j + cnt0 / 2 - 5);
 			second_y = *(out_i + cnt0 / 2 + 5);
 			second_x = *(out_j + cnt0 / 2 + 5);
+>>>>>>> 2175c02f6e2df1eb6e7c5d4172dedaaff8e0d47d
 
 
 			outline_y = second_y - first_y;
