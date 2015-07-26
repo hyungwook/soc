@@ -177,6 +177,7 @@ int main(void)
 	int sum_i = 0, sum_j = 0;
 	float first_x=0, first_y=0, second_x=0, second_y=0;
 	float outline_x = 0, outline_y = 0;
+	int result = 0;
 	
 	SURFACE* bmpsurf = 0;
 	U16* fpga_videodata = (U16*)malloc(180 * 120 * 2);
@@ -192,6 +193,8 @@ int main(void)
 	float* green = (float*)malloc(180 * 120 * 4);
 	float* blue = (float*)malloc(180 * 120 * 4);
 	int* xxx = (int*)malloc(180 * 120 * 4);
+	int* out_i = (int*)malloc(180 * 120 * 4);
+	int* out_j = (int*)malloc(180 * 120 * 4);
 
 	float Mask[9] = { 0 };
 	float Mask1[9] = { 0 };//마스크하기 위한 변수
@@ -494,42 +497,26 @@ int main(void)
 			///////////////
 
 			cnt0 = 0;
-
-<<<<<<< HEAD
-			sum_i = 0;
-			sum_j = 0;
-			cnt0 = 0;
-
-			for (j = 0; j < 180; j++)
-=======
 			for (j = 30; j < 150; j++)
->>>>>>> 2175c02f6e2df1eb6e7c5d4172dedaaff8e0d47d
+
 			{
 				for (i = 119; i >= 0; i--)
 				{
 					/*if (j < 90)
-<<<<<<< HEAD
+
 						sum_left++;
 					else
 						sum_right++;
 						*/
-=======
-					sum_left++;
-					else
-					sum_right++;
-					*/
->>>>>>> 2175c02f6e2df1eb6e7c5d4172dedaaff8e0d47d
+
 					if ((*(xxx + 180 * i + j) + *(xxx + 180 * i + j - 1) == 3)
 						|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j) == 3)
 						|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j - 1) == 3))
 					{
-<<<<<<< HEAD
-						sum_i = sum_i + i;
-						sum_j = sum_j + j;
-=======
+
 						*(out_i + cnt0) = i;
 						*(out_j + cnt0) = j;
->>>>>>> 2175c02f6e2df1eb6e7c5d4172dedaaff8e0d47d
+
 						cnt0++;
 						*(lcd + i * 180 + j) = 0x7000;
 
@@ -540,7 +527,7 @@ int main(void)
 						break;
 				}
 			}
-			sum_i = sum_i / (cnt0 + 1);
+			/*sum_i = sum_i / (cnt0 + 1);
 			sum_j = sum_j / (cnt0 + 1);
 
 			first_x = sum_j * 2 / 3;
@@ -552,44 +539,12 @@ int main(void)
 			outline_x = second_x - first_x;
 			degree = atan2(outline_y,outline_x)*180/3.14;
 			
-			printf("%.2f\n", degree);
+			printf("%.2f\n", degree);*/
 
-
-<<<<<<< HEAD
-			//printf("%d %d\n", sum_left, sum_right);
-			/*
-			if (sum_left > sum_right + 500)
-			{
-				Send_Command(0x01, 0xfe);//정지 후
-				DelayLoop(200000);
-				Send_Command(0x08, 0xf7);//오른쪽돌기
-				DelayLoop(200000);
-			}
-			else if (sum_right > sum_left + 500)
-			{
-				Send_Command(0x01, 0xfe);//정지 후
-				DelayLoop(200000);
-				Send_Command(0x07, 0xf8);//왼쪽돌기
-				DelayLoop(200000);
-			}
-				
-			
-			Send_Command(0x02, 0xfd);
-			DelayLoop(200000);
-
-			face_left = sum_left + sum_right;
-			sum_left = 0;
-			sum_right = 0;
-
-			Send_Command(0x04, 0xfb);//오른쪽보기
-			DelayLoop(200000);
-=======
 			first_y = *(out_i + cnt0 / 2 - 5);
 			first_x = *(out_j + cnt0 / 2 - 5);
 			second_y = *(out_i + cnt0 / 2 + 5);
 			second_x = *(out_j + cnt0 / 2 + 5);
->>>>>>> 2175c02f6e2df1eb6e7c5d4172dedaaff8e0d47d
-
 
 			outline_y = second_y - first_y;
 			outline_x = second_x - first_x;
@@ -598,6 +553,62 @@ int main(void)
 			printf("%.2f\n", degree);
 
 			printf("%d %d\n", sum_left, sum_right);
+
+			if (degree > 45 && degree < 90)
+			{
+				//Send_Command(0x07, 0xf8);
+				DelayLoop(100000);
+				printf("turn left\n");
+
+			}
+			else if (degree < -45 && degree > -90)
+			{
+				//Send_Command(0x08, 0xf7);
+				DelayLoop(100000);
+				printf("turn right\n");
+
+			}
+			else if (degree > 15 && degree < 45)
+			{
+				//Send_Command(0x09, 0xf6);
+				DelayLoop(100000);
+				printf("turn left little\n");
+			}
+			else if (degree < -15 && degree > -45)
+			{
+				//Send_Command(0x0a, 0xf5);
+				DelayLoop(100000);
+				printf("turn right little\n");
+			}
+			else
+				result++;
+
+			if (result == 1)
+			{
+				if (sum_left + sum_right < 2000)
+				{//오른쪽을 봤을 때 흰색이 적게 보이면 왼쪽으로 이동
+					//Send_Command(0x05, 0xfa);
+					DelayLoop(100000);
+					printf("go left\n");
+
+				}
+				else if (sum_left + sum_right > 19000)
+				{//오른쪽을 봤을 때 흰색이 많이 보이면 오른쪽으로 이동
+					//Send_Command(0x06, 0xf9);
+					DelayLoop(100000);
+					printf("go right\n");
+				}
+				else
+					result++;
+			}
+
+			if (result == 2)
+			{
+				//Send_Command(0x02, 0xfd);
+				DelayLoop(100000);
+				face = 0;
+				printf("Go\n");
+			}
 		
 			
 			///////////////////////////////////////////////////////////////////////////////*/
