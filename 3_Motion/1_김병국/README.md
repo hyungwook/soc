@@ -14,6 +14,7 @@
 ##### (Latest diary should be on the top)
 ----------
 ###7월 26일
+기어가기마저해야함
 
 ###7월 13일
 
