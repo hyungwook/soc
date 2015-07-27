@@ -68,7 +68,7 @@ MAIN:
     IF ONE=1 THEN
         'GOTO 오른쪽턴45
         'GOTO 왼쪽턴451
-        GOTO 전진달리기50
+        'GOTO 전진달리기50
         'GOTO 앞으로덤블링2
         'GOTO 기어가기
         'GOTO 계단오른발오르기1cm
@@ -76,6 +76,7 @@ MAIN:
         'GOTO 허들넘기
         'GOTO 전진보행50
         'GOTO 전진종종걸음
+        GOTO 계단왼발내리기3cm
     ENDIF
 
 
@@ -910,6 +911,98 @@ MAIN:
     GOSUB 기본자세
     보행순서=0
     GOTO MAIN
+계단왼발내리기3cm:
+    GOSUB All_motor_mode3
+
+    SPEED 4
+    MOVE G6A, 88,  71, 152,  91, 110
+    MOVE G6D,108,  76, 145,  93,  94
+    MOVE G6B,100,40
+    MOVE G6C,100,40
+    WAIT
+
+    SPEED 6
+    MOVE G6A, 90, 100, 115, 105, 114
+    MOVE G6D,111,  76, 145,  93,  94
+    WAIT
+
+    GOSUB Leg_motor_mode2
+
+
+    SPEED 12
+    MOVE G6A,  80, 30, 155, 150, 114,
+    MOVE G6D,111,  65, 155,  90,  94
+    WAIT
+
+    GOSUB Leg_motor_mode2
+
+    SPEED 7
+    MOVE G6A,  80, 30, 175, 150, 114,
+    MOVE G6D,111,  115, 65,  140,  94
+    MOVE G6B,70,50
+    MOVE G6C,70,40
+    WAIT
+
+    GOSUB Leg_motor_mode3
+    SPEED 5
+    MOVE G6A,90, 20, 150, 150, 110
+    MOVE G6D,110,  155, 35,  120,94
+    MOVE G6B,100,50
+    MOVE G6C,140,40
+    WAIT
+
+    SPEED 5 ' add
+    MOVE G6A,90, 20, 150, 150, 105
+    MOVE G6D,110,  155, 55,  120,94
+    MOVE G6B,100,50
+    MOVE G6C,140,40
+    WAIT
+    '****************************
+
+    SPEED 8
+    MOVE G6A,100, 30, 150, 150, 100
+    MOVE G6D,100,  155, 70,  100,100
+    MOVE G6B,140,50
+    MOVE G6C,100,40
+    WAIT
+
+    SPEED 8
+    MOVE G6A,108, 64, 132, 137, 94
+    MOVE G6D,80,  125, 140,  85,114
+    MOVE G6B,170,50
+    MOVE G6C,100,40
+    WAIT
+
+    GOSUB Leg_motor_mode2	
+    SPEED 10
+    MOVE G6A,110, 68, 130, 147, 94
+    MOVE G6D,80,  125, 50,  150,114
+    WAIT
+
+    SPEED 9
+    MOVE G6A,110, 75, 130, 120, 94
+    MOVE G6D,80,  85, 90,  150,114
+    WAIT
+
+    SPEED 8
+    MOVE G6A,110, 80, 130, 110, 94
+    MOVE G6D,80,  75,130,  115,114
+    MOVE G6B,130,50
+    MOVE G6C,100,40
+    WAIT
+
+    SPEED 6
+    MOVE G6D, , 80, 130, 105,99,
+    MOVE G6A,100,  80, 130,  105, 99
+    MOVE G6B,110,40
+    MOVE G6C,110,40
+    WAIT
+
+    SPEED 4
+
+    GOSUB 기본자세
+    ONE = 0
+    GOTO MAIN
 
 
 
@@ -959,24 +1052,24 @@ MAIN:
     '넘어진확인 = 0
     GOSUB Leg_motor_mode3
 
- 
-        SPEED 4
-        '오른쪽기울기
-        MOVE G6A, 88,  71, 152,  91, 110
-        MOVE G6D,108,  76, 146,  93,  94
-        MOVE G6B,100,35
-        MOVE G6C,100,35
-        WAIT
 
-        SPEED 10'보행속도
-        '왼발들기
-        MOVE G6A, 90, 100, 115, 105, 114
-        MOVE G6D,111,  78, 146,  93,  95
-        MOVE G6B,90
-        MOVE G6C,110
-        WAIT
+    SPEED 4
+    '오른쪽기울기
+    MOVE G6A, 88,  71, 152,  91, 110
+    MOVE G6D,108,  76, 146,  93,  94
+    MOVE G6B,100,35
+    MOVE G6C,100,35
+    WAIT
 
-'        GOTO 전진보행50_1
+    SPEED 10'보행속도
+    '왼발들기
+    MOVE G6A, 90, 100, 115, 105, 114
+    MOVE G6D,111,  78, 146,  93,  95
+    MOVE G6B,90
+    MOVE G6C,110
+    WAIT
+
+    '        GOTO 전진보행50_1
 
 
 
