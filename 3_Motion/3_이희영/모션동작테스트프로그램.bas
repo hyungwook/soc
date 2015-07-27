@@ -10,6 +10,7 @@ DIM A_old AS BYTE
 DIM X AS BYTE
 DIM Y AS BYTE
 DIM 보행순서 AS BYTE
+DIM ONE AS BYTE
 DIM 보행속도 AS BYTE
 DIM 좌우속도 AS BYTE
 DIM 좌우속도2 AS BYTE
@@ -59,21 +60,21 @@ SPEED 5
 GOSUB 기본자세
 
 
-보행순서 = 1
+ONE = 1
 
 '***** 메인 반복루틴 **************
 MAIN:
 
-    IF 보행순서=1 THEN
+    IF ONE=1 THEN
         'GOTO 오른쪽턴45
         'GOTO 왼쪽턴451
-        'GOTO 전진달리기50
+        GOTO 전진달리기50
         'GOTO 앞으로덤블링2
         'GOTO 기어가기
         'GOTO 계단오른발오르기1cm
         'GOTO 기어서올라가기
         'GOTO 허들넘기
-        GOTO 전진보행50
+        'GOTO 전진보행50
         'GOTO 전진종종걸음
     ENDIF
 
@@ -374,7 +375,7 @@ MAIN:
 
 
     '**********************
-    FOR I = 0 TO 5
+    FOR I = 0 TO 10
 전진달리기50_1:
         MOVE G6A,96,  95, 100, 120, 104
         MOVE G6D,103, 78, 146,  91, 102
@@ -728,7 +729,7 @@ MAIN:
     MOVE G6C,100,  30,  80
     WAIT
     GOSUB 기본자세
-    보행순서=0
+    ONE=0
     GOTO MAIN
 
 기어서올라가기: 'UPSTAIR RED
@@ -958,28 +959,29 @@ MAIN:
     '넘어진확인 = 0
     GOSUB Leg_motor_mode3
 
-    'IF 보행순서 = 0 THEN
-    '    보행순서 = 1
+ 
+        SPEED 4
+        '오른쪽기울기
+        MOVE G6A, 88,  71, 152,  91, 110
+        MOVE G6D,108,  76, 146,  93,  94
+        MOVE G6B,100,35
+        MOVE G6C,100,35
+        WAIT
 
-    SPEED 4
-    '오른쪽기울기
-    MOVE G6A, 88,  71, 152,  91, 110
-    MOVE G6D,108,  76, 146,  93,  94
-    MOVE G6B,100,35
-    MOVE G6C,100,35
-    WAIT
+        SPEED 10'보행속도
+        '왼발들기
+        MOVE G6A, 90, 100, 115, 105, 114
+        MOVE G6D,111,  78, 146,  93,  95
+        MOVE G6B,90
+        MOVE G6C,110
+        WAIT
 
-    SPEED 10'보행속도
-    '왼발들기
-    MOVE G6A, 90, 100, 115, 105, 114
-    MOVE G6D,111,  78, 146,  93,  95
-    MOVE G6B,90
-    MOVE G6C,110
-    WAIT
+'        GOTO 전진보행50_1
+
 
 
 전진보행50_1:
-    FOR I = 0 TO 7
+    FOR I = 0 TO 10
         SPEED 보행속도
         '왼발뻣어착지
         MOVE G6A, 85,  44, 163, 113, 117
@@ -1036,7 +1038,7 @@ MAIN:
     NEXT I
 
     GOSUB 기본자세
-    보행순서=0
+    ONE=0
     GOTO MAIN
 
 
