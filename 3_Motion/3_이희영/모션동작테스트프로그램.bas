@@ -643,7 +643,7 @@ MAIN:
 
     GOTO 기어가기_LOOP
 
-계단오른발오르기1cm: 'UPSTAIR GREEN
+계단오른발오르기1cm: 'UPSTAIR GREEN COMPLETE
     GOSUB All_motor_mode3
     GOSUB All_motor_mode3
 
@@ -675,15 +675,15 @@ MAIN:
     GOSUB Leg_motor_mode3
 
     SPEED 7
-    MOVE G6D, 105, 75, 100, 155, 105,
-    MOVE G6A,95,  90, 165,  70, 100
+    MOVE G6D, 105, 75, 100, 152, 102,
+    MOVE G6A,95,  93, 160,  70, 102
     MOVE G6C,160,50
     MOVE G6B,160,40
     WAIT
 
     SPEED 6
-    MOVE G6D, 113, 90, 90, 155,100,
-    MOVE G6A,95,  100, 165,  65, 105
+    MOVE G6D, 110, 90, 90, 155,100,
+    MOVE G6A,95,  100, 165,  65, 102
     MOVE G6C,180,50
     MOVE G6B,180,30
     WAIT
@@ -691,32 +691,32 @@ MAIN:
     '****************************
     GOSUB Leg_motor_mode2	
     SPEED 8
-    MOVE G6D, 114, 90, 100, 150,95,
-    MOVE G6A,95,  90, 165,  70, 105
+    MOVE G6D, 110, 90, 100, 150,95,
+    MOVE G6A,93,  90, 165,  70, 107
     WAIT
 
     SPEED 12
-    MOVE G6D, 114, 90, 100, 150,95,
-    MOVE G6A,90,  120, 40,  140, 108
+    MOVE G6D, 110, 90, 100, 150,95,
+    MOVE G6A,88,  120, 40,  140, 110
     WAIT
 
     SPEED 10
-    MOVE G6D, 114, 90, 110, 130,95,
-    MOVE G6A,90,  95, 90,  145, 108
+    MOVE G6D, 110, 90, 110, 130,95,
+    MOVE G6A,88,  95, 90,  145, 110
     MOVE G6C,140,50
     MOVE G6B,140,30
     WAIT
 
     SPEED 10
     MOVE G6D, 110, 90, 110, 130,95,
-    MOVE G6A,80,  85, 110,  135, 108
+    MOVE G6A,80,  85, 110,  135, 110
     MOVE G6B,110,40
     MOVE G6C,110,40
     WAIT
 
     SPEED 5
-    MOVE G6A, 98, 90, 110, 125,99,
-    MOVE G6D,98,  90, 110,  125, 99
+    MOVE G6A, 98, 90, 110, 125,101,
+    MOVE G6D,98,  90, 110,  125,101,
     MOVE G6B,110,40
     MOVE G6C,110,40
     WAIT
@@ -951,16 +951,19 @@ MAIN:
     GOTO MAIN
 
 전진보행50:
-
+    'GOSUB SOUND_Walk_Ready
     보행속도 = 10'5
     좌우속도 = 5'8'3
     좌우속도2 = 4'5'2
     '넘어진확인 = 0
     GOSUB Leg_motor_mode3
 
+    'IF 보행순서 = 0 THEN
+    '    보행순서 = 1
+
     SPEED 4
     '오른쪽기울기
-    MOVE G6A, 88,  71, 152,  91, 116
+    MOVE G6A, 88,  71, 152,  91, 110
     MOVE G6D,108,  76, 146,  93,  94
     MOVE G6B,100,35
     MOVE G6C,100,35
@@ -968,23 +971,19 @@ MAIN:
 
     SPEED 10'보행속도
     '왼발들기
-    MOVE G6A, 90, 100, 115, 105, 116
-    MOVE G6D,111,  78, 146,  93,  92
+    MOVE G6A, 90, 100, 115, 105, 114
+    MOVE G6D,111,  78, 146,  93,  95
     MOVE G6B,90
     MOVE G6C,110
     WAIT
 
 
-
-    '*******************************
-
-
 전진보행50_1:
-    FOR I = 0 TO 50
+    FOR I = 0 TO 7
         SPEED 보행속도
         '왼발뻣어착지
-        MOVE G6A, 85,  44, 163, 113, 114
-        MOVE G6D,110,  77, 146,  93,  94
+        MOVE G6A, 85,  44, 163, 113, 117
+        MOVE G6D,108,  77, 146,  93,  92
         WAIT
 
 
@@ -992,21 +991,16 @@ MAIN:
         SPEED 좌우속도
         'GOSUB Leg_motor_mode3
         '왼발중심이동
-        MOVE G6A,110,  76, 144, 100,  93
+        MOVE G6A,108,  76, 144, 100,  93
         MOVE G6D,85, 93, 155,  71, 112
         WAIT
 
-        'GOSUB 앞뒤기울기측정
-        'IF 넘어진확인 = 1 THEN
-        '    넘어진확인 = 0
-        '    GOTO MAIN
-        'ENDIF
 
 
         SPEED 보행속도
         'GOSUB Leg_motor_mode2
         '오른발들기10
-        MOVE G6A,111,  77, 146,  93, 94
+        MOVE G6A,110,  77, 146,  93, 94
         MOVE G6D,90, 100, 105, 110, 114
         MOVE G6B,110
         MOVE G6C,90
@@ -1023,12 +1017,10 @@ MAIN:
         MOVE G6A,110,  77, 146,  93,  94
         WAIT
 
-
-
         SPEED 좌우속도
         'GOSUB Leg_motor_mode3
         '오른발중심이동
-        MOVE G6D,110,  76, 144, 100,  93
+        MOVE G6D,108,  76, 144, 100,  93
         MOVE G6A, 85, 93, 155,  71, 112
         WAIT
 
@@ -1037,7 +1029,7 @@ MAIN:
         'GOSUB Leg_motor_mode2
         '왼발들기10
         MOVE G6A, 90, 100, 105, 110, 114
-        MOVE G6D,111,  77, 146,  93,  94
+        MOVE G6D,110,  77, 146,  93,  94
         MOVE G6B, 90
         MOVE G6C,110
         WAIT
