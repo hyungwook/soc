@@ -751,7 +751,7 @@ RX_EXIT:
     GOTO MAIN
 
     '********************************************************
-    
+
 계단왼발내리기2cm:
     GOSUB All_motor_mode3
 
@@ -792,6 +792,12 @@ RX_EXIT:
     MOVE G6C,140,40
     WAIT
 
+    SPEED 5 ' add
+    MOVE G6A,90, 20, 150, 150, 105
+    MOVE G6D,110,  155, 55,  120,94
+    MOVE G6B,100,50
+    MOVE G6C,140,40
+    WAIT
     '****************************
 
     SPEED 8
@@ -801,14 +807,14 @@ RX_EXIT:
     MOVE G6C,100,40
     WAIT
 
-    SPEED 10
-    MOVE G6A,110, 68, 130, 145, 90
+    SPEED 8
+    MOVE G6A,108, 64, 132, 137, 94
     MOVE G6D,80,  125, 140,  85,114
     MOVE G6B,170,50
     MOVE G6C,100,40
     WAIT
 
-    GOSUB Leg_motor_mode2   
+    GOSUB Leg_motor_mode2	
     SPEED 10
     MOVE G6A,110, 68, 130, 147, 94
     MOVE G6D,80,  125, 50,  150,114
@@ -837,7 +843,7 @@ RX_EXIT:
 
     GOSUB 기본자세
     GOTO MAIN
-    
+
     '********************************************************
 
 기어가기:
