@@ -335,7 +335,7 @@ RX_EXIT:
     MOVE G6A, 90,  90, 120, 105, 110, 100	
     MOVE G6D,100,  76, 146,  93, 107, 100	
     MOVE G6B,100,  40
-    MOVE G6C,100,  40
+    MOVE G6C,100,  40, , , 135
     WAIT
 
     SPEED 12
@@ -358,7 +358,7 @@ RX_EXIT:
     MOVE G6D, 90,  90, 120, 105, 110, 100
     MOVE G6A,100,  76, 146,  93, 107, 100
     MOVE G6B,100,  40
-    MOVE G6C,100,  40
+    MOVE G6C,100,  40, , , 135
     WAIT
 
     SPEED 12

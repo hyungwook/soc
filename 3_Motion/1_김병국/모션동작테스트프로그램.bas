@@ -573,7 +573,6 @@ MAIN:
     보행순서=0
     GOTO MAIN
     '**************************************************
-
 기어가기:
 
     GOSUB Leg_motor_mode3
@@ -595,7 +594,7 @@ MAIN:
 
     DELAY 300
 
-    SPEED 12
+    SPEED 15
     PTP SETOFF
     PTP ALLOFF
     HIGHSPEED SETOFF
@@ -606,20 +605,20 @@ MAIN:
 
 
     MOVE G6A, 100, 160,  55, 160, 100
-    MOVE G6D, 101, 145,  75, 160, 99
+    MOVE G6D, 102, 145,  75, 160, 99
     MOVE G6B, 170,  25,  70
-    MOVE G6C, 190,  50,  40
+    MOVE G6C, 187,  50,  40
     WAIT
 
 기어가기_1:
     MOVE G6A, 100, 150,  70, 160, 100
     MOVE G6D, 100, 140, 120, 120, 99
-    MOVE G6B, 160,  25,  73
+    MOVE G6B, 160,  28,  73
     MOVE G6C, 190,  25,  70
     WAIT
 
     MOVE G6D, 100, 160,  50, 160, 100
-    MOVE G6A, 102, 146,  78, 160, 100
+    MOVE G6A, 102, 146,  78, 160, 101
     MOVE G6C, 175,  30,  65
     MOVE G6B, 187,  50,  40
     WAIT
@@ -633,6 +632,7 @@ MAIN:
     WAIT
 
     GOTO 기어가기_LOOP
+
     '**********************************************************
 
 계단오른발오르기1cm: 'UPSTAIR GREEN
