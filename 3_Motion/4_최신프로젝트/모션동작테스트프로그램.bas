@@ -14,8 +14,11 @@ DIM ONE AS BYTE
 DIM 보행속도 AS BYTE
 DIM 좌우속도 AS BYTE
 DIM 좌우속도2 AS BYTE
-'****************** GYRO
 
+'**** 기울기센서포트 설정
+
+CONST 앞뒤기울기AD포트 = 2
+CONST 좌우기울기AD포트 = 3
 
 '*****  2012년 이전 센서 ****
 'CONST 기울기확인시간 = 10  'ms
@@ -45,7 +48,6 @@ PTP ALLON		'전체모터 점대점 동작 설정
 
 '*******모터위치값피드백****************
 GOSUB MOTOR_GET
-'*******GYRO USE************************
 
 '*******모터사용설정********************
 GOSUB MOTOR_ON
@@ -66,14 +68,14 @@ MAIN:
     IF ONE=1 THEN
         'GOTO 오른쪽턴45
         'GOTO 왼쪽턴451
-        'GOTO 전진달리기50
+        GOTO 전진달리기50
         'GOTO 앞으로덤블링2
         'GOTO 기어가기
         'GOTO 계단오른발오르기1cm
         'GOTO 기어서올라가기
         'GOTO 허들넘기
         'GOTO 전진보행50
-        GOTO 전진종종걸음
+        'GOTO 전진종종걸음
         'GOTO 계단왼발내리기3cm
     ENDIF
 
@@ -107,11 +109,6 @@ MAIN:
 
 전진종종걸음:
     '    넘어진확인 = 0
-    'GOSUB GYRO_ON
-    'GOSUB GYRO_MID
-    GOSUB GYRO_INIT
-    GOSUB GYRO_ON
-    GOSUB GYRO_MID
 
     SPEED 10
     HIGHSPEED SETON
@@ -139,7 +136,7 @@ MAIN:
 
 
     '**********************
-    FOR I = 0 TO 10
+    FOR I = 0 TO 100
 전진종종걸음_1:
         MOVE G6A,95,  95, 120, 100, 104
         MOVE G6D,104,  77, 146,  91,  102
@@ -206,7 +203,7 @@ MAIN:
     DELAY 400
 
     GOSUB Leg_motor_mode1
-    ONE=0
+    보행순서=0
     GOTO MAIN
 
     '******************************************
@@ -355,88 +352,124 @@ MAIN:
     보행순서=0
     GOTO MAIN
 
-전진달리기50:
+전진달리기양발50:
 
-
-    GOSUB GYRO_ON
-    GOSUB GYRO_MID
     SPEED 30
     HIGHSPEED SETON
     GOSUB Leg_motor_mode4
 
-    'IF 보행순서 = 0 THEN
-    '    보행순서 = 1
-    MOVE G6A,95,  76, 145,  93, 101
-    MOVE G6D,101,  78, 145,  93, 98
-    WAIT
 
-    '    GOTO 전진달리기50_1
-    'ELSE
-    '    보행순서 = 0
-    '    MOVE G6D,95,  76, 145,  93, 101
-    '    MOVE G6A,101,  78, 145,  93, 98
-    '    WAIT
-
-    '    GOTO 전진달리기50_4
-    'ENDIF
+    IF 보행순서 = 0 THEN
+        보행순서 = 1
+        MOVE G6A,95,  76, 145,  93, 101
+        MOVE G6D,101,  78, 145,  93, 98
+        MOVE G6B,100,  30,  80,    , 100, 100
+        MOVE G6C,100,  30,  80, 100, 135, 100
+        WAIT
+        GOTO 전진달리기양발50_1
+    ELSE
+        보행순서 = 0
+        MOVE G6D,95,  76, 145,  93, 101
+        MOVE G6A,101,  78, 145,  93, 98
+        MOVE G6C,100,  30,  80, 100, 135, 100
+        MOVE G6B,100,  30,  80,    , 100, 100
+        WAIT
+        GOTO 전진달리기양발50_4
+    ENDIF
 
 
     '**********************
-    FOR I = 0 TO 3
-전진달리기50_1:
-        MOVE G6A,96,  95, 100, 120, 104
-        MOVE G6D,103, 78, 146,  91, 102
+전진달리기양발50_1:
+
+    FOR I = 0 TO 2
+
+        MOVE G6A,95,  95, 100, 120, 101
+        MOVE G6D,106, 88, 136,  91, 105
         MOVE G6B, 80
         MOVE G6C,120
         WAIT
-
-전진달리기50_2:
-        MOVE G6A,96,  75, 122, 120, 104
-        MOVE G6D,103, 80, 146,  89, 100
+        '   GOTO 전진달리기50_2
+        '전진달리기50_2:
+        MOVE G6A,95,  75, 122, 120, 101
+        MOVE G6D,106, 78, 146,  91, 105
+        WAIT
+        '    GOTO 전진달리기50_3
+        '전진달리기50_3:
+        MOVE G6A,103, 70, 145, 103, 100
+        MOVE G6D, 97, 88, 160,  68, 102
         WAIT
 
-전진달리기50_3:
-        MOVE G6A,104, 70, 145, 103, 100
-        MOVE G6D, 94, 88, 160,  68, 102
-        WAIT
-
-        'ERX 4800,A, 전진달리기50_4
-        'IF A <> A_old THEN  GOTO 전진달리기50_멈춤
-
-        '*********************************
-
-전진달리기50_4:
-        MOVE G6D,96,  95, 100, 120, 104
-        MOVE G6A,103, 78, 146,  91, 102
+        MOVE G6D,95,  88, 100, 120, 101
+        MOVE G6A,108, 78, 146,  91, 105
         MOVE G6C, 80
         MOVE G6B,120
         WAIT
-
-전진달리기50_5:
-        MOVE G6D,96,  75, 122, 120, 104
-        MOVE G6A,103, 80, 146,  89, 100
+        '   GOTO 전진달리기50_5
+        '전진달리기50_5:
+        MOVE G6D,95,  75, 122, 120, 101
+        MOVE G6A,108, 80, 146,  91, 105
         WAIT
-
-전진달리기50_6:
+        '    GOTO 전진달리기50_6
+        '전진달리기50_6:
         MOVE G6D,104, 70, 145, 103, 100
         MOVE G6A, 94, 88, 160,  68, 102
         WAIT
+
     NEXT I
 
+    GOTO 전진달리기50_멈춤
 
+전진달리기양발50_4:
 
-전진달리기50_멈춤:
+    FOR I = 0 TO 2
+
+        MOVE G6D,95,  88, 100, 120, 101
+        MOVE G6A,108, 78, 146,  91, 105
+        MOVE G6C, 80
+        MOVE G6B,120
+        WAIT
+        '   GOTO 전진달리기50_5
+        '전진달리기50_5:
+        MOVE G6D,95,  75, 122, 120, 101
+        MOVE G6A,108, 80, 146,  91, 105
+        WAIT
+        '    GOTO 전진달리기50_6
+        '전진달리기50_6:
+        MOVE G6D,104, 70, 145, 103, 100
+        MOVE G6A, 94, 88, 160,  68, 102
+        WAIT
+
+        MOVE G6A,95,  95, 100, 120, 101
+        MOVE G6D,106, 88, 136,  91, 105
+        MOVE G6B, 80
+        MOVE G6C,120
+        WAIT
+        '   GOTO 전진달리기50_2
+        '전진달리기50_2:
+        MOVE G6A,95,  75, 122, 120, 101
+        MOVE G6D,106, 78, 146,  91, 105
+        WAIT
+        '    GOTO 전진달리기50_3
+        '전진달리기50_3:
+        MOVE G6A,103, 70, 145, 103, 100
+        MOVE G6D, 97, 88, 160,  68, 102
+        WAIT
+
+    NEXT I
+
+    GOTO 전진달리기양발50_멈춤
+
+전진달리기양발50_멈춤:
     HIGHSPEED SETOFF
-    SPEED 15
+    SPEED 10
     GOSUB 안정화자세
-    SPEED 5
+    SPEED 6
     GOSUB 기본자세
 
-    DELAY 400
+    DELAY 500
 
     GOSUB Leg_motor_mode1
-    보행순서=0
-    GOTO 전진달리기50
+    GOTO MAIN
 
     '******************************************
 허들넘기: 'USE
@@ -654,8 +687,6 @@ MAIN:
 계단오른발오르기1cm: 'UPSTAIR GREEN COMPLETE
     GOSUB All_motor_mode3
     GOSUB All_motor_mode3
-    GOSUB GYRO_ON
-    GOSUB GYRO_MID
 
     SPEED 4
     MOVE G6D, 88,  71, 152,  91, 110
@@ -921,8 +952,6 @@ MAIN:
     GOTO MAIN
 계단왼발내리기3cm:
     GOSUB All_motor_mode3
-    GOSUB GYRO_ON
-    GOSUB GYRO_MID
 
     SPEED 4
     MOVE G6A, 88,  71, 152,  91, 110
@@ -1018,10 +1047,10 @@ MAIN:
 
 
 안정화자세:
-    MOVE G6A,98,  76, 145,  93, 101, 100
-    MOVE G6D,98,  76, 145,  93, 101, 100
-    MOVE G6B,100,  30,  80, 100, 100, 100
-    MOVE G6C,100,  30,  80, 100, 100, 100
+    MOVE G6A,98,  77, 145,  93, 101, 100
+    MOVE G6D,99,  75, 145,  93, 101, 100
+    MOVE G6B,100,  25,  80, 100, 100, 100
+    MOVE G6C,102,  31,  80, 100, 100, 100
     WAIT
     RETURN
     '************************************************
@@ -1061,8 +1090,6 @@ MAIN:
     좌우속도2 = 4'5'2
     '넘어진확인 = 0
     GOSUB Leg_motor_mode3
-    GOSUB GYRO_ON
-    GOSUB GYRO_MID
 
 
     SPEED 4
@@ -1174,15 +1201,10 @@ MOTOR_GET: '위치값피드백
     '*******기본자세관련*****************
 
 기본자세:
-
-    GOSUB GYRO_ON
-    GOSUB GYRO_MID
-
-
-    MOVE G6A,100,  74, 148,  91, 102, 100
-    MOVE G6D,100,  74, 148,  91, 102, 100
-    MOVE G6B,100,  30,  80, 100, 100, 100
-    MOVE G6C,100,  30,  80, 100, 100, 100
+    MOVE G6A,100,  82, 145,  86, 100, 100
+    MOVE G6D,100,  82, 145,  86, 100, 100
+    MOVE G6B,100,  25,  80, 100, 100, 100
+    MOVE G6C,102 ,  31,  80, 100, 100, 100
     WAIT
     RETURN
 기본자세2:
@@ -1292,31 +1314,3 @@ RX_EXIT: '수신값을 버리는루틴
     GOTO RX_EXIT
 
     '************************************************
-GYRO_INIT:
-    GYRODIR G6A, 0, 0, 0, 0, 1
-    GYRODIR G6D, 1, 0, 0, 0, 0
-    RETURN
-GYRO_ON:
-    GYROSET G6A, 2, 1, 1, 1,
-    GYROSET G6D, 2, 1, 1, 1,
-    RETURN
-GYRO_OFF:
-    GYROSET G6A, 0, 0, 0, 0, 0
-    GYROSET G6D, 0, 0, 0, 0, 0
-    RETURN
-GYRO_MAX:
-    GYROSENSE G6A,255,255,255,255
-    GYROSENSE G6D,255,255,255,255
-    RETURN
-GYRO_MID:
-    GYROSENSE G6A,255,100,100,100
-    GYROSENSE G6D,255,100,100,100
-    RETURN
-GYRO_MIN:
-    GYROSENSE G6A,100,50,50,50,50
-    GYROSENSE G6D,100,50,50,50,50
-    RETURN
-GYRO_ST:
-    GYROSENSE G6A,100,30,20,10,
-    GYROSENSE G6D,100,30,20,10 ,
-    RETURN
