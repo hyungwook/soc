@@ -93,18 +93,27 @@ Action_mode = 0	'D(CODE 27):댄스모드
 
 
 
-'****초기위치 *****************************
-OUT 52,0	'눈 LED 켜기
 
 SPEED 5
-GOSUB 전원초기자세
-GOSUB 기본자세
+GOSUB MOTOR_ON
+GOSUB MOTOR_READ
 
+'*******피에조소리내기******************
+TEMPO 220
+MUSIC "O23EAB7EA>3#C"
+
+GOSUB 기본자세
 
 
 GOTO MAIN
 '************************************************
 '************************************************
+MOTOR_READ:
+    FOR I = 1 TO 15
+        b=MOTORIN(2)
+    NEXT I
+    RETURN
+    '************************************************
 
 MOTOR_FAST_ON:
 
@@ -404,7 +413,7 @@ GOSUB_RX_EXIT2:
     MOVE G6D, 95, 88, 160,  68, 102
     WAIT
 
-    GOSUB 앞뒤기울기측정
+    'GOSUB 앞뒤기울기측정
     IF 넘어진확인 = 1 THEN
         넘어진확인 = 0
         GOTO MAIN
@@ -435,7 +444,7 @@ GOSUB_RX_EXIT2:
     MOVE G6A, 95, 88, 160,  68, 102
     WAIT
 
-    GOSUB 앞뒤기울기측정
+    'GOSUB 앞뒤기울기측정
     IF 넘어진확인 = 1 THEN
         넘어진확인 = 0
         GOTO MAIN
@@ -508,32 +517,6 @@ GOSUB_RX_EXIT2:
     GOSUB 기본자세
     GOTO RX_EXIT
 
-왼쪽턴20:
-    GOSUB Leg_motor_mode2
-    SPEED 8
-    MOVE G6A,95,  90, 150,  73, 105, 100
-    MOVE G6D,95,  53, 150, 110, 105, 100
-    MOVE G6B,110
-    MOVE G6C,90
-    WAIT
-
-
-    SPEED 10
-    MOVE G6A,93,  90, 150,  73, 105, 100
-    MOVE G6D,93,  53, 150, 110, 105, 100
-    WAIT
-
-    SPEED 6
-    MOVE G6A,101,  76, 146,  93, 98, 100
-    MOVE G6D,101,  76, 146,  93, 98, 100
-    MOVE G6B,100,  30,  80
-    MOVE G6C,100,  30,  80
-    WAIT
-
-    GOSUB 기본자세
-    GOSUB Leg_motor_mode1
-    DELAY 500
-    GOTO RX_EXIT
 
 왼쪽턴45:
 
@@ -556,7 +539,7 @@ GOSUB_RX_EXIT2:
     WAIT
 
     SPEED 8
-    GOSUB 외각선확인
+    'GOSUB 외각선확인
     GOSUB Leg_motor_mode1
     GOTO RX_EXIT
 
@@ -579,7 +562,7 @@ GOSUB_RX_EXIT2:
     WAIT
 
     SPEED 8
-    GOSUB 외각선확인
+    'GOSUB 외각선확인
     GOSUB Leg_motor_mode1
 
     GOTO RX_EXIT
@@ -1005,6 +988,32 @@ GOSUB_RX_EXIT2:
     GOTO RX_EXIT
 
     '********************************************************
+오른쪽턴20:
+    GOSUB Leg_motor_mode2
+    SPEED 8
+    MOVE G6D,95,  90, 150,  73, 105, 100
+    MOVE G6A,95,  53, 150, 110, 105, 100
+    MOVE G6C,110
+    MOVE G6B,90
+    WAIT
+
+
+    SPEED 10
+    MOVE G6D,93,  90, 150,  73, 105, 100
+    MOVE G6A,93,  53, 150, 110, 105, 100
+    WAIT
+
+    SPEED 6
+    MOVE G6D,101,  76, 146,  93, 98, 100
+    MOVE G6A,101,  76, 146,  93, 98, 100
+    MOVE G6C,100,  30,  80
+    MOVE G6B,100,  30,  80
+    WAIT
+
+    GOSUB 기본자세
+    GOSUB Leg_motor_mode1
+    DELAY 500
+    GOTO RX_EXIT
 
 
 
