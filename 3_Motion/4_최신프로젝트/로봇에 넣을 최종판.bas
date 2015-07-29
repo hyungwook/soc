@@ -123,7 +123,7 @@ MOTOR_ON:
     MOVE G6C,100,  30,  80, 100, 60, 100
     WAIT
     GOTO MAIN
-    
+
 
 앉은자세:
     SPEED 10
@@ -1041,7 +1041,7 @@ RX_EXIT:
 왼발공차기:
 
     GOSUB Leg_motor_mode3
-    SPEED 4
+    SPEED 3
 
     MOVE G6D,110,  77, 145,  93,  92, 100	
     MOVE G6A, 85,  71, 152,  91, 114, 100
@@ -1049,7 +1049,7 @@ RX_EXIT:
     MOVE G6B,100,  40,  80, , , ,	
     WAIT
 
-    SPEED 7
+    SPEED 3
     MOVE G6D,106,  75, 145,  100,  98
     MOVE G6A, 83,  85, 122,  105, 108
     MOVE G6C,100,  48,  80, , , ,
@@ -1059,7 +1059,7 @@ RX_EXIT:
     GOSUB Leg_motor_mode2
     HIGHSPEED SETON
 
-    SPEED 7
+    SPEED 5
     MOVE G6D,111,  81, 141,  87,  95
     MOVE G6A, 83,  20, 172,  135, 110
     MOVE G6B,50
@@ -1071,21 +1071,21 @@ RX_EXIT:
     HIGHSPEED SETOFF
 
 
-    SPEED 7
+    SPEED 4
     MOVE G6D,111,  72, 145,  97,  95
     MOVE G6A, 83,  58, 122,  130, 114
     MOVE G6B,100,  40,  80, , , ,
     MOVE G6C,100,  40,  80, , , ,	
     WAIT	
 
-    SPEED 8
+    SPEED 4
     MOVE G6D,111,  77, 145,  95,  93	
     MOVE G6A, 80,  80, 142,  95, 114
     MOVE G6B,100,  40,  80, , , ,
     MOVE G6C,100,  40,  80, , , ,
     WAIT	
 
-    SPEED 8
+    SPEED 4
     MOVE G6D,106,  77, 145,  93,  93, 100	
     MOVE G6A, 83,  71, 152,  91, 110, 100
     WAIT
@@ -1217,7 +1217,7 @@ RX_EXIT:
 
     GOSUB Leg_motor_mode1
     '보행순서=0
-    GOTO 전진달리기희영50
+    GOTO MAIN
 
 
 
@@ -1344,8 +1344,8 @@ KEY3: 'LEFT SIDE
     'WAIT
     MOVE G6A,100,  74, 148,  91, 102, 100
     MOVE G6D,100,  74, 148,  91, 102, 100
-    MOVE G6B,106,  44,  50, 100, 100, 10
-    MOVE G6C,106,  44,  50, 100, 131, 100
+    MOVE G6B,108,  47,  50, 100, 100, 16
+    MOVE G6C,106,  44,  50, 100, 128, 100
     WAIT
     'DELAY 1000
     GOTO MAIN
@@ -1359,8 +1359,8 @@ KEY4: 'RIGHT SIDE
     'WAIT
     MOVE G6A,100,  74, 148,  91, 102, 100
     MOVE G6D,100,  74, 148,  91, 102, 100
-    MOVE G6B,106,  44,  50, 100, 100, 190
-    MOVE G6C,106,  44,  50, 100, 131, 100
+    MOVE G6B,106,  44,  50, 100, 100, 184
+    MOVE G6C,108,  47,  50, 100, 128, 100
     WAIT
     'DELAY 1000
     GOTO MAIN

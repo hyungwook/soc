@@ -122,8 +122,8 @@ MOTOR_ON:
     MOVE G6B,100,  30,  80, 100, 100, 100
     MOVE G6C,100,  30,  80, 100, 60, 100
     WAIT
-    GOTO MAIN
-    
+    GOTO RX_EXIT
+
 
 앉은자세:
     SPEED 10
@@ -270,7 +270,7 @@ MOTOR_ON:
     DELAY 500
 
     GOSUB Leg_motor_mode1
-    GOTO MAIN
+    GOTO RX_EXIT
 
 RX_EXIT:
     'GOSUB SOUND_STOP
@@ -303,7 +303,7 @@ RX_EXIT:
 
     SPEED 15	
     GOSUB 기본자세
-    GOTO MAIN
+    GOTO RX_EXIT
 
 오른쪽옆으로70:
 
@@ -326,7 +326,7 @@ RX_EXIT:
 
     SPEED 15
     GOSUB 기본자세
-    GOTO MAIN
+    GOTO RX_EXIT
 
 왼쪽턴20:
     GOSUB Leg_motor_mode2
@@ -353,7 +353,7 @@ RX_EXIT:
     GOSUB 기본자세
     GOSUB Leg_motor_mode1
     DELAY 500
-    GOTO MAIN
+    GOTO RX_EXIT
 
 왼쪽턴45:
 
@@ -378,7 +378,7 @@ RX_EXIT:
     SPEED 8
     GOSUB 외각선확인
     GOSUB Leg_motor_mode1
-    GOTO MAIN
+    GOTO RX_EXIT
 
 오른쪽턴45:
 
@@ -402,7 +402,7 @@ RX_EXIT:
     GOSUB 외각선확인
     GOSUB Leg_motor_mode1
 
-    GOTO MAIN
+    GOTO RX_EXIT
 
 
 오른쪽턴20:
@@ -430,7 +430,7 @@ RX_EXIT:
     GOSUB 기본자세
     GOSUB Leg_motor_mode1
     DELAY 500
-    GOTO MAIN
+    GOTO RX_EXIT
 
 
 
@@ -532,7 +532,7 @@ RX_EXIT:
 
     GOSUB Leg_motor_mode1
     '보행순서=0
-    GOTO MAIN
+    GOTO RX_EXIT
 
 
 
@@ -636,7 +636,7 @@ RX_EXIT:
 
     GOSUB Leg_motor_mode1
     '보행순서=0
-    GOTO MAIN
+    GOTO RX_EXIT
 
 
     '*****************************************************
@@ -744,7 +744,7 @@ RX_EXIT:
     WAIT
     GOSUB 기본자세
     '보행순서=0
-    GOTO MAIN
+    GOTO RX_EXIT
 
     '********************************************************
 
@@ -838,7 +838,7 @@ RX_EXIT:
     SPEED 4
 
     GOSUB 기본자세
-    GOTO MAIN
+    GOTO RX_EXIT
 
     '********************************************************
 
@@ -972,7 +972,7 @@ RX_EXIT:
     MOVE G6B, 170,  30,  90 , 100, 100
     MOVE G6C, 170,  30,  90 , 100, 100
     WAIT
-    GOTO MAIN
+    GOTO RX_EXIT
 
     '********************************************************
 
@@ -1034,7 +1034,7 @@ RX_EXIT:
 
     GOSUB 기본자세
     보행순서=0
-    GOTO MAIN
+    GOTO RX_EXIT
 
 
     '*********************************************
@@ -1096,7 +1096,7 @@ RX_EXIT:
     GOSUB Leg_motor_mode1
     DELAY 1500
 
-    GOTO MAIN
+    GOTO RX_EXIT
 
     '*********************************************
 
@@ -1217,34 +1217,34 @@ RX_EXIT:
 
     GOSUB Leg_motor_mode1
     '보행순서=0
-    GOTO 전진달리기희영50
+    GOTO RX_EXIT
 
 
 
 
 
-MAIN: '라벨설정
-    ETX 9600,48
+    'MAIN: '라벨설정
+    '    ETX 9600,48
 
     'GOSUB 앉은자세
     '**** 입력된 A값이 0 이면 MAIN 라벨로 가고
     '**** 1이면 KEY1 라벨, 2이면 key2로... 가는문
-MAIN1:
+MAIN:
     'GOTO KEY1
     'A=A+1
     'IF A=44 THEN
     'A=0
-    ERX 9600,A, MAIN1
+    ERX 9600,A, MAIN
     'GOTO 오른쪽턴2
     A_old = A
 
-    ON A GOTO MAIN1,KEY1,KEY2,KEY3,KEY4,KEY5,KEY6,KEY7,KEY8,KEY9,KEY10,KEY11,KEY12,KEY13,KEY14,KEY15
+    ON A GOTO MAIN,KEY1,KEY2,KEY3,KEY4,KEY5,KEY6,KEY7,KEY8,KEY9,KEY10,KEY11,KEY12,KEY13,KEY14,KEY15
     'GOTO KEY34
     'DELAY 500
 
     'GOTO 앉아오른팔뻗기
 
-    GOTO MAIN1	
+    GOTO MAIN	
     '*******************************************
     '		MAIN 라벨로 가기
     '*******************************************
@@ -1328,13 +1328,13 @@ KEY1:
     MOVE G6C,100,  30,  80, 100, 135, 100
     'DELAY 1000
 
-    GOTO MAIN
+    GOTO RX_EXIT
 KEY2:
     ETX  9600,2
     GOTO 전진달리기희영50
     'DELAY 1000
 
-    GOTO MAIN
+    GOTO RX_EXIT
 KEY3: 'LEFT SIDE
     ETX  9600,3
     'MOVE G6A,100,  79, 148,  86, 102, 100
@@ -1348,7 +1348,7 @@ KEY3: 'LEFT SIDE
     MOVE G6C,106,  44,  50, 100, 131, 100
     WAIT
     'DELAY 1000
-    GOTO MAIN
+    GOTO RX_EXIT
 
 KEY4: 'RIGHT SIDE
     ETX  9600,4
@@ -1363,60 +1363,60 @@ KEY4: 'RIGHT SIDE
     MOVE G6C,106,  44,  50, 100, 131, 100
     WAIT
     'DELAY 1000
-    GOTO MAIN
+    GOTO RX_EXIT
 KEY5:
     ETX 9600,5
     GOTO 왼쪽옆으로70
     'DELAY 1000
-    GOTO MAIN
+    GOTO RX_EXIT
 KEY6:
     ETX 9600,6
     GOTO 오른쪽옆으로70
     'DELAY 1000
-    GOTO MAIN
+    GOTO RX_EXIT
 KEY7:
     ETX 9600,7
     GOTO 왼쪽턴45
     'DELAY 1000
-    GOTO MAIN
+    GOTO RX_EXIT
 KEY8:
     ETX 9600,8
     GOTO 오른쪽턴45
     'DELAY 1000
-    GOTO MAIN
+    GOTO RX_EXIT
 KEY9:
     ETX 9600,9
     GOTO 왼쪽턴20
     'DELAY 1000
-    GOTO MAIN
+    GOTO RX_EXIT
 KEY10:
     ETX 9600,10
     GOTO 오른쪽턴20
     'DELAY 1000
-    GOTO MAIN
+    GOTO RX_EXIT
 KEY11:
     ETX 9600,11
     GOTO 전진종종10걸음
     'DELAY 1000
-    GOTO MAIN
+    GOTO RX_EXIT
 KEY12:
     ETX 9600,12
     GOTO 전진종종2걸음
     'DELAY 1000
-    GOTO MAIN
+    GOTO RX_EXIT
 KEY13:
     ETX 9600,13
     GOTO 올려보기
     'DELAY 1000
-    GOTO MAIN
+    GOTO RX_EXIT
 KEY14:
     ETX 9600,14
     GOTO 계단오른발오르기2cm
     'DELAY 1000
-    GOTO MAIN
+    GOTO RX_EXIT
 KEY15:
     ETX 9600,15
     GOTO 계단왼발내리기2cm
     'DELAY 1000
-    GOTO MAIN
+    GOTO RX_EXIT
     END
