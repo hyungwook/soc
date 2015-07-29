@@ -1040,6 +1040,10 @@ RX_EXIT:
     '*********************************************
 왼발공차기:
 
+    GOSUB GYRO_INIT
+    GOSUB GYRO_ON
+    GOSUB GYRO_MIN
+
     GOSUB Leg_motor_mode3
     SPEED 3
 
@@ -1094,6 +1098,7 @@ RX_EXIT:
     SPEED 3
     GOSUB 기본자세	
     GOSUB Leg_motor_mode1
+    GOSUB GYRO_OFF
     DELAY 1500
 
     GOTO MAIN
@@ -1220,31 +1225,204 @@ RX_EXIT:
     GOTO MAIN
 
 
+허들넘기: 'USE
+
+    SPEED 13
+    MOVE G6B, 190, 100, 100
+    MOVE G6C, 190, 100, 100
+    WAIT
+
+    SPEED 10
+    MOVE G6B, 185, 10, 100
+    MOVE G6C, 190, 14, 100
+    WAIT
+
+    SPEED 10
+    MOVE G6A, 100,  76, 145,  93, 100, 100
+    MOVE G6D, 100,  76, 145,  93, 100, 100
+    MOVE G6B, 185,  10,  100
+    MOVE G6C, 190,  14,  100
+    WAIT
+
+    SPEED 6
+    MOVE G6A, 100,  75, 145,  130, 100, 100
+    MOVE G6D, 100,  76, 145,  130, 100, 100
+    MOVE G6B, 185,  10,  80 , 100, 100
+    MOVE G6C, 190,  14,  80 , 100, 190
+    WAIT
+    '=------------------------------------------
+    SPEED 6
+    MOVE G6A, 100,  76, 145,  130, 100, 100
+    MOVE G6D, 100,  76, 145,  130, 100, 100
+    MOVE G6B, 152,  20,  85
+    MOVE G6C, 155,  24,  85
+    WAIT
+
+    SPEED 6
+    MOVE G6A,100,  100, 95,  10, 100, 100
+    MOVE G6D,100,  100, 95,  10, 100, 100
+    MOVE G6B, 152,  20,  85
+    MOVE G6C, 155,  24,  85
+    WAIT
+
+
+    '-------------------------------------
+    SPEED 6
+    MOVE G6A,100,  15, 55,  139, 100, 100
+    MOVE G6D,100,  11, 51,  140, 100, 100
+    MOVE G6B, 97,  26,  80
+    MOVE G6C, 100,  30,  80, 100, 100
+    WAIT
+
+    SPEED 6
+    MOVE G6A,100,  10, 55,  140, 100, 100
+    MOVE G6D,100,  10, 55,  140, 100, 100
+    MOVE G6B, 100,  100,  80
+    MOVE G6C, 100,  100,  80, 100, 100
+    WAIT
+
+    SPEED 6
+    MOVE G6A,100,  10, 55,  140, 190, 100
+    MOVE G6D,100,  10, 55,  140, 190, 100
+    MOVE G6B, 100,  100,  80
+    MOVE G6C, 100,  100,  80, 100, 100
+    WAIT
+
+    SPEED 6
+    MOVE G6A,100,  60, 55,  140, 190, 100
+    MOVE G6D,100,  60, 55,  140, 190, 100
+    MOVE G6B, 100,  100,  80
+    MOVE G6C, 100,  100,  80, 100, 100
+    WAIT
+
+    SPEED 6
+    MOVE G6A,100,  60, 55,  140, 100, 100
+    MOVE G6D,100,  60, 55,  140, 100, 100
+    MOVE G6B, 100,  100,  80
+    MOVE G6C, 100,  100,  80, 100, 100
+    WAIT
 
 
 
-MAIN: '라벨설정
-    ETX 9600,48
+    '--------------------------------------------
+    SPEED 10
+    MOVE G6A,100, 150, 170,  40, 100
+    MOVE G6D,100, 150, 170,  40, 100
+    MOVE G6B, 150, 150,  45
+    MOVE G6C, 150, 150,  45
+    WAIT
+
+    SPEED 10
+    MOVE G6A,  100, 155,  110, 120, 100
+    MOVE G6D,  100, 155,  110, 120, 100
+    MOVE G6B, 190, 80,  15
+    MOVE G6C, 190, 80,  15
+    WAIT
+
+    SPEED 10
+    MOVE G6A,  100, 165,  25, 162, 100
+    MOVE G6D,  100, 165,  25, 162, 100
+    MOVE G6B,  155, 15, 90
+    MOVE G6C,  155, 15, 90
+    WAIT
+
+    '-------------- 일어나기 -----------------
+    SPEED 9
+    MOVE G6A, 60, 162,  30, 162, 145, 100
+    MOVE G6D, 60, 162,  30, 162, 145, 100
+    MOVE G6B,160,  32, 70, 100, 100, 100
+    MOVE G6C,160,  32, 70, 100, 100, 100
+    WAIT
+
+
+    MOVE G6A, 60, 150,  28, 155, 140, 100
+    MOVE G6D, 60, 150,  28, 155, 140, 100
+    MOVE G6B,150,  60,  90, 100, 100, 100
+    MOVE G6C,150,  60,  90, 100, 100, 100
+    WAIT
+    '''''''''''''''''''''''''
+
+    '---------------'추가분'-----------------
+    MOVE G6A,100, 150,  28, 140, 100, 100
+    MOVE G6D,100, 150,  28, 140, 100, 100
+    MOVE G6B,130,  50,  85, 100, 100, 100
+    MOVE G6C,130,  50,  85, 100, 100, 100
+    WAIT
+    DELAY 100
+
+    SPEED 9
+    MOVE G6A,100, 130,  48, 136, 100, 100
+    MOVE G6D,100, 130,  48, 136, 100, 100
+    MOVE G6B,130,  50,  85, 100, 100, 100
+    MOVE G6C,130,  50,  85, 100, 100, 100
+    WAIT
+
+
+    '---------------------------------------
+
+    SPEED 10
+    GOSUB 안정화자세
+    SPEED 10
+    GOSUB 기본자세
+    '보행순서=0
+    GOTO MAIN
+
+    '*****************************************************
+
+GYRO_INIT:
+    GYRODIR G6A, 0, 0, 0, 0, 1
+    GYRODIR G6D, 1, 0, 0, 0, 0
+    RETURN
+GYRO_ON:
+    GYROSET G6A, 2, 1, 1, 1,
+    GYROSET G6D, 2, 1, 1, 1,
+    RETURN
+GYRO_OFF:
+    GYROSET G6A, 0, 0, 0, 0, 0
+    GYROSET G6D, 0, 0, 0, 0, 0
+    RETURN
+GYRO_MAX:
+    GYROSENSE G6A,255,255,255,255
+    GYROSENSE G6D,255,255,255,255
+    RETURN
+GYRO_MID:
+    GYROSENSE G6A,255,100,100,100
+    GYROSENSE G6D,255,100,100,100
+    RETURN
+GYRO_MIN:
+    GYROSENSE G6A,100,50,50,50,50
+    GYROSENSE G6D,100,50,50,50,50
+    RETURN
+GYRO_ST:
+    GYROSENSE G6A,100,30,20,10,
+    GYROSENSE G6D,100,30,20,10 ,
+    RETURN
+
+
+
+
+'MAIN: '라벨설정
+    'ETX 9600,48
 
     'GOSUB 앉은자세
     '**** 입력된 A값이 0 이면 MAIN 라벨로 가고
     '**** 1이면 KEY1 라벨, 2이면 key2로... 가는문
-MAIN1:
+MAIN:
     'GOTO KEY1
     'A=A+1
     'IF A=44 THEN
     'A=0
-    ERX 9600,A, MAIN1
+    ERX 9600,A, MAIN
     'GOTO 오른쪽턴2
     A_old = A
 
-    ON A GOTO MAIN1,KEY1,KEY2,KEY3,KEY4,KEY5,KEY6,KEY7,KEY8,KEY9,KEY10,KEY11,KEY12,KEY13,KEY14,KEY15
+    ON A GOTO MAIN,KEY1,KEY2,KEY3,KEY4,KEY5,KEY6,KEY7,KEY8,KEY9,KEY10,KEY11,KEY12,KEY13,KEY14,KEY15,KEY16,KEY17
     'GOTO KEY34
     'DELAY 500
 
     'GOTO 앉아오른팔뻗기
 
-    GOTO MAIN1	
+    GOTO MAIN
     '*******************************************
     '		MAIN 라벨로 가기
     '*******************************************
@@ -1321,22 +1499,23 @@ Arm_motor_mode3:
 
 
 KEY1:
-    ETX  9600,1
-    MOVE G6A,100,  82, 145,  90, 100, 100
-    MOVE G6D,100,  82, 145,  90, 100, 100
-    MOVE G6B,100,  30,  80, 	, 100, 100
-    MOVE G6C,100,  30,  80, 100, 135, 100
+    'ETX  9600,1
+    MOVE G6A,100,  82, 145,  86, 100, 100
+    MOVE G6D,100,  82, 145,  86, 100, 100
+    MOVE G6B,100,  25,  80, 	, 100, 100
+    MOVE G6C,102 ,  30,  80, 100, 135, 100
+    WAIT
     'DELAY 1000
 
     GOTO MAIN
 KEY2:
-    ETX  9600,2
+   ' ETX  9600,2
     GOTO 전진달리기희영50
     'DELAY 1000
 
     GOTO MAIN
 KEY3: 'LEFT SIDE
-    ETX  9600,3
+    'ETX  9600,3
     'MOVE G6A,100,  79, 148,  86, 102, 100
     'MOVE G6D,100,  79, 148,  86, 102, 100
     'MOVE G6B,100,  18,  88, 100, 100, 10
@@ -1351,7 +1530,7 @@ KEY3: 'LEFT SIDE
     GOTO MAIN
 
 KEY4: 'RIGHT SIDE
-    ETX  9600,4
+    'ETX  9600,4
     'MOVE G6A,100,  74, 148,  95, 102, 100
     'MOVE G6D,100,  74, 148,  95, 102, 100
     'MOVE G6B,100,  18,  88, 100, 100, 190
@@ -1365,58 +1544,69 @@ KEY4: 'RIGHT SIDE
     'DELAY 1000
     GOTO MAIN
 KEY5:
-    ETX 9600,5
+    'ETX 9600,5
     GOTO 왼쪽옆으로70
     'DELAY 1000
     GOTO MAIN
 KEY6:
-    ETX 9600,6
+   ' ETX 9600,6
     GOTO 오른쪽옆으로70
     'DELAY 1000
     GOTO MAIN
 KEY7:
-    ETX 9600,7
+   ' ETX 9600,7
     GOTO 왼쪽턴45
     'DELAY 1000
     GOTO MAIN
 KEY8:
-    ETX 9600,8
+    'ETX 9600,8
     GOTO 오른쪽턴45
     'DELAY 1000
     GOTO MAIN
 KEY9:
-    ETX 9600,9
+   ' ETX 9600,9
     GOTO 왼쪽턴20
     'DELAY 1000
     GOTO MAIN
 KEY10:
-    ETX 9600,10
+   ' ETX 9600,10
     GOTO 오른쪽턴20
     'DELAY 1000
     GOTO MAIN
 KEY11:
-    ETX 9600,11
+    'ETX 9600,11
     GOTO 전진종종10걸음
     'DELAY 1000
     GOTO MAIN
 KEY12:
-    ETX 9600,12
+    'ETX 9600,12
     GOTO 전진종종2걸음
     'DELAY 1000
     GOTO MAIN
 KEY13:
-    ETX 9600,13
+    'ETX 9600,13
     GOTO 올려보기
-    'DELAY 1000
+    DELAY 1000
     GOTO MAIN
 KEY14:
-    ETX 9600,14
+    'ETX 9600,14
     GOTO 계단오른발오르기2cm
     'DELAY 1000
     GOTO MAIN
 KEY15:
-    ETX 9600,15
+    'ETX 9600,15
     GOTO 계단왼발내리기2cm
+    'DELAY 1000
+    GOTO MAIN
+KEY16:
+    'ETX 9600,16
+    GOTO 허들넘기
+    'DELAY 1000
+    GOTO MAIN
+    END
+KEY17:
+    'ETX 9600,17
+    GOTO 왼발공차기
     'DELAY 1000
     GOTO MAIN
     END
