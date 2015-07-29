@@ -58,7 +58,7 @@ MUSIC "O23EAB7EA>3#C"
 '***** 초기자세로 **********************
 'GOSUB GYRO_INIT
 'GOSUB GYRO_ON
-'GOSUB GYRO_MIN
+'GOSUB GYRO_ST
 SPEED 5
 GOSUB 기본자세
 
@@ -84,10 +84,11 @@ MAIN:
         'GOTO 계단왼발내리기3cm
         'GOTO 계단오른발오르기2cm
         'GOTO GREEN
-        GOTO 계단왼발내리기2cm
+        'GOTO 계단왼발내리기2cm
+        GOTO 왼쪽턴45_1
+        'GOTO 오른쪽턴45
         'GOTO 왼발공차기
     ENDIF
-
 
     GOTO MAIN
     '************************************************
@@ -153,28 +154,6 @@ MAIN:
 
     GOTO MAIN
 
-왼쪽턴45:
-
-    GOSUB Leg_motor_mode2
-    SPEED 8
-    MOVE G6A,95,  106, 145,  63, 105, 100
-    MOVE G6D,95,  46, 145,  123, 105, 100
-    MOVE G6B,115
-    MOVE G6C,85
-    WAIT
-
-    SPEED 10
-    MOVE G6A,93,  106, 145,  63, 105, 100
-    MOVE G6D,93,  46, 145,  123, 105, 100
-    WAIT
-
-    SPEED 8
-    GOSUB 기본자세
-    GOSUB Leg_motor_mode1
-    DELAY 1500
-
-    보행순서=0
-    GOTO MAIN
 
 
 
@@ -1122,29 +1101,58 @@ MAIN:
     '***************************************
 
 왼쪽턴45_1:
+    FOR I = 0 TO 5
+        GOSUB Leg_motor_mode2
+        SPEED 8
+        MOVE G6A,97,  109, 180,  30, 105, 100
+        MOVE G6D,93,  60,  110,  150, 105, 100
+        MOVE G6B,120,,,,,190
+        MOVE G6C,80,,,,128,100
+        WAIT
+
+
+
+        SPEED 10
+        MOVE G6A,94,  108, 180,  15, 105, 100
+        MOVE G6D,94,  62,  110,  135, 105, 100
+        'MOVE G6A,93,  114 160,  30, 105, 100
+        'MOVE G6D,93,  50,  127,  135, 105, 100
+        MOVE G6B,120,,,,,190
+        MOVE G6C,80,,,,128,100
+        WAIT
+
+        SPEED 8
+        GOSUB 기본자세2
+        GOSUB Leg_motor_mode1
+        WAIT
+        DELAY 2000
+
+    NEXT I
+    GOTO MAIN
+
+왼쪽턴45:
 
     GOSUB Leg_motor_mode2
     SPEED 8
     MOVE G6A,95,  106, 145,  63, 105, 100
     MOVE G6D,95,  46, 145,  123, 105, 100
-    MOVE G6B,115,,,,,190
-    MOVE G6C,85,,,,128,100
+    MOVE G6B,115
+    MOVE G6C,85
     WAIT
-
-
 
     SPEED 10
     MOVE G6A,93,  106, 145,  63, 105, 100
     MOVE G6D,93,  46, 145,  123, 105, 100
-    MOVE G6B,115,,,,,190
-    MOVE G6C,85,,,,128,100
-
     WAIT
 
     SPEED 8
-    GOSUB 기본자세2
+    GOSUB 기본자세
     GOSUB Leg_motor_mode1
+    DELAY 1500
+
+    보행순서=0
     GOTO MAIN
+
 
 전진보행50:
     'GOSUB SOUND_Walk_Ready
