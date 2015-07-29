@@ -428,6 +428,11 @@ MAIN:
 
 전진달리기양발50:
 
+    GOSUB GYRO_INIT
+    GOSUB GYRO_ON
+    GOSUB GYRO_ST
+
+
     SPEED 30
     HIGHSPEED SETON
     GOSUB Leg_motor_mode4
@@ -544,14 +549,20 @@ MAIN:
     DELAY 500
 
     GOSUB Leg_motor_mode1
+    GOSUB GYRO_OFF
     GOTO MAIN
 
     '******************************************
 허들넘기: 'USE
 
+
+
+
     SPEED 13
-    MOVE G6B, 190, 100, 100
-    MOVE G6C, 190, 100, 100
+    MOVE G6A,100,  82, 145,  86, 100, 100
+    MOVE G6D,100,  83, 145,  86, 100, 100
+    MOVE G6B,100,  100,  80, 100, 100, 100
+    MOVE G6C,102 , 100,  80, 100, 100, 100
     WAIT
 
     SPEED 10

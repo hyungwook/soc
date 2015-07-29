@@ -105,6 +105,16 @@ MOTOR_ON:
     mode = 0
     ETX 9600,30
     RETURN
+기본자세2:
+    MOVE G6A,100,  82, 145,  86, 100, 100
+    MOVE G6D,100,  82, 145,  86, 100, 100
+    MOVE G6B,100,  25,  80, 	, 100, 100
+    MOVE G6C,102 ,  30,  80, 100, 135, 100
+    WAIT
+    mode = 0
+    ETX 9600,30
+    RETURN
+
 
 외각선확인:
     MOVE G6A,100,  74, 148,  91, 102, 100
@@ -153,6 +163,10 @@ MOTOR_ON:
     '**********************************************
     '**********************************************
 전진달리기양발50:
+
+    GOSUB GYRO_INIT
+    GOSUB GYRO_ON
+    GOSUB GYRO_ST
 
     SPEED 30
     HIGHSPEED SETON
@@ -269,7 +283,9 @@ MOTOR_ON:
 
     DELAY 500
 
+
     GOSUB Leg_motor_mode1
+    GOSUB GYRO_OFF
     GOTO MAIN
 
 RX_EXIT:
@@ -361,8 +377,8 @@ RX_EXIT:
     SPEED 8
     MOVE G6A,95,  106, 145,  63, 105, 100
     MOVE G6D,95,  46, 145,  123, 105, 100
-    MOVE G6B,115,,,,,190
-    MOVE G6C,85,,,,135,100
+    MOVE G6B,115
+    MOVE G6C,85
     WAIT
 
 
@@ -370,8 +386,8 @@ RX_EXIT:
     SPEED 10
     MOVE G6A,93,  106, 145,  63, 105, 100
     MOVE G6D,93,  46, 145,  123, 105, 100
-    MOVE G6B,115,,,,,190
-    MOVE G6C,85,,,,135,100
+    MOVE G6B,115
+    MOVE G6C,85
 
     WAIT
 
@@ -386,15 +402,15 @@ RX_EXIT:
     SPEED 8
     MOVE G6A,95,  46, 145,  123, 105, 100
     MOVE G6D,95,  106, 145,  63, 105, 100
-    MOVE G6C,115,,,,135,100
-    MOVE G6B,85,,,,,190
+    MOVE G6C,115
+    MOVE G6B,85
     WAIT
 
     SPEED 10
     MOVE G6A,93,  46, 145,  123, 105, 100
     MOVE G6D,93,  106, 145,  63, 105, 100
-    MOVE G6C,115,,,,135,100
-    MOVE G6B,85,,,,,190
+    MOVE G6C,115
+    MOVE G6B,85
 
     WAIT
 
@@ -437,6 +453,10 @@ RX_EXIT:
 
 전진종종10걸음:
     '    넘어진확인 = 0
+
+    GOSUB GYRO_INIT
+    GOSUB GYRO_ON
+    GOSUB GYRO_ST
 
     SPEED 10
     HIGHSPEED SETON
@@ -531,7 +551,7 @@ RX_EXIT:
     DELAY 400
 
     GOSUB Leg_motor_mode1
-    '보행순서=0
+    GOSUB GYRO_OFF    '보행순서=0
     GOTO MAIN
 
 
@@ -541,7 +561,9 @@ RX_EXIT:
 
 전진종종2걸음:
     '    넘어진확인 = 0
-
+    GOSUB GYRO_INIT
+    GOSUB GYRO_ON
+    GOSUB GYRO_ST
     SPEED 10
     HIGHSPEED SETON
     GOSUB All_motor_mode3
@@ -635,7 +657,7 @@ RX_EXIT:
     DELAY 400
 
     GOSUB Leg_motor_mode1
-    '보행순서=0
+    GOSUB GYRO_OFF'보행순서=0
     GOTO MAIN
 
 
@@ -645,7 +667,7 @@ RX_EXIT:
     MOVE G6A,98,  77, 145,  93, 101, 100
     MOVE G6D,99,  75, 145,  93, 101, 100
     MOVE G6B,100,  25,  80, 100, 100, 100
-    MOVE G6C,102,  31,  80, 100, 100, 100
+    MOVE G6C,102,  31,  80, 100, 135, 100
     WAIT
     RETURN
 
@@ -1133,37 +1155,45 @@ RX_EXIT:
 
 전진달리기희영50_1:
     FOR I = 0 TO 2
-        MOVE G6A,96,  95, 100, 120, 105
-        MOVE G6D,103, 78, 146,  91, 102
+'전진달리기50_1:
+        MOVE G6A,96,  95, 100, 120, 104
+        MOVE G6D,101, 78, 146,  91, 100
         MOVE G6B, 80
         MOVE G6C,120
         WAIT
 
-
-        MOVE G6A,96,  75, 122, 120, 105
-        MOVE G6D,103, 80, 146,  89, 100
+'전진달리기50_2:
+        MOVE G6A,96,  75, 122, 120, 104
+        MOVE G6D,101, 80, 146,  89, 100
         WAIT
 
-
-        MOVE G6A,104, 70, 145, 103, 101
-        MOVE G6D, 94, 88, 160,  68, 102
+'전진달리기50_3:
+        MOVE G6A,104, 70, 145, 103, 100
+        MOVE G6D, 96, 88, 160,  68, 100
         WAIT
 
+        'ERX 4800,A, 전진달리기50_4
+        'IF A <> A_old THEN  GOTO 전진달리기50_멈춤
+
+        '*********************************
+
+'전진달리기50_4:
         MOVE G6D,96,  95, 100, 120, 104
-        MOVE G6A,103, 78, 146,  91, 103
+        MOVE G6A,103, 78, 146,  91, 102
         MOVE G6C, 80
         MOVE G6B,120
         WAIT
 
+'전진달리기50_5:
         MOVE G6D,96,  75, 122, 120, 104
-        MOVE G6A,103, 80, 146,  89, 101
+        MOVE G6A,103, 80, 146,  89, 100
         WAIT
 
-
+'전진달리기50_6:
         MOVE G6D,104, 70, 145, 103, 100
-        MOVE G6A, 94, 88, 160,  68, 103
+        MOVE G6A, 94, 88, 160,  68, 102
         WAIT
-    NEXT I
+     NEXT I
 
     GOTO 전진달리기희영50_멈춤
 
@@ -1175,35 +1205,38 @@ RX_EXIT:
 전진달리기희영50_4:
 
     FOR I = 0 TO 2
+'전진달리기50_4:
         MOVE G6D,96,  95, 100, 120, 104
-        MOVE G6A,103, 78, 146,  91, 103
+        MOVE G6A,103, 78, 146,  91, 102
         MOVE G6C, 80
         MOVE G6B,120
         WAIT
 
+'전진달리기50_5:
         MOVE G6D,96,  75, 122, 120, 104
-        MOVE G6A,103, 80, 146,  89, 101
+        MOVE G6A,103, 80, 146,  89, 100
         WAIT
 
-
+'전진달리기50_6:
         MOVE G6D,104, 70, 145, 103, 100
-        MOVE G6A, 94, 88, 160,  68, 103
+        MOVE G6A, 94, 88, 160,  68, 102
         WAIT
 
-        MOVE G6A,96,  95, 100, 120, 105
-        MOVE G6D,103, 78, 146,  91, 102
+'전진달리기50_1:
+        MOVE G6A,96,  95, 100, 120, 104
+        MOVE G6D,101, 78, 146,  91, 100
         MOVE G6B, 80
         MOVE G6C,120
         WAIT
 
-
-        MOVE G6A,96,  75, 122, 120, 105
-        MOVE G6D,103, 80, 146,  89, 100
+'전진달리기50_2:
+        MOVE G6A,96,  75, 122, 120, 104
+        MOVE G6D,101, 80, 146,  89, 100
         WAIT
 
-
-        MOVE G6A,104, 70, 145, 103, 101
-        MOVE G6D, 94, 88, 160,  68, 102
+'전진달리기50_3:
+        MOVE G6A,104, 70, 145, 103, 100
+        MOVE G6D, 96, 88, 160,  68, 100
         WAIT
     NEXT I
 
@@ -1218,6 +1251,7 @@ RX_EXIT:
     SPEED 5
     GOSUB 기본자세
 
+
     DELAY 400
 
     GOSUB Leg_motor_mode1
@@ -1228,8 +1262,10 @@ RX_EXIT:
 허들넘기: 'USE
 
     SPEED 13
-    MOVE G6B, 190, 100, 100
-    MOVE G6C, 190, 100, 100
+    MOVE G6A,100,  82, 145,  86, 100, 100
+    MOVE G6D,100,  83, 145,  86, 100, 100
+    MOVE G6B,100,  100,  80, 100, 100, 100
+    MOVE G6C,102 , 100,  80, 100, 100, 100
     WAIT
 
     SPEED 10
@@ -1401,7 +1437,7 @@ GYRO_ST:
 
 
 
-'MAIN: '라벨설정
+    'MAIN: '라벨설정
     'ETX 9600,48
 
     'GOSUB 앉은자세
@@ -1509,7 +1545,7 @@ KEY1:
 
     GOTO MAIN
 KEY2:
-   ' ETX  9600,2
+    ' ETX  9600,2
     GOTO 전진달리기희영50
     'DELAY 1000
 
@@ -1549,12 +1585,12 @@ KEY5:
     'DELAY 1000
     GOTO MAIN
 KEY6:
-   ' ETX 9600,6
+    ' ETX 9600,6
     GOTO 오른쪽옆으로70
     'DELAY 1000
     GOTO MAIN
 KEY7:
-   ' ETX 9600,7
+    ' ETX 9600,7
     GOTO 왼쪽턴45
     'DELAY 1000
     GOTO MAIN
@@ -1564,12 +1600,12 @@ KEY8:
     'DELAY 1000
     GOTO MAIN
 KEY9:
-   ' ETX 9600,9
+    ' ETX 9600,9
     GOTO 왼쪽턴20
     'DELAY 1000
     GOTO MAIN
 KEY10:
-   ' ETX 9600,10
+    ' ETX 9600,10
     GOTO 오른쪽턴20
     'DELAY 1000
     GOTO MAIN
