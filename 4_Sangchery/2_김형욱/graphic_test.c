@@ -120,7 +120,7 @@ void uart1_buffer_write(unsigned char *buf, int size)
 
 	while (uart_tx_buf_full(UART1) == 1);
 	ret = uart_write(UART1, buf, size);
-	if (ret<0) {
+	if (ret < 0) {
 		printf("Maybe UART Buffer is Full!\n");
 	}
 }
@@ -156,30 +156,39 @@ void init_console(void)
 
 int main(void)
 {
-	int i = 0, j = 0, k = 0, l = 0, cnt = 0, line = 0;
+	int i = 0, j = 0, k = 0, l = 0, line = 0;
 	int state_1 = 0;
 	float r = 0, g = 0, b = 0;
 	float max = 0.0f, min = 0.0f;
 	float hf = 0.0f, sf = 0.0f, vf = 0.0f;
 	//	float point_h = 0.0f, point_s = 0.0f, point_v = 0.0f; //중앙점의 hsv값
-	float delta,degree=0;
+	float delta, degree = 0;
 	char input;
 	int hue_min = 45, hue_max = 70, sat_min = 2;
 	unsigned char tmpchar;
-	int ret, face = 0;
+	int ret;
 	int b_loop = 0;
+	int exer = 0;
+	int stage = 4;
 	//외곽선
-	int sum_left = 0, sum_right = 0;
-	int sum_i = 0, sum_j = 0;
+	int r_sum_left = 0, r_sum_right = 0;
+	int l_sum_left = 0, l_sum_right = 0;
+	int r_sum = 0, l_sum = 0;
 	int cnt0 = 0;
+	int motion1 = 0;
 	float first_x = 0, first_y = 0, second_x = 0, second_y = 0, outline_x = 0, outline_y = 0;
+	int firstx = 0, firsty = 0, secondx = 0, secondy = 0;
 	int result = 0;
+	//st1
+	int cnt = 0, cnt1 = 0, sum1 = 0, sum2 = 0, sum3 = 0, sw = 0;
 	//st2
 	int motion2 = 0;
 	//st3
-	int cnt3 = 0, motion3 = 0, st3_av_i = 0, st3_sum_i = 0;
-	int st3_left = 0, st3_right = 0;
-	
+	int cnt3 = 0, motion3 = 0;
+	//st4
+	int cnt4 = 0, motion4 = 0, st4_av_i = 0, st4_sum_i = 0, cnt4_b_w = 0;
+	int st4_left = 0, st4_right = 0,green4_l = 0, green4_r = 0;
+
 
 	SURFACE* bmpsurf = 0;
 	U16* fpga_videodata = (U16*)malloc(180 * 120 * 2);
@@ -197,7 +206,7 @@ int main(void)
 	int* xxx = (int*)malloc(180 * 120 * 4);
 	int* out_i = (int*)malloc(180 * 120 * 4);
 	int* out_j = (int*)malloc(180 * 120 * 4);
-	int* st3_green = (int*)malloc(180 * 120 * 4);
+	int* st4_green = (int*)malloc(180 * 120 * 4);
 
 
 
@@ -237,11 +246,13 @@ int main(void)
 		while (1)
 		{
 
-
+		GOUP:
 			read_fpga_video_data(fpga_videodata);
 
 
-			for (i = 0; i<180 * 120; i++)
+
+
+			for (i = 0; i < 180 * 120; i++)
 			{
 
 				b = ((*(fpga_videodata + i)) & 31);
@@ -261,11 +272,11 @@ int main(void)
 
 
 
-				if (r>g)
-					if (r>b)
+				if (r > g)
+					if (r > b)
 					{
 						max = r;
-						min = g>b ? b : g;
+						min = g > b ? b : g;
 					}
 					else
 					{
@@ -273,10 +284,10 @@ int main(void)
 						min = g;
 					}
 				else
-					if (g>b)
+					if (g > b)
 					{
 						max = g;
-						min = r>b ? b : r;
+						min = r > b ? b : r;
 					}
 					else
 					{
@@ -346,15 +357,15 @@ int main(void)
 			int m = 0;
 			float grad = 0;
 
-			for (i = 0; i<120; i++)
+			for (i = 0; i < 120; i++)
 			{
 
-				for (j = 0; j<180; j++){
+				for (j = 0; j < 180; j++){
 
 					*(lcd + i * 180 + j) = *(fpga_videodata + i * 180 + j);
 
 
-					if (((int)*(red + i * 180 + j) >17) && ((int)*(green + i * 180 + j) >17) && ((int)*(blue + i * 180 + j) > 17) && ((int)*(v_compare + i * 180 + j) > 17))
+					if (((int)*(red + i * 180 + j) >20) && ((int)*(green + i * 180 + j) >20) && ((int)*(blue + i * 180 + j) > 20) && ((int)*(v_compare + i * 180 + j) > 25))
 						*(xxx + i * 180 + j) = 1;//흰색을표시
 
 					else if (((int)*(red + i * 180 + j) < 10) && ((int)*(green + i * 180 + j) < 10) && ((int)*(blue + i * 180 + j) < 10) && ((int)*(v_compare + i * 180 + j) < 10))
@@ -375,385 +386,922 @@ int main(void)
 					else
 						*(xxx + i * 180 + j) = 7;//나머지
 
-					/*
-					if (i == 60)
-					{
-					*(lcd + i * 180 + j) = 0x7000;//lcd에 가로줄 빨간줄 표시코드
-					if (j == 90)
-					{
-					printf("hue: %.1f  sat: %.1f v_: %.1f\n", *(hue_joon + i * 180 + j), *(s_temp + i * 180 + j), *(v_compare + i * 180 + j));
-					printf("red : %d, green : %d, blue : %d\n", (int)*(red + i * 180 + j), (int)*(green + i * 180 + j), (int)*(blue + i * 180 + j));
-					}
-
-					}
-					if (j == 90)
-					*(lcd + i * 180 + j) = 0x7000;//lcd에 세로줄 빨간줄 표시코드
-					*/
 				}
 
 
 			}
-
+			/*
+			switch (sw)
+			{
+			case 1:
+			sw = 0;
+			goto stage1;
+			}
+			*/
 			/*
 			for (i = 0; i < 120; i++)
 			{
 			for (j = 0; j < 180; j++){
 
-			if ((*(xxx + 180 * i + j) + *(xxx + 180 * i + j - 1)) == 3) *(lcd + i * 180 + j) = 0x7000;
-			else if ((*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j)) == 3) *(lcd + i * 180 + j) = 0x7000;
-			else if ((*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j - 1)) == 3) *(lcd + i * 180 + j) = 0x7000; // 흰색과 검정 경계면일경우를 얘기함
+			if ((*(xxx + 180 * i + j) + *(xxx + 180 * i + j - 1) == 3)
+			|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j) == 3)
+			|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j - 1) == 3)) *(lcd + i * 180 + j) = 0x000f;
+			// 흰색과 검정 경계면일경우를 얘기함
 
-			else *(lcd + i * 180 + j) = 0;
+			else if (*(xxx + 180 * i + j) == 1) *(lcd + i * 180 + j) = 0xf000;
+			else if (*(xxx + 180 * i + j) == 2) *(lcd + i * 180 + j) = 0x0000;
+
 			}
 			}
+			draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
+			draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
+			flip();
 			*/
+
 
 			/*
 			////////////////////////외곽선(로봇중앙맞추기)///////////////////////
 
 			result = 0;
 			cnt0 = 0;
-			sum_left = 0;
-			sum_right = 0;
-			int firstx = 0, firsty = 0, secondx = 0, secondy = 0;
-			if (face == 0)
+			int r_b_w_i = 0, l_b_w_i = 0;
+
+			for (j = 5; j < 175; j++)
 			{
-				Send_Command(0x04, 0xfb);
-				DelayLoop(100000);
-				draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
-				draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
-				flip();
-				face = 1;//오
+			for (i = 116; i >= 60; i--)
+			{
+			if (*(xxx + 180 * i + j) == 1) *(lcd + 180 * i + j) = 0x000f;
+			if ((*(xxx + 180 * i + j) + *(xxx + 180 * i + j - 1) == 3)
+			|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j) == 3)
+			|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j - 1) == 3))
+			{
+			*(lcd + 180 * i + j) = 0xf000;
+			break;
+			}
+			if (*(xxx + 180 * i + j) == 2)
+			break;
+
+
+			}
+			}
+			draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
+			draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
+			flip();
+
+
+			if (motion1 == 0)//준비단계
+			{
+			printf("motion1=%d", motion1);
+			printf("Ready\n");
+			r_sum_left = 0, r_sum_right = 0;
+			l_sum_left = 0, l_sum_right = 0;
+			r_sum = 0, l_sum = 0;
+
+
+			motion1 = 1;//오
+
+			goto GOUP;
 			}
 
-			else if (face == 1)
+			else if (motion1 == 1)//오른쪽고개돌리기
 			{
-				for (j = 30; j < 150; j++)
-				{
-					for (i = 119; i >= 0; i--)
-					{
-						if (j < 90)
-						sum_left++;
-						else
-						sum_right++;
-						
-						if ((*(xxx + 180 * i + j) + *(xxx + 180 * i + j - 1) == 3)
-							|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j) == 3)
-							|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j - 1) == 3))
-						{
-							*(out_i + cnt0) = i;
-							*(out_j + cnt0) = j;
-							cnt0++;
-							*(lcd + i * 180 + j) = 0x7000;
+			printf("motion1=%d", motion1);
+			printf("face right!\n");
+			r_sum_left = 0, r_sum_right = 0;
+			l_sum_left = 0, l_sum_right = 0;
+			r_sum = 0, l_sum = 0;
+			r_b_w_i = 0, l_b_w_i = 0;
+			cnt0 = 0;
+			Send_Command(0x04, 0xfb);
+			DelayLoop(80000000);
 
-						}
-						else
-							*(lcd + i * 180 + j) = 0;
+			motion1 = 2;
+			goto GOUP;
+			}
 
-						if (*(xxx + 180 * i + j) == 2)
-							break;
-					}
-				}
+			else if (motion1 == 2)//오른쪽에서 영상처리
+			{
+			printf("motion1=%d", motion1);
+			printf("right screen\n");
+			Send_Command(0x04, 0xfb);
+			DelayLoop(80000000);
+			for (j = 5; j < 175; j++)
+			{
+			for (i = 116; i >= 60; i--)
+			{
+			if (*(xxx + 180 * i + j) == 1)
+			{
+			if (j < 90)
+			r_sum_left++;
+			else
+			r_sum_right++;
 
-				for (i = 0; i < 10; i++)
-				{
-					firsty += *(out_i + cnt0 / 2 - 20 + i);
-					firstx += *(out_j + cnt0 / 2 - 20 + i);
-					secondy += *(out_i + cnt0 / 2 + 10 + i);
-					secondx += *(out_j + cnt0 / 2 + 10 + i);
-				}
-				first_y = firsty / 10;
-				first_x = firstx / 10;
-				second_y = secondy / 10;
-				second_x = secondx / 10;
+			if ((*(xxx + 180 * i + j) + *(xxx + 180 * i + j - 1) == 3)
+			|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j) == 3)
+			|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j - 1) == 3))
+			{
+			r_b_w_i += i;
+			cnt0++;
+			break;
 
-
-				outline_y = second_y - first_y;
-				outline_x = second_x - first_x;
-				degree = atan2(outline_y, outline_x) * 180 / 3.14;
-
-				printf("%.2f\n", degree);
-
-				draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
-				draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
-				flip();
-				
-
-				if (degree > 45 && degree < 90 )
-				{
-					Send_Command(0x07, 0xf8);
-					DelayLoop(100000);
-					printf("turn left\n");
-					
-				}
-				else if (degree < -45 && degree > -90)
-				{
-					Send_Command(0x08, 0xf7);
-					DelayLoop(100000);
-					printf("turn right\n");
-					
-				}
-				else if (degree > 15&& degree < 45)
-				{
-					Send_Command(0x09, 0xf6);
-					DelayLoop(100000);
-				printf("turn left little\n");
-				}
-				else if (degree < -15&& degree > -45 )
-				{
-					Send_Command(0x0a, 0xf5);
-					DelayLoop(100000);
-					printf("turn right little\n");
-				}
-				else
-					result++;
-
-				if (result == 1)
-				{
-					if (sum_left + sum_right < 2000)
-					{//오른쪽을 봤을 때 흰색이 적게 보이면 왼쪽으로 이동
-						Send_Command(0x05, 0xfa);
-						DelayLoop(100000);
-						printf("go left\n");
-
-					}
-					else if (sum_left + sum_right > 19000)
-					{//오른쪽을 봤을 때 흰색이 많이 보이면 오른쪽으로 이동
-						Send_Command(0x06, 0xf9);
-						DelayLoop(100000);
-						printf("go right\n");
-					}
-					else
-						result++;
-				}
-
-				if (result == 2)
-				{
-					Send_Command(0x02, 0xfd);
-					DelayLoop(100000);
-					face = 0;
-					printf("Go\n");
-				}
 
 			}
 
-			
+			}
+			else if (*(xxx + 180 * i + j) == 2)
+			break;
+
+			}
+			}
+
+
+
+			r_sum = r_sum_left + r_sum_right;
+			printf("r_sum=%d\n",r_sum);
+			printf("r_b_w_i=%d\n", r_b_w_i / cnt0);
+			motion1 = 3;
+			goto GOUP;
+			}
+
+			else if (motion1 == 3)//고개왼쪽
+			{
+			printf("motion1=%d", motion1);
+			printf("face left!\n");
+			Send_Command(0x03, 0xfc);
+			DelayLoop(80000000);
+
+			motion1 = 4;
+			goto GOUP;
+			}
+
+			else if (motion1 == 4)//왼쪽에서 영상처리
+			{
+			printf("motion1=%d", motion1);
+			printf("left screen\n");
+			Send_Command(0x03, 0xfc);
+			DelayLoop(80000000);
+			for (j = 5; j < 175; j++)
+			{
+			for (i = 118; i >= 60; i--)
+			{
+			if (*(xxx + 180 * i + j) == 1)
+			{
+			if (j < 90)
+			l_sum_left++;
+			else
+			l_sum_right++;
+
+			if ((*(xxx + 180 * i + j) + *(xxx + 180 * i + j - 1) == 3)
+			|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j) == 3)
+			|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j - 1) == 3))
+			{
+			l_b_w_i += i;
+			cnt0++;
+			break;
+
+			}
+
+			}
+
+			else if (*(xxx + 180 * i + j) == 2)
+			break;
+
+
+			}
+			}
+
+
+
+			l_sum = l_sum_left + l_sum_right;
+			printf("l_sum=%d\n", l_sum);
+			printf("l_b_w_i=%d\n", l_b_w_i / cnt0);
+
+			motion1 = 5;
+			goto GOUP;
+			}
+
+			else if (motion1 == 5)//거리 비교
+			{
+			printf("motion1=%d", motion1);
+			printf("distance\n");
+			Send_Command(0x01, 0xfe);
+			DelayLoop(80000000);
+			if (l_sum > r_sum + 1000) // 왼쪽으로 한걸음 가야할듯
+			{
+			motion1 = 6;
+			goto GOUP;
+			}
+			else if (r_sum > l_sum + 1000) // 오른쪽으로 한걸음 가야할듯
+			{
+			motion1 = 7;
+			goto GOUP;
+			}
+			else // 평행비교로 가야대
+			{
+			motion1 = 8;
+			goto GOUP;
+			}
+			}
+
+			else if (motion1 == 6)//왼쪽한걸음동작
+			{
+			printf("motion1=%d", motion1);
+			printf("Go left!\n");
+			Send_Command(0x05, 0xfa);
+			DelayLoop(80000000);
+
+			motion1 = 1;
+			goto GOUP;
+			}
+
+			else if (motion1 == 7)//오른쪽한걸음동작
+			{
+			printf("motion1=%d", motion1);
+			printf("Go Right!\n");
+			Send_Command(0x06, 0xf9);
+			DelayLoop(80000000);
+
+			motion1 = 1;
+			goto GOUP;
+			}
+
+			else if (motion1 == 8) //오른쪽평행비교하자~
+			{
+			r_sum_left = 0, r_sum_right = 0;
+			l_sum_left = 0, l_sum_right = 0;
+
+			printf("motion1=%d", motion1);
+			printf("Second,face right!\n");
+			Send_Command(0x04, 0xfb);
+			DelayLoop(80000000);
+
+			motion1 = 9;
+			goto GOUP;
+			}
+
+			else if (motion1 == 9)//오른쪽 영상비교
+			{
+
+			printf("motion1=%d", motion1);
+			printf("Second,right screen\n");
+			Send_Command(0x04, 0xfb);
+			DelayLoop(80000000);
+			for (j = 5; j < 175; j++)
+			{
+			for (i = 116; i >= 60; i--)
+			{
+			if (*(xxx + 180 * i + j) == 1)
+			{
+			if (j < 90)
+			r_sum_left++;
+			else
+			r_sum_right++;
+
+			if ((*(xxx + 180 * i + j) + *(xxx + 180 * i + j - 1) == 3)
+			|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j) == 3)
+			|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j - 1) == 3))
+			{
+			break;
+
+			}
+
+
+
+			}
+			else if (*(xxx + 180 * i + j) == 2)
+			break;
+			}
+			}
+			printf("r_sum_left=%d\n", r_sum_left);
+			printf("r_sum_right=%d\n", r_sum_right);
+
+			motion1 = 10;
+			goto GOUP;
+			}
+
+			else if (motion1 == 10)//평행비교
+			{
+			printf("motion1=%d", motion1);
+			printf("Center\n");
+			Send_Command(0x04, 0xfb);
+			DelayLoop(80000000);
+			if (r_sum_right > r_sum_left + 750) // 왼쪽으로 돌아야함
+			{
+			motion1 = 11;
+			goto GOUP;
+			}
+			else if (r_sum_left > r_sum_right + 750) // 오른쪽으로 돌아야함
+			{
+			motion1 = 12;
+			goto GOUP;
+			}
+			else // 이제 가자
+			{
+			motion1 = 13;
+			goto GOUP;
+			}
+			}
+
+			else if (motion1 == 11)//왼쪽으로 20도
+			{
+			printf("motion1=%d", motion1);
+			printf("Turn Left!\n");
+			Send_Command(0x09, 0xf6);
+			DelayLoop(80000000);
+
+			motion1 = 8;
+			goto GOUP;
+			}
+
+			else if (motion1 == 12)//오른쪽으로 20도
+			{
+			printf("motion1=%d", motion1);
+			printf("Turn right!\n");
+			Send_Command(0x0a, 0xf5);
+			DelayLoop(80000000);
+
+			motion1 = 8;
+			goto GOUP;
+			}
+
+			else if (motion1 == 13)
+			{
+			printf("motion1=%d", motion1);
+			printf("GOGO!!\n");
+			Send_Command(0x02, 0xfd);
+			DelayLoop(80000000);
+			motion1 = 0;
+			goto GOUP;
+			}
+
+
+
 
 			////////////////////////////////////////////////////////////////
 			*/
 
+
 			/*
 			///////////////////// 1번째 장애물 /////////////////////////////
 			//앞만 보고 가다가 파란 픽셀이 화면에 많이 잡히면 stop
-			//고개를 숙이고 파란 픽셀의 평균값을 확인 후 좌우로 이동
-			//고개를 숙인 채로 가운데값을 찾으면 앞으로 다시 이동
+			if (stage == 1)
+			{
+			int aver = 0;
 			cnt1 = 0;
+			sum1 = 0;
+			sum2 = 0;
+			Send_Command(0x0c, 0xf3);
+			DelayLoop(50000000);
+			for (i = 60; i < 120; i++)
+			for (j = 30; j < 150; j++)
+			if (*(xxx + 180 * i + j) == 6)//파란색일 때
+			{
+			sum1 = sum1 + j;
+			cnt1++;
+			*(lcd + i * 180 + j) = 0xFFFF;
+			}
+			sum1 = sum1 / (cnt1 + 1);
+			printf("sum1 : %d\n", sum1);
+			printf("cnt1 : %d\n", cnt1);
+
+			//cnt1값이 커지면 멈추고 외곽선을 이용해서 몸의 평형으로 맞춤
+			//그리고 고개를 올림
+			if (cnt1 > 800)
+			{
+			Send_Command(0x01, 0xfe);
+			DelayLoop(50000000);
+			printf("up start\n");
+			Send_Command(0x0d, 0xf2);//고개들기
+
+			DelayLoop(50000000);
+			printf("up end\n");
+			sw = 1;
+			goto GOUP;
+			stage1:
+			printf("stage1\n");
+
+			aver = 0;
+			cnt1 = 0;
+			sum2 = 0;
+			sum3 = 0;
 			for (i = 0; i < 120; i++)
-			for (j = 0; j < 180; j++)
-			if (*(xxx + 180 * i + j) == 6)
 			{
-			cnt1++;
-			*(lcd + i * 180 + j) = 0xFFFF;
-			}
 
-			
-
-
-
-			for (i =60; i < 120; i++)
 			for (j = 0; j < 180; j++)
 			{
-			if (*(xxx + 180 * i + j) == 6)
+
+			if (*(xxx + 180 * i + j) == 6)//파란색 발견하면 cnt1증가 가로축j의 합을 sum2에 저장
 			{
-			sum_j = sum_j + j;
 			cnt1++;
-			*(lcd + i * 180 + j) = 0xFFFF;
+			sum2 = sum2 + j;
 			}
 
 			}
 
-			sum_j = sum_j / (cnt1+1);
+			if (cnt1 > 40)// 가로줄 하나에 cnt1가 40 이상이면 cnt1값과 sum2값을 다른 변수에 합하면서 저장
+			{
+			aver = aver + cnt1;
+			sum3 = sum3 + sum2;
+			cnt1 = 0;
+			sum2 = 0;
+			}
+			else //아니면 sum2, cnt1초기화
+			{
+			sum2 = 0;
+			cnt1 = 0;
+			}
+			}
 
-			printf("%d", sum_j);
-			if (sum_j>120) printf("right\n");
-			else if (sum_j < 60) printf("left\n");
-			else printf("center\n");
+			sum3 = sum3 / (aver + 1);
+			//printf("sum1 : %d sum2 : %d\n", sum1,sum2);
+			printf("aver : %d  sum3 : %d\n", aver, sum3);
+
+			if (sum3 > 95 && sum3 < 200)
+			{
+			printf("right\n");
+			Send_Command(0x06, 0xf9);//오른쪽으로 한걸음
+			DelayLoop(50000000);
+			Send_Command(0x06, 0xf9);
+			DelayLoop(50000000);
+			Send_Command(0x06, 0xf9);
+			DelayLoop(50000000);
+			cnt++;
+			}
+
+			else if (sum3 > 0 && sum3 < 85)//왼쪽에 파란픽셀이 많을 때
+			{
+			printf("left\n");
+			Send_Command(0x05, 0xfa);//왼쪽으로 한걸음
+			DelayLoop(50000000);
+			Send_Command(0x05, 0xfa);
+			DelayLoop(50000000);
+			Send_Command(0x05, 0xfa);
+			DelayLoop(50000000);
+			cnt++;
+			}
+			else if (sum3 == 0 || (sum3 >= 85 && sum3 <= 95))
+			{
+			printf("again\n");
+			Send_Command(0x0d, 0xf2);//고개들기
+			DelayLoop(50000000);
+			sw = 1;
+			goto GOUP;
+			}
+
+			if (cnt == 2)
+			{
+			stage = 2;
+			goto GOUP;
+			}
+
+			}
+			}
 
 
 			///////////////////////////////////////////////////////////////
-			*/
 
-			/*
-			///////////////////// 2번째 장애물 /////////////////////////////  ***i값 나중에 추가!***
-			int cnt2 = 0;
-			for (i = 0; i < 120; i++)
+
+
+			///////////////////// 2번째 장애물 ///////////////////////////// ***i값 나중에 추가!***
+			else if (stage == 2)
 			{
-				for (j = 0; j < 180; j++)
-				{
-					if (((*(xxx + i * 180 + j) - *(xxx + i * 180 + j + 1)) == 2) && *(xxx + i * 180 + j) == 4)
-					{
-						cnt2++;
-						*(lcd + 180 * i + j) = 0x7000;
-					}
-					else
-						*(lcd + 180 * i + j) = 0x0000;
-				}
+			int cnt2 = 0;
+			for (i = 40; i < 80; i++)
+			{
+			for (j = 0; j < 180; j++)
+			{
+			if (((*(xxx + i * 180 + j) - *(xxx + i * 180 + j + 1)) == 2) && *(xxx + i * 180 + j) == 4)
+			{
+			cnt2++;
+			*(lcd + 180 * i + j) = 0x7000;
 			}
+			else
+			*(lcd + 180 * i + j) = 0x0000;
+			}
+			}
+			draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
+			draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
+			flip();
 
 			if (cnt2 > 50)
-				motion2 = 1;//멈춰
+			motion2 = 1;//멈춰
 
-			if (motion2 == 1)
+			if (motion2 == 0)
 			{
-				if (cnt2 < 50)
-					motion2 = 2;//가
-
+			printf("slow go!\n");
+			Send_Command(0x0c, 0xf3);
+			DelayLoop(20000000);
+			goto GOUP;
 			}
 
-			if (motion2 == 1)
+			else if (motion2 == 1)
 			{
-				printf("STOP!!!!!!!!!!!!!!\n");
-				Send_Command(0x04, 0xfb);
-				DelayLoop(1000000);
+			printf("STOP!!!!!!!!!!!!!!\n");
+			Send_Command(0x01, 0xfe);
+			DelayLoop(10000000);
+			if (cnt2 < 50)
+			motion2 = 2;//가
+			goto GOUP;
 			}
 
-			else if (motion2 == 2 || motion2 == 0)
+			else if (motion2 == 2)
 			{
-				printf("GOGOGOGOGO!!!!!!!!!!!\n");
-				Send_Command(0x03, 0xfc);
-				DelayLoop(200000);
-
+			printf("GOGOGOGOGO!!!!!!!!!!!\n");
+			Send_Command(0x02, 0xfd);
+			DelayLoop(20000000);
+			stage = 3;
+			goto GOUP;
+			}
 			}
 
 			///////////////////////////////////////////////////////////////
 			*/
 
 			/////////////////////// 3번째 장애물 /////////////////////////////
-			//걸어오고있다.
-			cnt3 = 0;
-			st3_av_i = 0, st3_sum_i = 0;
-			st3_left = 0, st3_right = 0;
-
-			for (i = 0; i < 120; i++)
+			if (stage == 3)
 			{
-				for (j = 30; j < 150; j++)
+				cnt3 = 0;
+
+				for (i = 90; i < 120; i++)
 				{
-					if (*(xxx + 180 * i + j  ) == 5)
+					for (j = 20; j < 160; j++)
 					{
-						if ((*(xxx + 180 * i + j) + *(xxx + 180 * i + j + 1) == 7)
-							|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i + 1) + j) == 7)
-							|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i + 1) + j + 1) == 7))//초검일 경우
+
+						if (*(xxx + 180 * i + j) == 6)//파랑일 경우
 						{
-							*(lcd + 180 * i + j) = 0x7000;
-							printf("height i=%d\n", i);
-							*(st3_green + cnt3) = i;
+							*(lcd + 180 * i + j) = 0xf000;
+
 							cnt3++;
 						}
+
+
 					}
 				}
-			}
+				draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
+				draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
+				flip();
 
-			for (i = 0; i < cnt3; i++)
-			{
-				st3_sum_i += *(st3_green + i);
-			}
+				printf("cnt3=%d\n", cnt3);
 
-			st3_av_i = st3_sum_i / cnt3;
-
-			printf("st3_av_i=%d\n", st3_av_i);
-			printf("cnt3=%d\n", cnt3);
-			printf("motion3=%d\n",motion3);
-
-			if (motion3 == 0)
-			{
-				if (st3_av_i >55 && cnt3 >25)
+				if (cnt3 > 300)
 				{
-					Send_Command(0x0b, 0xf4); // 고개숙이고 총총걸음 10걸음짜리 행동으로 따로넣어야할듯
-					DelayLoop(10000000);
-					printf("command up!\n");
-					
-					//총총걸음 한 10걸음? 하다가 계단오르기!!!!! 로직으로
-					motion3 = 2;
-					
+					printf("Command, 10 walk\n");
+
+					motion3 = 1;
 				}
-				else
+
+				if (motion3 == 0)
 				{
+					printf("slow go!\n");
+					Send_Command(0x0c, 0xf3);
+					Send_Command(0x0c, 0xf3);
+					Send_Command(0x0c, 0xf3);
+					DelayLoop(100000000);
+					goto GOUP;
+				}
+				else if (motion3 == 1)
+				{
+					printf("10walk\n");
 					Send_Command(0x0b, 0xf4);
-					DelayLoop(10000000);
-					printf("no!\n");
+					Send_Command(0x0b, 0xf4);
+					Send_Command(0x0b, 0xf4);
+					DelayLoop(250000000);
+
+					motion3 = 2;
+					goto GOUP;
+				}
+				else if (motion3 == 2)
+				{
+
+					printf("10walk,one more\n");
+					Send_Command(0x0b, 0xf4);
+					Send_Command(0x0b, 0xf4);
+					Send_Command(0x0b, 0xf4);
+					DelayLoop(250000000);
+					motion3 = 3;
+					goto GOUP;
+				}
+
+				else if (motion3 == 3)
+				{
+					printf("jump\n");
+					Send_Command(0x10, 0xef);
+					Send_Command(0x10, 0xef);
+					Send_Command(0x10, 0xef);
+					DelayLoop(500000000);
+					motion3 = 4;
+					goto GOUP;
+				}
+				else if (motion3 == 4)
+				{
+					printf("GO,and turn!\n");
+					Send_Command(0x02, 0xfd);
+					Send_Command(0x02, 0xfd);
+					Send_Command(0x02, 0xfd);
+					DelayLoop(120000000);
+					printf("Turn1\n");
+					Send_Command(0x07, 0xf8);
+					Send_Command(0x07, 0xf8);
+					Send_Command(0x07, 0xf8);
+					DelayLoop(100000000);
+					printf("Turn2\n");
+					Send_Command(0x07, 0xf8);
+					Send_Command(0x07, 0xf8);
+					Send_Command(0x07, 0xf8);
+					DelayLoop(100000000);
+					printf("Turn3\n");
+					Send_Command(0x07, 0xf8);
+					Send_Command(0x07, 0xf8);
+					Send_Command(0x07, 0xf8);
+					DelayLoop(100000000);
+					printf("Turn4\n");
+					Send_Command(0x07, 0xf8);
+					Send_Command(0x07, 0xf8);
+					Send_Command(0x07, 0xf8);
+					DelayLoop(100000000);
+					printf("Clear!\n");
+					stage = 4;
+					goto GOUP;
 				}
 			}
 
-			else if (motion3 == 2)
-			{
-				printf("up\n");
-				Send_Command(0x0e, 0xf1);
-				DelayLoop(1000000000);
 
-				motion3 = 1;
-			}
 
-			else if (motion3 == 1)//올라간상태 총총걸음
+
+			/////////////////////////////////////////////////////////////////
+
+
+			/////////////////////// 4번째 장애물 /////////////////////////////
+			//걸어오고있다.
+			else if (stage == 4)
 			{
-				for (i = 0; i < 120; i++) // 초록색에서 균형잡기
+				cnt4 = 0, cnt4_b_w = 0;
+				st4_av_i = 0, st4_sum_i = 0;
+				green4_l = 0, green4_r = 0;
+				st4_left = 0, st4_right = 0;
+				
+				
+
+				for (i = 0; i < 120; i++)
 				{
-					for (j = 0; j < 180; j++)
+					for (j = 20; j < 160; j++)
 					{
 						if (*(xxx + 180 * i + j) == 5)
 						{
-							if (j < 90)
-								st3_left++;
+							if ((*(xxx + 180 * i + j) + *(xxx + 180 * i + j + 1) == 7)
+								|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i + 1) + j) == 7)
+								|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i + 1) + j + 1) == 7))//초검일 경우
+							{
+								*(lcd + 180 * i + j) = 0x7000;
+								*(st4_green + cnt4) = i;
+								cnt4++;
+								cnt4_b_w++;
+							}
 							else
-								st3_right++;
+								*(lcd + 180 * i + j) = 0xffff;
 						}
 					}
 				}
-				printf("up clear!\n");
-				if (st3_left > st3_right + 3000)
+				/*
+				for (i = 60; i < 120; i++)
 				{
-					Send_Command(0x05, 0xfa);
-					DelayLoop(100000000);
-					motion3 = 1;
-					printf("go left\n");
+					for (j = 20; j < 160; j++)
+					{
+						if (*(xxx + 180 * i + j) == 5)
+						{
+							if ((*(xxx + 180 * i + j) + *(xxx + 180 * i + j + 1) == 7)
+								|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i + 1) + j) == 7)
+								|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i + 1) + j + 1) == 7)
+								|| (*(xxx + 180 * i + j) + *(xxx + 180 * i + j - 1) == 7)
+								|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j) == 7)
+								|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j - 1) == 7))//흰검일 경우//내려갈거
+							{
+								*(lcd + 180 * i + j) = 0x000f;
+								cnt4_b_w++;
+							}
+						}
+					}
 				}
-				else if (st3_right>st3_left + 3000)
+				*/
+
+				
+
+				draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
+				draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
+				flip();
+
+				for (i = 0; i < cnt4; i++)
 				{
-					Send_Command(0x06, 0xf9);
-					DelayLoop(100000000);
-					motion3 = 1;
-					printf("go right\n");
+					st4_sum_i += *(st4_green + i);
+				}
+
+				st4_av_i = st4_sum_i / cnt4;
+
+				printf("st4_av_i=%d\n", st4_av_i);
+				printf("cnt4=%d\n", cnt4);
+				printf("cnt4_b_w=%d\n", cnt4_b_w);
+				printf("motion4=%d\n", motion4);
+
+				if (motion4 == 0)
+				{
+					if (st4_av_i >65 && cnt4 > 5)
+					{
+						printf("command up!\n");
+						Send_Command(0x0b, 0xf4);
+						Send_Command(0x0b, 0xf4);
+						Send_Command(0x0b, 0xf4);// 고개숙이고 총총걸음 10걸음짜리 행동으로 따로넣어야할듯
+						DelayLoop(250000000);
+						
+						printf("Walk End!\n");
+
+						//총총걸음 한 10걸음? 하다가 계단오르기!!!!! 로직으로
+						motion4 = 1;
+						goto GOUP;
+
+					}
+					else
+					{
+						Send_Command(0x0c, 0xf3);
+						Send_Command(0x0c, 0xf3);
+						Send_Command(0x0c, 0xf3);
+						DelayLoop(50000000);
+						printf("no!\n");
+						goto GOUP;
+					}
+				}
+
+				else if (motion4 == 1)
+				{
+					printf("up\n");
+					Send_Command(0x0e, 0xf1);
+					Send_Command(0x0e, 0xf1);
+					Send_Command(0x0e, 0xf1);//오르기
+					DelayLoop(250000000);
+					motion4 = 2;
+					goto GOUP;
+				}
+
+				else if (motion4 == 2)//올라간상태 총총걸음
+				{
+					for (i = 0; i < 120; i++) // 초록색에서 균형잡기
+					{
+						for (j = 0; j < 180; j++)
+						{
+							if (*(xxx + 180 * i + j) == 5)
+							{
+								if (j < 90)
+									st4_left++;
+								else
+									st4_right++;
+							}
+						}
+					}
+					
+					for (i = 0; i < 120; i++)
+					{
+						for (j = 0; j < 10; j++)
+						{
+							if (*(xxx + 180 * i + j) == 5)
+								green4_l++;
+						}
+					}
+
+					for (i = 0; i < 120; i++)
+					{
+						for (j = 110; j < 120; j++)
+						{
+							if (*(xxx + 180 * i + j) == 5)
+								green4_r++;
+						}
+					}
+
+					printf("up clear!\n");
+					printf("st4_left=%d\n", st4_left);
+					printf("st4_right=%d\n", st4_right);
+					printf("cnt4_b_w=%d\n", cnt4_b_w);
+
+					if (st4_left > st4_right + 2000)
+					{
+						printf("go left\n");
+						Send_Command(0x05, 0xfa);
+						Send_Command(0x05, 0xfa);
+						Send_Command(0x05, 0xfa);
+						DelayLoop(50000000);
+						
+						goto GOUP;
+					}
+					else if (st4_right > st4_left + 2000)
+					{
+						printf("go right\n");
+						Send_Command(0x06, 0xf9);
+						Send_Command(0x06, 0xf9);
+						Send_Command(0x06, 0xf9);
+						DelayLoop(50000000);
+						
+
+						goto GOUP;
+					}
+					else
+					{
+						if (green4_l > green4_r+500)
+						{
+							printf("turn left\n");
+							Send_Command(0x09, 0xf6);
+							Send_Command(0x09, 0xf6);
+							Send_Command(0x09, 0xf6);
+							DelayLoop(100000000);
+							goto GOUP;
+						}
+
+						else if (green4_r > green4_l+500)
+						{
+							printf("turn right\n");
+							Send_Command(0x0a, 0xf5);
+							Send_Command(0x0a, 0xf5);
+							Send_Command(0x0a, 0xf5);
+							DelayLoop(100000000);
+							goto GOUP;
+						}
+						else
+						{
+							printf("center!\n");
+							Send_Command(0x0c, 0xf3);
+							Send_Command(0x0c, 0xf3);
+							Send_Command(0x0c, 0xf3);//바닥보고 총총걸음(이건 한~두걸음씩)
+							DelayLoop(50000000);
+							
+							if (st4_av_i >65 && cnt4_b_w > 5)
+							{
+								motion4 = 3;
+								goto GOUP;
+							}
+							goto GOUP;
+						}
+					}
+
+
+
+				}
+
+				
+
+				else if (motion4 == 3)
+				{
+					printf("Command Down!\n");
+					printf("one\n");
+					Send_Command(0x0b, 0xf4);
+					Send_Command(0x0b, 0xf4);
+					Send_Command(0x0b, 0xf4);// 고개숙이고 총총걸음 10걸음짜리 행동으로 따로넣어야할듯
+					DelayLoop(250000000);
+					printf("two\n");
+					Send_Command(0x0c, 0xf3); 
+					Send_Command(0x0c, 0xf3);
+					Send_Command(0x0c, 0xf3);//바닥보고 총총걸음(이건 한~두걸음씩)
+					DelayLoop(75000000);
+					printf("three\n");
+					Send_Command(0x0c, 0xf3); 
+					Send_Command(0x0c, 0xf3);
+					Send_Command(0x0c, 0xf3);//바닥보고 총총걸음(이건 한~두걸음씩)
+					DelayLoop(75000000);
+
+
+
+					printf("Down!\n");
+					Send_Command(0x0f, 0xf0);
+					Send_Command(0x0f, 0xf0);
+					Send_Command(0x0f, 0xf0);//내리기
+					DelayLoop(250000000);
+					printf("Stage Clear!!\n");
+					motion4 = 4;
+					goto GOUP;
+				}
+
+				else if (motion4 == 4)
+				{
+					for (i = 0; i < 4; i++)
+					{
+						printf("Dance~!~!~!~!!~!\n");
+						Send_Command(0x05, 0xfa);
+						Send_Command(0x05, 0xfa);
+						Send_Command(0x05, 0xfa);
+						DelayLoop(70000000);
+						Send_Command(0x06, 0xf9);
+						Send_Command(0x06, 0xf9);
+						Send_Command(0x06, 0xf9);
+						DelayLoop(70000000);
+					}
+					motion4 = 5;
+					goto GOUP;
 				}
 				else
 				{
-					motion3 = 1;
-					printf("center\n");
+					printf("Sleep\n");
+					Send_Command(0x01, 0xfe);
+					DelayLoop(10000000);
 				}
 
-				if (motion3 == 1)
-				{
-					Send_Command(0x0c, 0xf3); //바닥보고 총총걸음(이건 한~두걸음씩)
-					DelayLoop(100000000);
-					printf("up clear and go!\n");
-				}
-				
 			}
-			
 			//////////////////////////////////////////////////////////
-
-			/*
-			if (cnt3 > 250)
-			{
-				motion3 = 1;//고개박고 종종걸음
-			}
-
-			if (motion3 == 1)
-			{
-				Send_Command(0x0b, 0xf4);
-				DelayLoop(1000000);
-				if (cnt3_1>)
-			}
-			*/
-
 
 
 
@@ -765,9 +1313,9 @@ int main(void)
 			//printf("Full < Expension(x2.66), Rotate(90) > (320 x 480)\n");
 			//printf("%d\n", cnt);
 			//draw_img_from_buffer(lcd, 320, 0, 0, 0, 2.67, 90);
-			draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
-			draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
-			flip();
+
+
+
 		}
 
 	}
