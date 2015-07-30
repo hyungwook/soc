@@ -170,7 +170,7 @@ MOTOR_ON:
         MOVE G6D,102,   85, 130, 103, 98
         MOVE G6A, 95,  79, 146,  89, 102
         WAIT
-        NEXT I
+    NEXT I
     '    GOSUB 앞뒤기울기측정
     '    IF 넘어진확인 = 1 THEN
     '        넘어진확인 = 0
@@ -1669,6 +1669,105 @@ GYRO_ST:
 
     GOSUB Leg_motor_mode1
     GOSUB GYRO_OFF'보행순서=0
+    GOTO MAIN
+
+
+    '*****************************************************
+    
+전진보행50:
+
+    GOSUB GYRO_INIT
+    GOSUB GYRO_ON
+    GOSUB GYRO_ST
+
+    'GOSUB SOUND_Walk_Ready
+    보행속도 = 10'5
+    좌우속도 = 5'8'3
+    좌우속도2 = 4'5'2
+    '넘어진확인 = 0
+    GOSUB Leg_motor_mode3
+
+
+    SPEED 4
+    '오른쪽기울기
+    MOVE G6A, 88,  71, 152,  91, 110
+    MOVE G6D,108,  76, 146,  93,  94
+    MOVE G6B,100,35
+    MOVE G6C,100,35
+    WAIT
+
+    SPEED 10'보행속도
+    '왼발들기
+    MOVE G6A, 90, 100, 115, 105, 114
+    MOVE G6D,111,  78, 146,  93,  95
+    MOVE G6B,90
+    MOVE G6C,110
+    WAIT
+
+    '        GOTO 전진보행50_1
+
+
+
+전진보행50_1:
+    FOR I = 0 TO 10
+        SPEED 보행속도
+        '왼발뻣어착지
+        MOVE G6A, 85,  44, 163, 113, 117
+        MOVE G6D,108,  77, 146,  93,  92
+        WAIT
+
+
+
+        SPEED 좌우속도
+        'GOSUB Leg_motor_mode3
+        '왼발중심이동
+        MOVE G6A,108,  76, 144, 100,  93
+        MOVE G6D,86, 93, 155,  71, 112
+        WAIT
+
+
+
+        SPEED 보행속도
+        'GOSUB Leg_motor_mode2
+        '오른발들기10
+        MOVE G6A,110,  77, 146,  93, 94
+        MOVE G6D,90, 100, 105, 110, 114
+        MOVE G6B,110
+        MOVE G6C,90
+        WAIT
+
+
+
+전진보행50_2:
+
+
+        SPEED 보행속도
+        '오른발뻣어착지
+        MOVE G6D,85,  44, 163, 113, 117
+        MOVE G6A,110,  77, 146,  93,  94
+        WAIT
+
+        SPEED 좌우속도
+        'GOSUB Leg_motor_mode3
+        '오른발중심이동
+        MOVE G6D,108,  76, 144, 100,  93
+        MOVE G6A, 85, 93, 155,  71, 112
+        WAIT
+
+
+        SPEED 보행속도
+        'GOSUB Leg_motor_mode2
+        '왼발들기10
+        MOVE G6A, 90, 100, 105, 110, 114
+        MOVE G6D,110,  77, 146,  93,  94
+        MOVE G6B, 90
+        MOVE G6C,110
+        WAIT
+    NEXT I
+
+    GOSUB 기본자세
+    GOSUB GYRO_OFF
+    ONE=0
     GOTO MAIN
 
 
