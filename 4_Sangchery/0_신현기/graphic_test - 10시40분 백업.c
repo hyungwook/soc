@@ -320,21 +320,21 @@ int main(void)
 			Mask1[6] = -1.0f; Mask1[7] = -1.0f; Mask1[8] = -1.0f;
 
 			for (i = n; i < 120 - n; i++){
-			index1 = i * 180;
-			for (j = n; j < 180 - n; j++){
-			float sum1 = 0.0f;
-			float sum2 = 0.0f;
+				index1 = i * 180;
+				for (j = n; j < 180 - n; j++){
+					float sum1 = 0.0f;
+					float sum2 = 0.0f;
 
-			for (k = -n; k <= n; k++){
-			index2 = (i + k) * 180;
-			index3 = (k + n) * 3;
-			for (l = -n; l <= n; l++){
-			sum1 += gray[index2 + (j + l)] * Mask[index3 + l + n];
-			//sum2 += gray[index2 + (j + l)] * Mask1[index3 + l + n];
-			}
-			}
-			*(lcd + i * 180 + j) = sum1;
-			}
+					for (k = -n; k <= n; k++){
+						index2 = (i + k) * 180;
+						index3 = (k + n) * 3;
+						for (l = -n; l <= n; l++){
+							sum1 += gray[index2 + (j + l)] * Mask[index3 + l + n];
+							//sum2 += gray[index2 + (j + l)] * Mask1[index3 + l + n];
+						}
+					}
+					*(lcd + i * 180 + j) = sum1;
+				}
 			}
 			printf("mask end\n");
 
