@@ -57,9 +57,9 @@ GOSUB MOTOR_ON
 TEMPO 220
 MUSIC "O23EAB7EA>3#C"
 '***** 초기자세로 **********************
-GOSUB GYRO_INIT
-GOSUB GYRO_ON
-GOSUB GYRO_ST
+'GOSUB GYRO_INIT
+'GOSUB GYRO_ON
+'GOSUB GYRO_ST
 SPEED 5
 GOSUB 기본자세
 
@@ -73,7 +73,7 @@ MAIN:
         'GOTO 오른쪽턴45
         'GOTO 왼쪽턴20
         'GOTO 전진달리기양발50
-        GOTO 전진달리기희영50
+        'GOTO 전진달리기희영50
         'GOTO 오른쪽턴20
         'GOTO 앞으로덤블링2
         ' GOTO 기어가기
@@ -82,7 +82,7 @@ MAIN:
         'GOTO 계단오른발오르기1cm
         ' GOTO 기어서올라가기
         'GOTO 허들넘기
-        'GOTO 전진보행50
+        GOTO 전진보행50
         'GOTO 전진종종걸음
         'GOTO 계단왼발내리기3cm
         'GOTO 계단오른발오르기2cm
@@ -210,9 +210,9 @@ MAIN:
 
 
     ' **********************
-   
+
 전진종종걸음_1:
- FOR I = 0 TO 10
+    FOR I = 0 TO 10
         MOVE G6A,95,  95, 120, 100, 104
         MOVE G6D,104,  77, 146,  91,  102
         MOVE G6B, 80
@@ -251,9 +251,9 @@ MAIN:
 
     GOTO 전진종종걸음_멈춤
 
-    
+
 전진종종걸음_4:
-FOR I = 0 TO 10
+    FOR I = 0 TO 10
         MOVE G6D,95,  95, 120, 100, 104
         MOVE G6A,104,  77, 146,  91,  102
         MOVE G6C, 80
@@ -1271,6 +1271,11 @@ FOR I = 0 TO 10
     GOTO MAIN
 
 전진보행50:
+
+    GOSUB GYRO_INIT
+    GOSUB GYRO_ON
+    GOSUB GYRO_ST
+
     'GOSUB SOUND_Walk_Ready
     보행속도 = 10'5
     좌우속도 = 5'8'3
@@ -1313,7 +1318,7 @@ FOR I = 0 TO 10
         'GOSUB Leg_motor_mode3
         '왼발중심이동
         MOVE G6A,108,  76, 144, 100,  93
-        MOVE G6D,85, 93, 155,  71, 112
+        MOVE G6D,86, 93, 155,  71, 112
         WAIT
 
 
@@ -1334,7 +1339,7 @@ FOR I = 0 TO 10
 
         SPEED 보행속도
         '오른발뻣어착지
-        MOVE G6D,85,  44, 163, 113, 114
+        MOVE G6D,85,  44, 163, 113, 117
         MOVE G6A,110,  77, 146,  93,  94
         WAIT
 
@@ -1357,6 +1362,7 @@ FOR I = 0 TO 10
     NEXT I
 
     GOSUB 기본자세
+    GOSUB GYRO_OFF
     ONE=0
     GOTO MAIN
 

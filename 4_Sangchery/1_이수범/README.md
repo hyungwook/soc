@@ -35,3 +35,9 @@
 - graphic_test 수정 (경계선 인식)
 ###7월 28일
 - graphic_test 수정 (경계선 인식)
+###7월 29일
+- graphic_test 수정 (공차기)
+###7월 30일
+- graphic_test 수정 (공차기)
+###7월 31일
+- 
