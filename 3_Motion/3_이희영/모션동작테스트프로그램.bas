@@ -35,6 +35,7 @@ CONST COUNT_MAX = 20
 
 '*******************
 
+
 '*******모터방향설정*********************
 DIR G6A,1,0,0,1,0,0	'왼쪽다리:모터0~5번
 DIR G6D,0,1,1,0,1,0	'오른쪽다리:모터18~23번
@@ -64,17 +65,20 @@ ONE = 1
 
 '***** 메인 반복루틴 **************
 MAIN:
+	GOSUB GYRO_INIT
+    GOSUB GYRO_ON
+    GOSUB GYRO_ST
 
     IF ONE=1 THEN
         'GOTO 오른쪽턴45
         'GOTO 왼쪽턴451
-        GOTO 전진달리기50
+        'GOTO 전진달리기50
         'GOTO 앞으로덤블링2
         'GOTO 기어가기
         'GOTO 계단오른발오르기1cm
         'GOTO 기어서올라가기
         'GOTO 허들넘기
-        'GOTO 전진보행50
+        GOTO 전진보행50
         'GOTO 전진종종걸음
         'GOTO 계단왼발내리기3cm
     ENDIF
@@ -109,6 +113,9 @@ MAIN:
 
 전진종종걸음:
     '    넘어진확인 = 0
+    GOSUB GYRO_INIT
+    GOSUB GYRO_ON
+    GOSUB GYRO_ST
 
     SPEED 10
     HIGHSPEED SETON
@@ -136,9 +143,10 @@ MAIN:
 
 
     '**********************
-    FOR I = 0 TO 100
+
 전진종종걸음_1:
-        MOVE G6A,95,  95, 120, 100, 104
+    FOR I = 0 TO 10
+        MOVE G6A,95,  95, 120, 100, 102
         MOVE G6D,102,  77, 146,  91,  100
         MOVE G6B, 80
         MOVE G6C,120
@@ -146,7 +154,7 @@ MAIN:
 
 
 전진종종걸음_2:
-        MOVE G6A,95,  85, 130, 103, 104
+        MOVE G6A,95,  85, 130, 103, 102
         MOVE G6D,102,  79, 146,  89,  99
         WAIT
 
@@ -167,7 +175,7 @@ MAIN:
         '*********************************
 
 전진종종걸음_4:
-        MOVE G6D,94,  95, 120, 100, 103
+        MOVE G6D,94,  95, 120, 100, 102
         MOVE G6A,104,  77, 146,  91,  102
         MOVE G6C, 80
         MOVE G6B,120
@@ -175,12 +183,12 @@ MAIN:
 
 
 전진종종걸음_5:
-        MOVE G6D,94,  85, 130, 103, 103
+        MOVE G6D,94,  85, 130, 103, 102
         MOVE G6A,104,  79, 146,  89,  100
         WAIT
 
 전진종종걸음_6:
-        MOVE G6D,102,   85, 130, 103, 99
+        MOVE G6D,102,   85, 130, 103, 98
         MOVE G6A, 95,  79, 146,  89, 102
         WAIT
     NEXT I
@@ -190,7 +198,7 @@ MAIN:
     '        GOTO MAIN
     '    ENDIF
     '
-    '    ERX 4800,A, 전진종종걸음_1
+    '    ERX 4800,A, 전v진종종걸음_1
     '    IF A <> A_old THEN  GOTO 전진종종걸음_멈춤
 
 전진종종걸음_멈춤:
@@ -204,6 +212,7 @@ MAIN:
 
     GOSUB Leg_motor_mode1
     보행순서=0
+    GOSUB GYRO_OFF
     GOTO MAIN
 
     '******************************************
@@ -1053,6 +1062,9 @@ MAIN:
     좌우속도 = 5'8'3
     좌우속도2 = 4'5'2
     '넘어진확인 = 0
+'    GOSUB GYRO_INIT
+'    GOSUB GYRO_ON
+'    GOSUB GYRO_ST
     GOSUB Leg_motor_mode3
 
 
@@ -1134,6 +1146,7 @@ MAIN:
     NEXT I
 
     GOSUB 기본자세
+    GOSUB GYRO_OFF
     ONE=0
     GOTO MAIN
 
