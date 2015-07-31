@@ -363,7 +363,7 @@ int main(void)
 					else if (((int)*(red + i * 180 + j) < 15) && ((int)*(green + i * 180 + j) > 15) && ((int)*(blue + i * 180 + j) < 15) && ((int)*(hue_joon + i * 180 + j) > 80) && ((int)*(hue_joon + i * 180 + j) < 120))
 						*(xxx + i * 180 + j) = 5;//초록을표시
 
-					else if (((int)*(blue + i * 180 + j) > 15) && ((int)*(hue_joon + i * 180 + j) > 180) && ((int)*(hue_joon + i * 180 + j) < 250))
+					else if ((*(red + i * 180 + j) < *(blue + i * 180 + j)) && (*(green + i * 180 + j) < *(blue + i * 180 + j)) && ((int)*(hue_joon + i * 180 + j) > 180) && ((int)*(hue_joon + i * 180 + j) < 250) && *(satur_tmp + i * 180 + j) > 30)
 						*(xxx + i * 180 + j) = 6;//파랑을표시
 
 					else
@@ -386,17 +386,16 @@ int main(void)
 				}
 
 			}
-
 			for (i = 0; i < 120; i++)
-				for (j = 0; j < 180; j++){
-					if (*(xxx + i * 180 + j) == 4)
-						*(lcd + i * 180 + j) = 0x7000;
+				for (j = 0; j < 180; j++)
+				{
 					if (*(xxx + i * 180 + j) == 6)
-						*(lcd + i * 180 + j) = 0xffff;
+						*(lcd + i * 180 + j) = 0x7000;
+					if (*(xxx + i * 180 + j) == 2)
+						*(lcd + i * 180 + j) = 0x000f;
 				}
 
 			/*
-				
 			int aver = 0;
 			int cnt1 = 0;
 			int sum2 = 0;
@@ -410,6 +409,7 @@ int main(void)
 					{
 						cnt1++;
 						sum2 = sum2 + j;
+						*(lcd + i * 180 + j) = 0x7000;
 					}
 
 				}
