@@ -7,6 +7,10 @@ DIM A_old AS BYTE
 DIM B AS BYTE
 DIM C AS BYTE
 DIM 보행순서 AS BYTE
+DIM 보행속도 AS BYTE
+DIM 좌우속도 AS BYTE
+DIM 좌우속도2 AS BYTE
+
 
 
 PTP SETON 				'단위그룹별 점대점동작 설정
@@ -90,109 +94,7 @@ MOTOR_ON:
 
     '************************************************
 
-전진종종걸음최종:
-    '    넘어진확인 = 0
-    GOSUB GYRO_INIT
-    GOSUB GYRO_ON
-    GOSUB GYRO_ST
 
-    SPEED 10
-    HIGHSPEED SETON
-    GOSUB All_motor_mode3
-
-    '    IF 보행순서 = 0 THEN
-    '        보행순서 = 1
-    MOVE G6A,95,  76, 145,  93, 101
-    MOVE G6D,100,  77, 145,  93, 97
-    MOVE G6B,100,  35
-    MOVE G6C,100,  35
-    WAIT
-
-    '        GOTO 전진종종걸음_1
-    '    ELSE
-    '        보행순서 = 0
-    '        MOVE G6D,95,  76, 145,  93, 101
-    '        MOVE G6A,101,  77, 145,  93, 98
-    '        MOVE G6B,100,  35
-    '        MOVE G6C,100,  35
-    '        WAIT
-
-    '       GOTO 전진종종걸음_4
-    '    ENDIF
-
-
-    '**********************
-
-전진종종걸음최종_1:
-    FOR I = 0 TO 10
-        MOVE G6A,95,  95, 120, 100, 102
-        MOVE G6D,102,  77, 146,  91,  100
-        MOVE G6B, 80
-        MOVE G6C,120
-        WAIT
-
-
-전진종종걸음최종_2:
-        MOVE G6A,95,  85, 130, 103, 102
-        MOVE G6D,102,  79, 146,  89,  99
-        WAIT
-
-전진종종걸음최종_3:
-        MOVE G6A,103,   85, 130, 103,  100
-        MOVE G6D, 94,  79, 146,  89, 100
-        WAIT
-
-        '    GOSUB 앞뒤기울기측정
-        '    IF 넘어진확인 = 1 THEN
-        '        넘어진확인 = 0
-        '        GOTO MAIN
-        '    ENDIF
-        '
-        '    ERX 4800,A, 전진종종걸음_4
-        '    IF A <> A_old THEN  GOTO 전진종종걸음_멈춤
-
-        '*********************************
-
-전진종종걸음최종_4:
-        MOVE G6D,94,  95, 120, 100, 102
-        MOVE G6A,104,  77, 146,  91,  102
-        MOVE G6C, 80
-        MOVE G6B,120
-        WAIT
-
-
-전진종종걸음최종_5:
-        MOVE G6D,94,  85, 130, 103, 102
-        MOVE G6A,104,  79, 146,  89,  100
-        WAIT
-
-전진종종걸음최종_6:
-        MOVE G6D,102,   85, 130, 103, 98
-        MOVE G6A, 95,  79, 146,  89, 102
-        WAIT
-    NEXT I
-    '    GOSUB 앞뒤기울기측정
-    '    IF 넘어진확인 = 1 THEN
-    '        넘어진확인 = 0
-    '        GOTO MAIN
-    '    ENDIF
-    '
-    '    ERX 4800,A, 전v진종종걸음_1
-    '    IF A <> A_old THEN  GOTO 전진종종걸음_멈춤
-
-전진종종걸음최종_멈춤:
-    HIGHSPEED SETOFF
-    SPEED 15
-    GOSUB 안정화자세
-    SPEED 10
-    GOSUB 기본자세
-
-    DELAY 400
-
-    GOSUB Leg_motor_mode1
-    보행순서=0
-    GOSUB GYRO_OFF
-    GOTO MAIN
 
 
 전진달리기최종:
@@ -221,7 +123,7 @@ MOTOR_ON:
 
 
     '**********************
-    FOR I = 0 TO 10
+    FOR I = 0 TO 5
 전진달리기최종_1:
         MOVE G6A,96,  95, 100, 120, 104
         MOVE G6D,101, 78, 146,  91, 100
@@ -276,7 +178,7 @@ MOTOR_ON:
     GOSUB Leg_motor_mode1
     '보행순서=0
     GOSUB GYRO_OFF
-    GOTO 전진달리기최종
+    GOTO MAIN
 
 
 전진달리기양발50:
@@ -1673,7 +1575,7 @@ GYRO_ST:
 
 
     '*****************************************************
-    
+
 전진보행50:
 
     GOSUB GYRO_INIT
@@ -1767,7 +1669,7 @@ GYRO_ST:
 
     GOSUB 기본자세
     GOSUB GYRO_OFF
-    ONE=0
+    'ONE=0
     GOTO MAIN
 
 
@@ -1883,7 +1785,7 @@ KEY1:
     GOTO MAIN
 KEY2:
     ' ETX  9600,2
-    GOTO 전진달리기희영50
+    GOTO 전진달리기최종
     'DELAY 1000
 
     GOTO MAIN
@@ -1896,8 +1798,8 @@ KEY3: 'LEFT SIDE
     'WAIT
     MOVE G6A,100,  74, 148,  91, 102, 100
     MOVE G6D,100,  74, 148,  91, 102, 100
-    MOVE G6B,108,  47,  50, 100, 100, 16
-    MOVE G6C,106,  44,  50, 100, 128, 100
+    MOVE G6B,108  18,  88, 100, 100, 10
+    MOVE G6C,108,  18,  88, 100, 135, 100
     WAIT
     'DELAY 1000
     GOTO MAIN
@@ -1911,10 +1813,9 @@ KEY4: 'RIGHT SIDE
     'WAIT
     MOVE G6A,100,  74, 148,  91, 102, 100
     MOVE G6D,100,  74, 148,  91, 102, 100
-    MOVE G6B,106,  44,  50, 100, 100, 184
-    MOVE G6C,108,  47,  50, 100, 128, 100
+    MOVE G6B,108  18,  88, 100, 100, 190
+    MOVE G6C,108,  18,  88, 100, 135, 100
     WAIT
-    'DELAY 1000
     GOTO MAIN
 KEY5:
     'ETX 9600,5
