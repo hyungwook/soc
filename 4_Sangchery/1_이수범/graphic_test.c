@@ -156,7 +156,6 @@ void init_console(void)
 int main(void)
 {
 	int i = 0, j = 0, k = 0, l = 0;
-	int curColor = 0, index = 0, value = 0;
 	int sw = 0;
 	int state_1 = 0;
 	int stage = 4;
@@ -173,7 +172,6 @@ int main(void)
 	int sum1 = 0, sum2 = 0, sum3 = 0;
 	int cnt = 0, cnt0 = 0, cnt1 = 0, cnt2 = 0;
 	float first_x = 0, first_y = 0, second_x = 0, second_y = 0, outline_x = 0, outline_y = 0;
-	float grayGap = 0;
 	int result = 0;
 	
 	int motion2 = 0;
@@ -195,7 +193,7 @@ int main(void)
 	float* satur_tmp = (float*)malloc(180 * 120 * 4);
 	float* v_compare = (float*)malloc(180 * 120 * 4);
 	float* s_temp = (float*)malloc(180 * 120 * 4);
-	//int* rgb = (int*)malloc(180 * 120 * 4);
+	int* rgb = (int*)malloc(180 * 120 * 4);
 	float* red = (float*)malloc(180 * 120 * 4);
 	float* green = (float*)malloc(180 * 120 * 4);
 	float* blue = (float*)malloc(180 * 120 * 4);
@@ -204,7 +202,7 @@ int main(void)
 	int* out_j = (int*)malloc(180 * 120 * 4);
 	int* out_p = (int*)malloc(180 * 120 * 4);
 	int* out_q = (int*)malloc(180 * 120 * 4);
-	int* coloring = (int*)malloc(180 * 120 * 4);
+	int* mask = (int*)malloc(180 * 120 * 4);
 
 
 	float Mask[9] = { 0 };
@@ -254,14 +252,17 @@ int main(void)
 				b = ((*(fpga_videodata + i)) & 31);
 				g = (((*(fpga_videodata + i)) >> 6) & 31);
 				r = (((*(fpga_videodata + i)) >> 11) & 31);
-				/*
+				
 				*(rgb + i) = b + g + r; //rgb값의 합
+
+				if (*(rgb + i) < 0x3332 || *(rgb + i) > 0xcccd)
+					*(rgb + i) = 0;
 
 				int graay = (int)(b + g + r) / 3;
 				int gray1 = (graay << 11);
 				int gray2 = (graay << 6);
 				*(gray + i) = gray1 + gray2 + graay; // 그레이하는과정
-				*/
+				
 				*(red + i) = r;
 				*(green + i) = g;
 				*(blue + i) = b;
@@ -374,7 +375,7 @@ int main(void)
 					else if (((int)*(red + i * 180 + j) < (int)*(blue + i * 180 + j)) && ((int)*(blue + i * 180 + j) > (int)*(green + i * 180 + j)) && ((int)*(hue_joon + i * 180 + j) > 180) && ((int)*(hue_joon + i * 180 + j) < 250))
 						*(xxx + i * 180 + j) = 6;//파랑을표시
 					else
-						*(xxx + i * 180 + j) = 9;//나머지
+						*(xxx + i * 180 + j) = 7;//나머지
 
 					/*
 					if (i == 60)
@@ -849,115 +850,148 @@ int main(void)
 				ball = 0, hole = 0;
 				center_i = 0, center_j = 0, center_p = 0, center_q = 0;
 				cnt4 = 0;
-				curColor = 0, k = 0, index = 0, l = 0, value = 0;
 
+				/*
+				if (*(xxx + i * 180 + j) == 1)
+					*(xxx + i * 180 + j) = 0x0000;
+				else
+					*(xxx + i * 180 + j) = 0xffff;
+				*/
 
-				for (j = 0; j < 180; j++)
+				/////////////////////마스크 추가///////////////////////////
+
+				int n = 1;
+				
+				Mask[0] = -1.0f; Mask[1] = 0.0f; Mask[2] = 1.0f;
+				Mask[3] = -2.0f; Mask[4] = 0.0f; Mask[5] = 2.0f;
+				Mask[6] = -1.0f; Mask[7] = 0.0f; Mask[8] = 1.0f;
+				
+				Mask1[0] = 1.0f; Mask1[1] = 2.0f; Mask1[2] = 1.0f;
+				Mask1[3] = 0.0f; Mask1[4] = 0.0f; Mask1[5] = 0.0f;
+				Mask1[6] = -1.0f; Mask1[7] = -2.0f; Mask1[8] = -1.0f;
+				
+				for (j = n; j < 180 - n; j++)
 				{
-					for (i = 0; i < 120; i++)
+					for (i = n; i < 120 - n; i++)
 					{
-						*(coloring + 180 * i + j) = 0;
+						index1 = i * 180;
+
+						float sum1 = 0.0f;
+						float sum2 = 0.0f;
+
+						for (k = -n; k <= n; k++)
+						{
+							index2 = (i + k) * 180;
+							index3 = (k + n) * 3;
+							for (l = -n; l <= n; l++)
+							{
+								sum1 += gray[index2 + (j + l)] * Mask[index3 + l + n];
+								sum2 += gray[index2 + (j + l)] * Mask1[index3 + l + n];
+							}
+						}
+						sum3 = (int)(sum1 + sum2);
+
+						if (sum3 < 0xffdc)
+							sum3 = 0x0000;
+						else
+						{
+							sum3 = 0xffff;
+						}
+
+						*(mask + i * 180 + j) = sum3;
 					}
 				}
-
-
+				
+				//////////////////////////////////////////////////////////
+				
 				for (j = 0; j < 180; j++)
 				{
-					for (i = 0; i < 120; i++)
+					for (i = 120; i > 0; i--)
 					{
+						/*
 						if (*(xxx + 180 * i + j) == 1)
 						{
-							//*(xxx + 180 * i + j) = 0;
 							*(lcd + i * 180 + j) = 0xffff;
 						}
 						else
 						{
-							//*(xxx + 180 * i + j) = 9;
 							*(lcd + i * 180 + j) = 0x0000;
 						}
-
+						*/
 						/*
+						if (sum3 == 0xffff)
+							break;
+						*/
+						//*(mask + i * 180 + j) = *(mask + i * 180 + j);
+						*(lcd + i * 180 + j) = *(mask + i * 180 + j);
+
 						if (*(xxx + 180 * i + j) == 3)
 						{
-						center_i += i;
-						center_j += j;
-						ball++;
+							center_i += i;
+							center_j += j;
+							ball++;
 
-						*(lcd + i * 180 + j) = 0x001f;
+							*(xxx + 180 * i + j) = 0x001f;
+							/*
+							*(lcd + i * 180 + j) = 0x001f;
+							}
+
+							if (*(xxx + 180 * i + j-2) == 6)
+							if(*(xxx + 180 * i + j-1) == 6)
+							if (*(xxx + 180 * i + j) == 2)
+							if (*(xxx + 180 * i + j + 1) == 2)
+							{
+							center_p += i;
+							center_q += j;
+							hole++;
+
+							*(lcd + i * 180 + j) = 0x07e0;
+							}
+							if (*(xxx + 180 * i + j - 2) == 2)
+							if (*(xxx + 180 * i + j - 1) == 2)
+							if (*(xxx + 180 * i + j) == 6)
+							if (*(xxx + 180 * i + j + 1) == 6)
+							{
+							center_p += i;
+							center_q += j;
+							hole++;
+
+							*(lcd + i * 180 + j) = 0x07e0;
+							*/
+
 						}
 
-						if (*(xxx + 180 * i + j-2) == 6)
-						if(*(xxx + 180 * i + j-1) == 6)
-						if (*(xxx + 180 * i + j) == 2)
-						if (*(xxx + 180 * i + j + 1) == 2)
+						if (*(mask + i * 180 + j) == 0xffff)
 						{
-						center_p += i;
-						center_q += j;
-						hole++;
-
-						*(lcd + i * 180 + j) = 0x07e0;
+							center_p += i;
+							center_q += j;
+							hole++;
 						}
-						if (*(xxx + 180 * i + j - 2) == 2)
-						if (*(xxx + 180 * i + j - 1) == 2)
-						if (*(xxx + 180 * i + j) == 6)
-						if (*(xxx + 180 * i + j + 1) == 6)
-						{
-						center_p += i;
-						center_q += j;
-						hole++;
-
-						*(lcd + i * 180 + j) = 0x07e0;
-						}
-
-						*/
-
-
-						if (*(xxx + 180 * i + j) != 1 && *(coloring + 180 * i + j) == 0)
-						{
-							curColor++;
-							*coloring = grass(coloring, i, j, curColor, xxx);
-							printf("first : %d\n", curColor);
-						}
-						printf("second : %d\n", curColor);
-						grayGap = 250.0f / (float)curColor;
-						value = (int)(*(coloring + 180 * i + j) * grayGap);
 					}
 				}
-
+				
+				
+				center_i = (int)(center_i / (ball + 1));
+				center_j = (int)(center_j / (ball + 1));
+				center_p = (int)(center_p / (hole + 1));
+				center_q = (int)(center_q / (hole + 1));
+				//printf("center i : %d  center j : %d\ncenter p : %d  center q : %d\n", center_i, center_j, center_p, center_q);
 
 				for (i = 0; i < 120; i++)
 				{
 					for (j = 0; j < 180; j++)
 					{
-						if (value == 0)
-							*(lcd + i * 180 + j) = 0xf000;
-						else
+						if (i == center_i)
 							*(lcd + i * 180 + j) = 0x001f;
+						if (j == center_j)
+							*(lcd + i * 180 + j) = 0x001f;
+						if (i == center_p)
+							*(lcd + i * 180 + j) = 0x07e0;
+						if (j == center_q)
+							*(lcd + i * 180 + j) = 0x07e0;
 					}
 				}
-
-				/*
-				center_i = (int)(center_i / (ball + 1));
-				center_j = (int)(center_j / (ball + 1));
-				center_p = (int)(center_p / (hole + 1));
-				center_q = (int)(center_q / (hole + 1));
-				printf("center i : %d  center j : %d\ncenter p : %d  center q : %d\n", center_i, center_j, center_p, center_q);
-
-				for (i = 0; i < 120; i++)
-				{
-				for (j = 0; j < 180; j++)
-				{
-				if (i == center_i)
-				*(lcd + i * 180 + j) = 0x001f;
-				if (j == center_j)
-				*(lcd + i * 180 + j) = 0x001f;
-				if (i == center_p)
-				*(lcd + i * 180 + j) = 0x07e0;
-				if (j == center_q)
-				*(lcd + i * 180 + j) = 0x07e0;
-				}
-				}
-				*/
+				
 				/*
 				if (center_i < 70)
 				{
@@ -1042,7 +1076,7 @@ int main(void)
 				}
 				*/
 
-				/////////////////////////////////stage5////////////////////////////////////////////
+				/////////////////////////////////stage5/////////////////////////////////
 				/*
 				for (i = 0; i < 120; i++)
 				{
@@ -1137,7 +1171,7 @@ int main(void)
 				printf("up clear and go!\n");
 
 				}*/
-				///////////////////////////////////////////////////////////////////////////////////
+				////////////////////////////////////////////////////////////////////////
 
 				//printf("Full < Expension(x2.66), Rotate(90) > (320 x 480)\n");
 				//draw_img_from_buffer(lcd, 320, 0, 0, 0, 2.67, 90);
@@ -1165,7 +1199,8 @@ int main(void)
 	free(out_j);
 	free(out_p);
 	free(out_q);
-	free(coloring);
+	free(mask);
+	free(rgb);
 
 	uart_close();
 	if (bmpsurf != 0)
@@ -1173,26 +1208,4 @@ int main(void)
 	close_graphic();
 
 	return 0;
-}
-
-int grass(int *coloring, int i, int j, int curColor, int *xxx)
-{
-	int alpha, delta, index;
-
-	for (alpha = i - 1; alpha <= i + 1; alpha++)
-		for (delta = j - 1; delta <= j + 1; delta++)
-		{
-			if (alpha < 0 || alpha >= 120 || delta < 0 || delta >= 180)
-				continue;
-
-			index = alpha * 180 + delta;
-
-			if (*(xxx + 180 * i + j) != 1 && *(coloring + 180 * i + j) == 0)
-			{
-				*(coloring + index) = curColor;
-				grass(coloring, alpha, delta, curColor, xxx);
-			}
-		}
-
-	return coloring;
 }
