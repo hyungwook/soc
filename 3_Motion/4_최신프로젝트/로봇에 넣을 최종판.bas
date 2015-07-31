@@ -391,24 +391,25 @@ RX_EXIT:
 
 왼쪽턴45:
 
-    GOSUB Leg_motor_mode2
+'--------------수정완료(태훈)-----------------
+	GOSUB Leg_motor_mode2
     SPEED 8
-    MOVE G6A,95,  106, 145,  63, 105, 100
-    MOVE G6D,95,  46, 145,  123, 105, 100
-    MOVE G6B,115
-    MOVE G6C,85
+    MOVE G6A,94,  104, 177,  22, 105, 100
+    MOVE G6D,94,  38,  135,  135, 105, 100
+    MOVE G6B,120
+    MOVE G6C,80
     WAIT
-
 
 
     SPEED 10
-    MOVE G6A,93,  106, 145,  63, 105, 100
-    MOVE G6D,93,  46, 145,  123, 105, 100
-    MOVE G6B,115
-    MOVE G6C,85
-
+    MOVE G6A,92,  104, 177,  22, 105, 100
+    MOVE G6D,92,  38,  135,  135, 105, 100
+    
+    MOVE G6B,120
+    MOVE G6C,80
     WAIT
 
+'---------------------------------------------
     SPEED 8
     GOSUB 외각선확인
     GOSUB Leg_motor_mode1
@@ -688,7 +689,6 @@ RX_EXIT:
     MOVE G6C,102,  31,  80, 100, 135, 100
     WAIT
     RETURN
-
 
 안정화자세2:
     MOVE G6A,98,  77, 145,  93, 101, 100
