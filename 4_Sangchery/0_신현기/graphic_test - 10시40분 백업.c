@@ -157,7 +157,7 @@ int main(void)
 {
 	int i = 0, j = 0, k = 0, l = 0, line = 0;
 
-	int face = 0, face_left = 0, face_right = 0;//face = 0 center, 1 left, 2 right
+	int white = 0;
 	int cnt1 = 0, cnt2 = 0;//각 stage별로 cnt1, cnt2 ... 변수 추가 예정
 	int stage = 0;
 
@@ -173,6 +173,7 @@ int main(void)
 	int b_loop = 0;
 	int sum_left = 0, sum_right = 0;
 	int sum_i = 0, sum_j = 0;
+	int sw = 0;
 	
 	SURFACE* bmpsurf = 0;
 	U16* fpga_videodata = (U16*)malloc(180 * 120 * 2);
@@ -239,7 +240,7 @@ int main(void)
 			break;
 			}
 			*/
-
+			GOUP:
 			read_fpga_video_data(fpga_videodata);
 
 
@@ -369,7 +370,7 @@ int main(void)
 					else
 						*(xxx + i * 180 + j) = 7;//나머지
 
-					/////////////////////값뽑을때 쓰는 코드/////////////////////
+					/*////////////////////값뽑을때 쓰는 코드/////////////////////
 					if (i == 60)
 					{
 					*(lcd + i * 180 + j) = 0x7000;//lcd에 가로줄 빨간줄 표시코드
@@ -382,10 +383,23 @@ int main(void)
 					}
 					if (j == 90)
 					*(lcd + i * 180 + j) = 0x7000;//lcd에 세로줄 빨간줄 표시코드
-					////////////////////////////////////////////////////////////
+					///////////////////////////////////////////////////////////*/
 				}
 
 			}
+			switch (sw)
+			{
+			case 1:
+				sw = 0;
+				//goto stage1;
+			case 2:
+				sw = 0;
+				goto outline;
+			default:
+				break;
+			}
+			//검정파랑뽑기
+			/*
 			for (i = 0; i < 120; i++)
 				for (j = 0; j < 180; j++)
 				{
@@ -394,6 +408,8 @@ int main(void)
 					if (*(xxx + i * 180 + j) == 2)
 						*(lcd + i * 180 + j) = 0x000f;
 				}
+
+				*/
 
 			/*
 			int aver = 0;
@@ -445,98 +461,98 @@ int main(void)
 			}
 			}*/
 			//////////////////////////////외곽선 추출 코드///////////////////////////////
-			/*sum_left = 0;
-			sum_right = 0;
-
-			for (j = 0; j < 180; j++)
-			{
-				for (i = 119; i >= 0; i--)
-				{
-					if (j < 90)
-						sum_left++;
-					else
-						sum_right++;
-
-
-					if (*(xxx + 180 * i + j) == 2)
-						break;
-				}
-			}
-
-			//printf("%d %d\n", sum_left, sum_right);
-			while ((sum_left < sum_right + 200) || (sum_right > sum_left + 200))
-			{
-				if (sum_left > sum_right + 500)
-				{
-					Send_Command(0x01, 0xfe);//정지 후
-					DelayLoop(200000);
-					Send_Command(0x08, 0xf7);//오른쪽돌기
-					DelayLoop(200000);
-				}
-				else if (sum_right > sum_left + 500)
-				{
-					Send_Command(0x01, 0xfe);//정지 후
-					DelayLoop(200000);
-					Send_Command(0x07, 0xf8);//왼쪽돌기
-					DelayLoop(200000);
-				}
-				
-			}
-			Send_Command(0x02, 0xfd);
-			DelayLoop(200000);
-
-			face_left = sum_left + sum_right;
 			sum_left = 0;
 			sum_right = 0;
-
+			white = 0;
+			printf("face right\n");
+			Send_Command(0x04, 0xfb);
 			Send_Command(0x04, 0xfb);//오른쪽보기
-			DelayLoop(200000);
+			//DelayLoop(80000000);
+			sw = 2;
+			goto GOUP;
+		outline:
+			printf("read\n");
+			for (j = 5; j < 175; j++)
+			{
+				for (i = 116; i >= 60; i--)
+				{
+					if (*(xxx + 180 * i + j) == 1)
+					{
+						if (j < 90)
+							sum_left++;
+						else
+							sum_right++;
+						*(lcd + 180 * i + j) = 0x000f;
+					}
+					if ((*(xxx + 180 * i + j) + *(xxx + 180 * i + j - 1) == 3)
+						|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j) == 3)
+						|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j - 1) == 3))
+					{
+						*(lcd + 180 * i + j) = 0xf000;
+						break;
+					}
+					if (*(xxx + 180 * i + j) == 2)
+						break;
 
+
+				}
+			}
+			/*			
 			for (j = 0; j < 180; j++)
 			{
 				for (i = 119; i >= 0; i--)
 				{
-					if (j < 90) // 가로를 반으로 나눠서 픽셀값 더함
-						sum_left++;
-					else
-						sum_right++;
+					if (*(xxx + i * 180 + j) == 1)
+					{
+						*(lcd + i * 180 + j) = 0x7000;
+						if (j < 90)
+							sum_left++;
+						else
+							sum_right++;
 
-					if ((*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j)) == 3)
-						break;
+						if (*(xxx + 180 * i + j) == 2)
+							break;
+					}
 				}
-			}
+			}*/
+
+			printf("sum_left : %d  sum_right : %d\n", sum_left, sum_right);
+
 			if (sum_left > sum_right + 500)
 			{
-				Send_Command(0x01, 0xfe);//정지 후
-				DelayLoop(200000);
-				Send_Command(0x08, 0xf7);//오른쪽돌기
-				DelayLoop(200000);
+				printf("turn right\n");
+				//Send_Command(0x08, 0xf7);
+				//Send_Command(0x08, 0xf7);//오른쪽돌기
+				//DelayLoop(50000000);
 			}
 			else if (sum_right>sum_left + 500)
 			{
-				Send_Command(0x01, 0xfe);//정지 후
-				DelayLoop(200000);
-				Send_Command(0x07, 0xf8);//왼쪽돌기
-				DelayLoop(200000);
+				printf("turn left\n");
+				//Send_Command(0x07, 0xf8);
+				//Send_Command(0x07, 0xf8);//왼쪽돌기
+				//DelayLoop(50000000);
 			}
-			face_right = sum_left + sum_right;
-
-			if (face_left > face_right + 700)
+			white = sum_left + sum_right;
+			printf("white : %d\n", white);
+			if (white > 3000)
 			{
-				Send_Command(0x05, 0xfa); // 왼쪽으로 한걸음
-				DelayLoop(200000);
+				printf("go left\n");
+				//Send_Command(0x05, 0xfa)
+				//Send_Command(0x05, 0xfa); // 왼쪽으로 한걸음
+				//DelayLoop(50000000);
 			}
-			else if (face_right > face_left + 700)
+			else if (white < 1000)
 			{
-				Send_Command(0x06, 0xf9); // 오른쪽으로 한걸음
-				DelayLoop(200000);
+				printf("go right\n");
+				//Send_Command(0x06, 0xf9);
+				//Send_Command(0x06, 0xf9); // 오른쪽으로 한걸음
+				//DelayLoop(50000000);
 			}
 
 			Send_Command(0x01, 0xfe);//정면보기
-			DelayLoop(200000);
+			//DelayLoop(50000000);
+			printf("yes\n");
 
-			Send_Command(0x02, 0xfd);
-			DelayLoop(200000);*/
 
 			///////////////////////////////////////////////////////////////////////////////*/
 
