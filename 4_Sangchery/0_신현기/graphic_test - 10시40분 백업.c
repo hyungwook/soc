@@ -157,7 +157,7 @@ int main(void)
 {
 	int i = 0, j = 0, k = 0, l = 0, line = 0;
 
-	int face = 0, face_left = 0, face_right = 0;//face = 0 center, 1 left, 2 right
+	int white = 0;
 	int cnt1 = 0, cnt2 = 0;//각 stage별로 cnt1, cnt2 ... 변수 추가 예정
 	int stage = 0;
 
@@ -173,6 +173,7 @@ int main(void)
 	int b_loop = 0;
 	int sum_left = 0, sum_right = 0;
 	int sum_i = 0, sum_j = 0;
+	int sw = 0;
 	
 	SURFACE* bmpsurf = 0;
 	U16* fpga_videodata = (U16*)malloc(180 * 120 * 2);
@@ -239,7 +240,7 @@ int main(void)
 			break;
 			}
 			*/
-
+			GOUP:
 			read_fpga_video_data(fpga_videodata);
 
 
@@ -307,7 +308,7 @@ int main(void)
 
 			}
 
-			/*////////////////////마스크 추가///////////////////////////
+			/*///////////////////마스크 추가///////////////////////////
 			printf("mask start\n"); // 외곽선추출
 			int n = 1;
 
@@ -320,25 +321,25 @@ int main(void)
 			Mask1[6] = -1.0f; Mask1[7] = -1.0f; Mask1[8] = -1.0f;
 
 			for (i = n; i < 120 - n; i++){
-			index1 = i * 180;
-			for (j = n; j < 180 - n; j++){
-			float sum1 = 0.0f;
-			float sum2 = 0.0f;
+				index1 = i * 180;
+				for (j = n; j < 180 - n; j++){
+					float sum1 = 0.0f;
+					float sum2 = 0.0f;
 
-			for (k = -n; k <= n; k++){
-			index2 = (i + k) * 180;
-			index3 = (k + n) * 3;
-			for (l = -n; l <= n; l++){
-			sum1 += gray[index2 + (j + l)] * Mask[index3 + l + n];
-			//sum2 += gray[index2 + (j + l)] * Mask1[index3 + l + n];
-			}
-			}
-			*(lcd + i * 180 + j) = sum1;
-			}
+					for (k = -n; k <= n; k++){
+						index2 = (i + k) * 180;
+						index3 = (k + n) * 3;
+						for (l = -n; l <= n; l++){
+							sum1 += gray[index2 + (j + l)] * Mask[index3 + l + n];
+							//sum2 += gray[index2 + (j + l)] * Mask1[index3 + l + n];
+						}
+					}
+					*(lcd + i * 180 + j) = sum1;
+				}
 			}
 			printf("mask end\n");
 
-			/////////////////////////////////////////////////////////*/
+			////////////////////////////////////////////////////////*/
 
 
 			for (i = 0; i < 120; i++)
@@ -363,13 +364,13 @@ int main(void)
 					else if (((int)*(red + i * 180 + j) < 15) && ((int)*(green + i * 180 + j) > 15) && ((int)*(blue + i * 180 + j) < 15) && ((int)*(hue_joon + i * 180 + j) > 80) && ((int)*(hue_joon + i * 180 + j) < 120))
 						*(xxx + i * 180 + j) = 5;//초록을표시
 
-					else if (((int)*(blue + i * 180 + j) > 15) && ((int)*(hue_joon + i * 180 + j) > 180) && ((int)*(hue_joon + i * 180 + j) < 250))
+					else if ((*(red + i * 180 + j) < *(blue + i * 180 + j)) && (*(green + i * 180 + j) < *(blue + i * 180 + j)) && ((int)*(hue_joon + i * 180 + j) > 180) && ((int)*(hue_joon + i * 180 + j) < 250) && *(satur_tmp + i * 180 + j) > 30)
 						*(xxx + i * 180 + j) = 6;//파랑을표시
 
 					else
 						*(xxx + i * 180 + j) = 7;//나머지
 
-					/////////////////////값뽑을때 쓰는 코드/////////////////////
+					/*////////////////////값뽑을때 쓰는 코드/////////////////////
 					if (i == 60)
 					{
 					*(lcd + i * 180 + j) = 0x7000;//lcd에 가로줄 빨간줄 표시코드
@@ -382,11 +383,71 @@ int main(void)
 					}
 					if (j == 90)
 					*(lcd + i * 180 + j) = 0x7000;//lcd에 세로줄 빨간줄 표시코드
-					////////////////////////////////////////////////////////////
+					///////////////////////////////////////////////////////////*/
 				}
 
 			}
+			switch (sw)
+			{
+			case 1:
+				sw = 0;
+				//goto stage1;
+			case 2:
+				sw = 0;
+				goto outline;
+			default:
+				break;
+			}
+			//검정파랑뽑기
+			/*
+			for (i = 0; i < 120; i++)
+				for (j = 0; j < 180; j++)
+				{
+					if (*(xxx + i * 180 + j) == 6)
+						*(lcd + i * 180 + j) = 0x7000;
+					if (*(xxx + i * 180 + j) == 2)
+						*(lcd + i * 180 + j) = 0x000f;
+				}
 
+				*/
+
+			/*
+			int aver = 0;
+			int cnt1 = 0;
+			int sum2 = 0;
+			int sum3 = 0;
+			for (i = 40; i < 80; i++)
+			{
+				for (j = 30; j < 150; j++)
+				{
+
+					if (*(xxx + 180 * i + j) == 6)//파란색 발견하면 cnt1증가 가로축j의 합을 sum2에 저장
+					{
+						cnt1++;
+						sum2 = sum2 + j;
+						*(lcd + i * 180 + j) = 0x7000;
+					}
+
+				}
+
+				if (cnt1 > 40)// 가로줄 하나에 cnt1가 40 이상이면 cnt1값과 sum2값을 다른 변수에 합하면서 저장
+				{
+					aver = aver + cnt1;
+					sum3 = sum3 + sum2;
+					cnt1 = 0;
+					sum2 = 0;
+					for (k = -10; k < 10;k++)
+						for(l=-10;l<10;l++)
+							*(lcd + (i+k) * 180 + (l+j)) = 0xffff;
+				}
+				else //아니면 sum2, cnt1초기화
+				{
+					sum2 = 0;
+					cnt1 = 0;
+				}
+			}
+			sum3 = sum3 / (aver + 1);
+			printf("aver : %d  sum3 : %d\n", aver, sum3);*/
 			/*
 			for (i = 0; i < 120; i++)
 			{
@@ -400,98 +461,98 @@ int main(void)
 			}
 			}*/
 			//////////////////////////////외곽선 추출 코드///////////////////////////////
-			/*sum_left = 0;
-			sum_right = 0;
-
-			for (j = 0; j < 180; j++)
-			{
-				for (i = 119; i >= 0; i--)
-				{
-					if (j < 90)
-						sum_left++;
-					else
-						sum_right++;
-
-
-					if (*(xxx + 180 * i + j) == 2)
-						break;
-				}
-			}
-
-			//printf("%d %d\n", sum_left, sum_right);
-			while ((sum_left < sum_right + 200) || (sum_right > sum_left + 200))
-			{
-				if (sum_left > sum_right + 500)
-				{
-					Send_Command(0x01, 0xfe);//정지 후
-					DelayLoop(200000);
-					Send_Command(0x08, 0xf7);//오른쪽돌기
-					DelayLoop(200000);
-				}
-				else if (sum_right > sum_left + 500)
-				{
-					Send_Command(0x01, 0xfe);//정지 후
-					DelayLoop(200000);
-					Send_Command(0x07, 0xf8);//왼쪽돌기
-					DelayLoop(200000);
-				}
-				
-			}
-			Send_Command(0x02, 0xfd);
-			DelayLoop(200000);
-
-			face_left = sum_left + sum_right;
 			sum_left = 0;
 			sum_right = 0;
-
+			white = 0;
+			printf("face right\n");
+			Send_Command(0x04, 0xfb);
 			Send_Command(0x04, 0xfb);//오른쪽보기
-			DelayLoop(200000);
+			//DelayLoop(80000000);
+			sw = 2;
+			goto GOUP;
+		outline:
+			printf("read\n");
+			for (j = 5; j < 175; j++)
+			{
+				for (i = 116; i >= 60; i--)
+				{
+					if (*(xxx + 180 * i + j) == 1)
+					{
+						if (j < 90)
+							sum_left++;
+						else
+							sum_right++;
+						*(lcd + 180 * i + j) = 0x000f;
+					}
+					if ((*(xxx + 180 * i + j) + *(xxx + 180 * i + j - 1) == 3)
+						|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j) == 3)
+						|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j - 1) == 3))
+					{
+						*(lcd + 180 * i + j) = 0xf000;
+						break;
+					}
+					if (*(xxx + 180 * i + j) == 2)
+						break;
 
+
+				}
+			}
+			/*			
 			for (j = 0; j < 180; j++)
 			{
 				for (i = 119; i >= 0; i--)
 				{
-					if (j < 90) // 가로를 반으로 나눠서 픽셀값 더함
-						sum_left++;
-					else
-						sum_right++;
+					if (*(xxx + i * 180 + j) == 1)
+					{
+						*(lcd + i * 180 + j) = 0x7000;
+						if (j < 90)
+							sum_left++;
+						else
+							sum_right++;
 
-					if ((*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j)) == 3)
-						break;
+						if (*(xxx + 180 * i + j) == 2)
+							break;
+					}
 				}
-			}
+			}*/
+
+			printf("sum_left : %d  sum_right : %d\n", sum_left, sum_right);
+
 			if (sum_left > sum_right + 500)
 			{
-				Send_Command(0x01, 0xfe);//정지 후
-				DelayLoop(200000);
-				Send_Command(0x08, 0xf7);//오른쪽돌기
-				DelayLoop(200000);
+				printf("turn right\n");
+				//Send_Command(0x08, 0xf7);
+				//Send_Command(0x08, 0xf7);//오른쪽돌기
+				//DelayLoop(50000000);
 			}
 			else if (sum_right>sum_left + 500)
 			{
-				Send_Command(0x01, 0xfe);//정지 후
-				DelayLoop(200000);
-				Send_Command(0x07, 0xf8);//왼쪽돌기
-				DelayLoop(200000);
+				printf("turn left\n");
+				//Send_Command(0x07, 0xf8);
+				//Send_Command(0x07, 0xf8);//왼쪽돌기
+				//DelayLoop(50000000);
 			}
-			face_right = sum_left + sum_right;
-
-			if (face_left > face_right + 700)
+			white = sum_left + sum_right;
+			printf("white : %d\n", white);
+			if (white > 3000)
 			{
-				Send_Command(0x05, 0xfa); // 왼쪽으로 한걸음
-				DelayLoop(200000);
+				printf("go left\n");
+				//Send_Command(0x05, 0xfa)
+				//Send_Command(0x05, 0xfa); // 왼쪽으로 한걸음
+				//DelayLoop(50000000);
 			}
-			else if (face_right > face_left + 700)
+			else if (white < 1000)
 			{
-				Send_Command(0x06, 0xf9); // 오른쪽으로 한걸음
-				DelayLoop(200000);
+				printf("go right\n");
+				//Send_Command(0x06, 0xf9);
+				//Send_Command(0x06, 0xf9); // 오른쪽으로 한걸음
+				//DelayLoop(50000000);
 			}
 
 			Send_Command(0x01, 0xfe);//정면보기
-			DelayLoop(200000);
+			//DelayLoop(50000000);
+			printf("yes\n");
 
-			Send_Command(0x02, 0xfd);
-			DelayLoop(200000);*/
 
 			///////////////////////////////////////////////////////////////////////////////*/
 
