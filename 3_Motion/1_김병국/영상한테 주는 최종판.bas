@@ -7,6 +7,10 @@ DIM A_old AS BYTE
 DIM B AS BYTE
 DIM C AS BYTE
 DIM 보행순서 AS BYTE
+DIM 보행속도 AS BYTE
+DIM 좌우속도 AS BYTE
+DIM 좌우속도2 AS BYTE
+
 
 
 PTP SETON 				'단위그룹별 점대점동작 설정
@@ -59,9 +63,9 @@ MOTOR_ON:
 
 기본자세:
     MOVE G6A,100,  82, 145,  86, 100, 100
-    MOVE G6D,100,  82, 145,  86, 100, 100
-    MOVE G6B,100,  25,  80, 	, 100, 100
-    MOVE G6C,102 ,  30,  80, 100, 135, 100
+    MOVE G6D,100,  83, 145,  86, 99, 100
+    MOVE G6B,100,  28,  80, 	, 100, 100
+    MOVE G6C,102 ,  31,  80, 100, 135, 100
     WAIT
     mode = 0
     ETX 9600,30
@@ -81,14 +85,99 @@ MOTOR_ON:
 
     '************************************************
 올려보기:
-    MOVE G6A,100,  74, 148,  91, 102, 100
-    MOVE G6D,100,  74, 148,  91, 102, 100
-    MOVE G6B,100,  30,  80, 100, 100, 100
-    MOVE G6C,100,  30,  80, 100, 60, 100
+    MOVE G6A,100,  82, 145,  86, 100, 100
+    MOVE G6D,100,  82, 145,  86, 100, 100
+    MOVE G6B,100,  25,  80, 	, 100, 100
+    MOVE G6C,102 ,  30,  80, 100, 75, 100
     WAIT
     GOTO MAIN
 
     '************************************************
+
+
+전진달리기최종:
+    GOSUB GYRO_INIT
+    GOSUB GYRO_ON
+    GOSUB GYRO_ST
+    SPEED 30
+    HIGHSPEED SETON
+    GOSUB Leg_motor_mode4
+
+    'IF 보행순서 = 0 THEN
+    '    보행순서 = 1
+    MOVE G6A,95,  76, 145,  93, 101
+    MOVE G6D,100,  78, 145,  93, 98
+    WAIT
+
+    '    GOTO 전진달리기50_1
+    'ELSE
+    '    보행순서 = 0
+    '    MOVE G6D,95,  76, 145,  93, 101
+    '    MOVE G6A,101,  78, 145,  93, 98
+    '    WAIT
+
+    '    GOTO 전진달리기50_4
+    'ENDIF
+
+
+    '**********************
+    FOR I = 0 TO 2
+전진달리기최종_1:
+        MOVE G6A,96,  95, 100, 120, 104
+        MOVE G6D,101, 78, 146,  91, 100
+        MOVE G6B, 80
+        MOVE G6C,120
+        WAIT
+
+전진달리기최종_2:
+        MOVE G6A,96,  75, 122, 120, 104
+        MOVE G6D,101, 80, 146,  89, 100
+        WAIT
+
+전진달리기최종_3:
+        MOVE G6A,104, 70, 145, 103, 100
+        MOVE G6D, 96, 88, 160,  68, 100
+        WAIT
+
+        'ERX 4800,A, 전진달리기50_4
+        'IF A <> A_old THEN  GOTO 전진달리기50_멈춤
+
+        '*********************************
+
+전진달리기최종_4:
+        MOVE G6D,96,  95, 100, 120, 104
+        MOVE G6A,103, 78, 146,  91, 102
+        MOVE G6C, 80
+        MOVE G6B,120
+        WAIT
+
+전진달리기최종_5:
+        MOVE G6D,96,  75, 122, 120, 104
+        MOVE G6A,103, 80, 146,  89, 100
+        WAIT
+
+전진달리기최종_6:
+        MOVE G6D,104, 70, 145, 103, 100
+        MOVE G6A, 94, 88, 160,  68, 102
+        WAIT
+    NEXT I
+
+
+
+전진달리기최종_멈춤:
+    HIGHSPEED SETOFF
+    SPEED 15
+    GOSUB 안정화자세
+    SPEED 5
+    GOSUB 기본자세
+
+    DELAY 400
+
+    GOSUB Leg_motor_mode1
+    '보행순서=0
+    GOSUB GYRO_OFF
+    GOTO MAIN
+
 
 전진달리기양발50:
     GOSUB GYRO_INIT
@@ -302,26 +391,27 @@ RX_EXIT:
 
     GOSUB Leg_motor_mode2
     SPEED 8
-    MOVE G6A,95,  106, 145,  63, 105, 100
-    MOVE G6D,95,  46, 145,  123, 105, 100
-    MOVE G6B,115
-    MOVE G6C,85
+    MOVE G6A,96,  107, 177,  19, 105, 100
+    MOVE G6D,96,  35,  135,  138, 105, 100
+    MOVE G6B,120
+    MOVE G6C,80
     WAIT
 
 
 
     SPEED 10
-    MOVE G6A,93,  106, 145,  63, 105, 100
-    MOVE G6D,93,  46, 145,  123, 105, 100
-    MOVE G6B,115
-    MOVE G6C,85
-
+    MOVE G6A,94,  107, 177,  19, 105, 100
+    MOVE G6D,94,  35,  135,  138, 105, 100
+    MOVE G6B,120
+    MOVE G6C,80
     WAIT
 
+
     SPEED 8
-    GOSUB 외각선확인
+    GOSUB 기본자세
     GOSUB Leg_motor_mode1
-    GOTO MAIN
+    WAIT
+    DELAY 1000
 
 오른쪽턴45:
 
@@ -342,7 +432,7 @@ RX_EXIT:
     WAIT
 
     SPEED 8
-    GOSUB 외각선확인
+    GOSUB 기본자세
     GOSUB Leg_motor_mode1
 
     GOTO MAIN
@@ -603,7 +693,7 @@ RX_EXIT:
     MOVE G6A,98,  77, 145,  93, 101, 100
     MOVE G6D,99,  75, 145,  93, 101, 100
     MOVE G6B,100,  25,  80, 100, 100, 100
-    MOVE G6C,102,  31,  80, 100, 148, 100
+    MOVE G6C,102,  31,  80, 100, 155, 100
     WAIT
     RETURN
 
@@ -803,16 +893,16 @@ RX_EXIT:
 기어가기:
 
     GOSUB Leg_motor_mode3
-    SPEED 15
-    MOVE G6A,100, 155,  28, 140, 100, 100
-    MOVE G6D,100, 155,  28, 140, 100, 100
+    SPEED 12
+    MOVE G6A,100, 155,  33, 139, 100, 100
+    MOVE G6D,100, 156,  27, 140, 100, 100
     MOVE G6B,180,  40,  85
-    MOVE G6C,180,  40,  85
+    MOVE G6C,180,  40,  85,,190
     WAIT
 
-    SPEED 5	
-    MOVE G6A, 100, 155,  57, 160, 100, 100'
-    MOVE G6D, 100, 155,  53, 160, 100, 100
+    SPEED 3
+    MOVE G6A, 100, 155,  55, 159, 101, 100'
+    MOVE G6D, 100, 155,  52, 160, 99, 100
     MOVE G6B,186,  30, 80
     MOVE G6C,190,  30, 80
     WAIT	
@@ -821,10 +911,10 @@ RX_EXIT:
 
     DELAY 300
 
-    SPEED 15
+    SPEED 6
     PTP SETOFF
     PTP ALLOFF
-    HIGHSPEED SETOFF
+    HIGHSPEED SETON
 
     'GOTO 기어가기왼쪽턴_LOOP
 
@@ -832,7 +922,7 @@ RX_EXIT:
 
 
     MOVE G6A, 100, 160,  55, 160, 100
-    MOVE G6D, 102, 145,  75, 160, 99
+    MOVE G6D, 101, 145,  75, 160, 100
     MOVE G6B, 170,  25,  70
     MOVE G6C, 187,  50,  40
     WAIT
@@ -840,7 +930,7 @@ RX_EXIT:
 기어가기_1:
     MOVE G6A, 100, 150,  70, 160, 100
     MOVE G6D, 100, 140, 120, 120, 99
-    MOVE G6B, 160,  28,  73
+    MOVE G6B, 160,  28,  74
     MOVE G6C, 190,  25,  70
     WAIT
 
@@ -930,11 +1020,72 @@ RX_EXIT:
     MOVE G6B, 170,  30,  90 , 100, 100
     MOVE G6C, 170,  30,  90 , 100, 100
     WAIT
-    GOTO MAIN
+
+    GOTO 기어가다일어나기
+    'GOTO MAIN
 
     '********************************************************
 
 기어가다일어나기:
+
+    ' 기어가기:
+
+    GOSUB Leg_motor_mode3
+    SPEED 15
+    MOVE G6A,100, 155,  28, 140, 100, 100
+    MOVE G6D,100, 155,  28, 140, 100, 100
+    MOVE G6B,180,  40,  85
+    MOVE G6C,180,  40,  85
+    WAIT
+
+    SPEED 5	
+    MOVE G6A, 100, 155,  57, 160, 100, 100'
+    MOVE G6D, 100, 155,  53, 160, 100, 100
+    MOVE G6B,186,  30, 80
+    MOVE G6C,190,  30, 80
+    WAIT	
+
+    GOSUB All_motor_mode2
+
+    DELAY 300
+
+    SPEED 15
+    PTP SETOFF
+    PTP ALLOFF
+    HIGHSPEED SETOFF
+
+    'GOTO 기어가기왼쪽턴_LOOP
+
+    '기어가기_LOOP:
+
+    FOR I = 0 TO 3
+        MOVE G6A, 100, 160,  55, 160, 100
+        MOVE G6D, 102, 145,  75, 160, 99
+        MOVE G6B, 170,  25,  70
+        MOVE G6C, 187,  50,  40
+        WAIT
+
+        '기어가기_1:
+        MOVE G6A, 100, 150,  70, 160, 100
+        MOVE G6D, 100, 140, 120, 120, 99
+        MOVE G6B, 160,  28,  73
+        MOVE G6C, 190,  25,  70
+        WAIT
+
+        MOVE G6D, 100, 160,  50, 160, 100
+        MOVE G6A, 102, 146,  78, 160, 101
+        MOVE G6C, 175,  30,  65
+        MOVE G6B, 187,  50,  40
+        WAIT
+
+
+        '기어가기_2:
+        MOVE G6D, 100, 150,  70, 160, 100
+        MOVE G6A, 101, 140, 123, 120, 99
+        MOVE G6C, 161,  30,  65
+        MOVE G6B, 187,  25,  72
+        WAIT
+    NEXT I
 
     PTP SETON		
     PTP ALLON
@@ -1395,7 +1546,7 @@ GYRO_ST:
     MOVE G6A,95,  76, 145,  93, 101
     MOVE G6D,101,  77, 145,  93, 98
     MOVE G6B,100,  35,,,,100
-    MOVE G6C,100,  35,, 100, 148
+    MOVE G6C,100,  35,, 100, 155
     WAIT
 
     '        GOTO 전진종종걸음_1
@@ -1474,12 +1625,273 @@ GYRO_ST:
     SPEED 15
     GOSUB 안정화자세2
     SPEED 10
-    GOSUB 기본자세2
+    'GOSUB 기본자세2
 
     DELAY 400
 
     GOSUB Leg_motor_mode1
     GOSUB GYRO_OFF'보행순서=0
+    GOTO MAIN
+
+
+내려가기:
+
+    SPEED 5
+    MOVE G6A,100, 143,  28, 142, 100, 100
+    MOVE G6D,100, 143,  28, 142, 100, 100
+    MOVE G6B,100,  30,  80
+    MOVE G6C,100,  30,  80
+    WAIT
+
+    SPEED 5
+    MOVE G6A,100, 143,  28, 142, 100, 100
+    MOVE G6D,100, 143,  28, 142, 100, 100
+    MOVE G6B,190,  30,  80
+    MOVE G6C,190,  30,  80
+    WAIT
+
+    SPEED 5
+    MOVE G6A,100, 143,  100, 142, 100, 100
+    MOVE G6D,100, 143,  100, 142, 100, 100
+    MOVE G6B,180,  30,  80
+    MOVE G6C,180,  30,  80
+    WAIT
+
+    SPEED 5
+    MOVE G6A, 80, 155,  85, 150, 150, 100
+    MOVE G6D, 80, 155,  85, 150, 150, 100
+    MOVE G6B,185,  20, 70,  100, 100, 100
+    MOVE G6C,185,  20, 70,  100, 100, 100
+    WAIT
+
+    MOVE G6A, 75, 162,  55, 162, 155, 100
+    MOVE G6D, 75, 162,  59, 162, 155, 100
+    MOVE G6B,188,  10, 100, 100, 100, 100
+    MOVE G6C,188,  10, 100, 100, 100, 100
+    WAIT
+
+    SPEED 5
+    MOVE G6A, 60, 162,  30, 162, 145, 100
+    MOVE G6D, 60, 162,  30, 162, 145, 100
+    MOVE G6B,170,  10, 100, 100, 100, 100
+    MOVE G6C,170,  10, 100, 100, 100, 100
+    WAIT
+    GOSUB Leg_motor_mode3	
+    MOVE G6A, 60, 150,  28, 155, 140, 100
+    MOVE G6D, 60, 150,  28, 155, 140, 100
+    MOVE G6B,150,  60,  90, 100, 100, 100
+    MOVE G6C,150,  60,  90, 100, 100, 100
+    WAIT
+
+    MOVE G6A,100, 150,  28, 140, 100, 100
+    MOVE G6D,100, 150,  28, 140, 100, 100
+    MOVE G6B,130,  50,  85, 100, 100, 100
+    MOVE G6C,130,  50,  85, 100, 100, 100
+    WAIT
+    DELAY 100
+
+    MOVE G6A,100, 150,  33, 140, 100, 100
+    MOVE G6D,100, 150,  33, 140, 100, 100
+    WAIT
+    SPEED 10
+
+    GOSUB 기본자세
+    GOTO MAIN
+    '*****************************************************
+
+
+
+전진보행50:
+
+    GOSUB GYRO_INIT
+    GOSUB GYRO_ON
+    GOSUB GYRO_ST
+
+    'GOSUB SOUND_Walk_Ready
+    보행속도 = 10'5
+    좌우속도 = 5'8'3
+    좌우속도2 = 4'5'2
+    '넘어진확인 = 0
+    GOSUB Leg_motor_mode3
+
+
+    SPEED 4
+    '오른쪽기울기
+    MOVE G6A, 88,  71, 152,  91, 110
+    MOVE G6D,108,  76, 146,  93,  94
+    MOVE G6B,100,37
+    MOVE G6C,100,35,,,135
+    WAIT
+
+    SPEED 10'보행속도
+    '왼발들기
+    MOVE G6A, 90, 100, 115, 105, 114
+    MOVE G6D,111,  78, 146,  93,  95
+    MOVE G6B,90
+    MOVE G6C,110
+    WAIT
+
+    '        GOTO 전진보행50_1
+
+
+
+전진보행50_1:
+    'FOR I = 0 TO 10
+    SPEED 보행속도
+    '왼발뻣어착지
+    MOVE G6A, 85,  44, 163, 113, 117
+    MOVE G6D,108,  77, 146,  93,  92
+    WAIT
+
+
+
+    SPEED 좌우속도
+    'GOSUB Leg_motor_mode3
+    '왼발중심이동
+    MOVE G6A,108,  76, 144, 100,  93
+    MOVE G6D,86, 93, 155,  71, 112
+    WAIT
+
+
+
+    SPEED 보행속도
+    'GOSUB Leg_motor_mode2
+    '오른발들기10
+    MOVE G6A,110,  77, 146,  93, 94
+    MOVE G6D,90, 100, 105, 110, 114
+    MOVE G6B,110
+    MOVE G6C,90
+    WAIT
+
+
+
+전진보행50_2:
+
+
+    SPEED 보행속도
+    '오른발뻣어착지
+    MOVE G6D,85,  44, 163, 113, 117
+    MOVE G6A,110,  77, 146,  93,  94
+    WAIT
+
+    SPEED 좌우속도
+    'GOSUB Leg_motor_mode3
+    '오른발중심이동
+    MOVE G6D,108,  76, 144, 100,  93
+    MOVE G6A, 85, 93, 155,  71, 112
+    WAIT
+
+
+    SPEED 보행속도
+    'GOSUB Leg_motor_mode2
+    '왼발들기10
+    MOVE G6A, 90, 100, 105, 110, 114
+    MOVE G6D,110,  77, 146,  93,  94
+    MOVE G6B, 90
+    MOVE G6C,110
+    WAIT
+    'NEXT I
+
+    GOSUB 기본자세
+    GOSUB GYRO_OFF
+    'ONE=0
+    GOTO MAIN
+
+
+판위에서전진보행50:
+
+    GOSUB GYRO_INIT
+    GOSUB GYRO_ON
+    GOSUB GYRO_ST
+
+    'GOSUB SOUND_Walk_Ready
+    보행속도 = 10'5
+    좌우속도 = 5'8'3
+    좌우속도2 = 4'5'2
+    '넘어진확인 = 0
+    GOSUB Leg_motor_mode3
+
+
+    SPEED 4
+    '오른쪽기울기
+    MOVE G6A, 88,  71, 152,  91, 110
+    MOVE G6D,108,  76, 146,  93,  94
+    MOVE G6B,100,37
+    MOVE G6C,100,35,,,155
+    WAIT
+
+    SPEED 10'보행속도
+    '왼발들기
+    MOVE G6A, 90, 100, 115, 105, 114
+    MOVE G6D,111,  78, 146,  93,  95
+    MOVE G6B,90
+    MOVE G6C,110
+    WAIT
+
+    '        GOTO 전진보행50_1
+
+
+
+판위에서전진보행50_1:
+    'FOR I = 0 TO 10
+    SPEED 보행속도
+    '왼발뻣어착지
+    MOVE G6A, 85,  44, 163, 113, 117
+    MOVE G6D,108,  77, 146,  93,  92
+    WAIT
+
+
+
+    SPEED 좌우속도
+    'GOSUB Leg_motor_mode3
+    '왼발중심이동
+    MOVE G6A,108,  76, 144, 100,  93
+    MOVE G6D,86, 93, 155,  71, 112
+    WAIT
+
+
+
+    SPEED 보행속도
+    'GOSUB Leg_motor_mode2
+    '오른발들기10
+    MOVE G6A,110,  77, 146,  93, 94
+    MOVE G6D,90, 100, 105, 110, 114
+    MOVE G6B,110
+    MOVE G6C,90
+    WAIT
+
+
+
+판위에서전진보행50_2:
+
+
+    SPEED 보행속도
+    '오른발뻣어착지
+    MOVE G6D,85,  44, 163, 113, 117
+    MOVE G6A,110,  77, 146,  93,  94
+    WAIT
+
+    SPEED 좌우속도
+    'GOSUB Leg_motor_mode3
+    '오른발중심이동
+    MOVE G6D,108,  76, 144, 100,  93
+    MOVE G6A, 85, 93, 155,  71, 112
+    WAIT
+
+
+    SPEED 보행속도
+    'GOSUB Leg_motor_mode2
+    '왼발들기10
+    MOVE G6A, 90, 100, 105, 110, 114
+    MOVE G6D,110,  77, 146,  93,  94
+    MOVE G6B, 90
+    MOVE G6C,110
+    WAIT
+    'NEXT I
+
+    GOSUB 기본자세
+    GOSUB GYRO_OFF
+    'ONE=0
     GOTO MAIN
 
 
@@ -1501,7 +1913,7 @@ MAIN:
     'GOTO 오른쪽턴2
     A_old = A
 
-    ON A GOTO MAIN,KEY1,KEY2,KEY3,KEY4,KEY5,KEY6,KEY7,KEY8,KEY9,KEY10,KEY11,KEY12,KEY13,KEY14,KEY15,KEY16,KEY17,KEY18
+    ON A GOTO MAIN,KEY1,KEY2,KEY3,KEY4,KEY5,KEY6,KEY7,KEY8,KEY9,KEY10,KEY11,KEY12,KEY13,KEY14,KEY15,KEY16,KEY17,KEY18,KEY19,KEY20,KEY21
     'GOTO KEY34
     'DELAY 500
 
@@ -1595,7 +2007,7 @@ KEY1:
     GOTO MAIN
 KEY2:
     ' ETX  9600,2
-    GOTO 전진달리기희영50
+    GOTO 전진달리기최종
     'DELAY 1000
 
     GOTO MAIN
@@ -1608,8 +2020,8 @@ KEY3: 'LEFT SIDE
     'WAIT
     MOVE G6A,100,  74, 148,  91, 102, 100
     MOVE G6D,100,  74, 148,  91, 102, 100
-    MOVE G6B,108,  47,  50, 100, 100, 16
-    MOVE G6C,106,  44,  50, 100, 128, 100
+    MOVE G6B,108  18,  88, 100, 100, 10
+    MOVE G6C,108,  18,  88, 100, 135, 100
     WAIT
     'DELAY 1000
     GOTO MAIN
@@ -1623,10 +2035,9 @@ KEY4: 'RIGHT SIDE
     'WAIT
     MOVE G6A,100,  74, 148,  91, 102, 100
     MOVE G6D,100,  74, 148,  91, 102, 100
-    MOVE G6B,106,  44,  50, 100, 100, 184
-    MOVE G6C,108,  47,  50, 100, 128, 100
+    MOVE G6B,108  18,  88, 100, 100, 190
+    MOVE G6C,108,  18,  88, 100, 135, 100
     WAIT
-    'DELAY 1000
     GOTO MAIN
 KEY5:
     'ETX 9600,5
@@ -1688,17 +2099,24 @@ KEY16:
     GOTO 허들넘기
     'DELAY 1000
     GOTO MAIN
-    END
 KEY17:
     'ETX 9600,17
     GOTO 왼발공차기
     'DELAY 1000
     GOTO MAIN
-    END
 KEY18:
     'ETX 9600,18
-    GOTO 판위에서전진종종2걸음
+    GOTO 판위에서전진보행50
     'DELAY 1000
     GOTO MAIN
+KEY19:
+    GOTO 기어서올라가기
+    GOTO MAIN
+KEY20:
+    GOTO 내려가기
+    GOTO MAIN
     END
-
+KEY21:
+    GOTO 전진보행50
+    GOTO MAIN
+    END
