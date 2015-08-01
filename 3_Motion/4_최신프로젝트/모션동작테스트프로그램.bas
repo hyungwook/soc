@@ -76,7 +76,7 @@ MAIN:
         'GOTO 전진달리기희영50
         'GOTO 오른쪽턴20
         'GOTO 앞으로덤블링2
-        ' GOTO 기어가기
+        GOTO 기어가기
         'GOTO 기어서올라가기
         'GOTO 내려가기
         'GOTO 계단오른발오르기1cm
@@ -89,7 +89,7 @@ MAIN:
         'GOTO GREEN
         'GOTO 계단왼발내리기2cm
         'GOTO 왼발공차기
-        GOTO 전진종종걸음최종
+        'GOTO 전진종종걸음최종
     ENDIF
 
 
@@ -743,7 +743,7 @@ MAIN:
     MOVE G6A,100, 155,  33, 139, 100, 100
     MOVE G6D,100, 156,  27, 140, 100, 100
     MOVE G6B,180,  40,  85
-    MOVE G6C,180,  40,  85
+    MOVE G6C,180,  40,  85,,190
     WAIT
 
     SPEED 3
@@ -776,7 +776,7 @@ MAIN:
 기어가기_1:
     MOVE G6A, 100, 150,  70, 160, 100
     MOVE G6D, 100, 140, 120, 120, 99
-    MOVE G6B, 160,  28,  73
+    MOVE G6B, 160,  28,  74
     MOVE G6C, 190,  25,  70
     WAIT
 
@@ -1631,7 +1631,7 @@ GYRO_ST:
     MOVE G6C,100,  30,  80
     WAIT
     GOSUB 기본자세
-    '보행순서=0
+    ONE=0
     GOTO MAIN
 
 
