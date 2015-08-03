@@ -163,7 +163,7 @@ int main(void)
 	float max = 0.0f, min = 0.0f;
 	float hf = 0.0f, sf = 0.0f, vf = 0.0f;
 	//	float point_h = 0.0f, point_s = 0.0f, point_v = 0.0f; //중앙점의 hsv값
-	float delta,degree=0;
+	float delta, degree = 0;
 	char input;
 	int ret, face = 0;
 	int b_loop = 0;
@@ -173,7 +173,7 @@ int main(void)
 	int cnt = 0, cnt0 = 0, cnt1 = 0, cnt2 = 0;
 	float first_x = 0, first_y = 0, second_x = 0, second_y = 0, outline_x = 0, outline_y = 0;
 	int result = 0;
-	
+
 	int motion2 = 0;
 	//st3
 	int cnt3 = 0, motion3 = 0, st3_av_i = 0, st3_sum_i = 0;
@@ -252,7 +252,7 @@ int main(void)
 				b = ((*(fpga_videodata + i)) & 31);
 				g = (((*(fpga_videodata + i)) >> 6) & 31);
 				r = (((*(fpga_videodata + i)) >> 11) & 31);
-				
+
 				*(rgb + i) = b + g + r; //rgb값의 합
 
 				if (*(rgb + i) < 0x3332 || *(rgb + i) > 0xcccd)
@@ -262,7 +262,7 @@ int main(void)
 				int gray1 = (graay << 11);
 				int gray2 = (graay << 6);
 				*(gray + i) = gray1 + gray2 + graay; // 그레이하는과정
-				
+
 				*(red + i) = r;
 				*(green + i) = g;
 				*(blue + i) = b;
@@ -853,23 +853,23 @@ int main(void)
 
 				/*
 				if (*(xxx + i * 180 + j) == 1)
-					*(xxx + i * 180 + j) = 0x0000;
+				*(xxx + i * 180 + j) = 0x0000;
 				else
-					*(xxx + i * 180 + j) = 0xffff;
+				*(xxx + i * 180 + j) = 0xffff;
 				*/
 
 				/////////////////////마스크 추가///////////////////////////
 
 				int n = 1;
-				
+
 				Mask[0] = -1.0f; Mask[1] = 0.0f; Mask[2] = 1.0f;
 				Mask[3] = -2.0f; Mask[4] = 0.0f; Mask[5] = 2.0f;
 				Mask[6] = -1.0f; Mask[7] = 0.0f; Mask[8] = 1.0f;
-				
+
 				Mask1[0] = 1.0f; Mask1[1] = 2.0f; Mask1[2] = 1.0f;
 				Mask1[3] = 0.0f; Mask1[4] = 0.0f; Mask1[5] = 0.0f;
 				Mask1[6] = -1.0f; Mask1[7] = -2.0f; Mask1[8] = -1.0f;
-				
+
 				for (j = n; j < 180 - n; j++)
 				{
 					for (i = n; i < 120 - n; i++)
@@ -901,9 +901,9 @@ int main(void)
 						*(mask + i * 180 + j) = sum3;
 					}
 				}
-				
+
 				//////////////////////////////////////////////////////////
-				
+
 				for (j = 0; j < 180; j++)
 				{
 					for (i = 120; i > 0; i--)
@@ -911,16 +911,16 @@ int main(void)
 						/*
 						if (*(xxx + 180 * i + j) == 1)
 						{
-							*(lcd + i * 180 + j) = 0xffff;
+						*(lcd + i * 180 + j) = 0xffff;
 						}
 						else
 						{
-							*(lcd + i * 180 + j) = 0x0000;
+						*(lcd + i * 180 + j) = 0x0000;
 						}
 						*/
 						/*
 						if (sum3 == 0xffff)
-							break;
+						break;
 						*/
 						//*(mask + i * 180 + j) = *(mask + i * 180 + j);
 						*(lcd + i * 180 + j) = *(mask + i * 180 + j);
@@ -969,8 +969,8 @@ int main(void)
 						}
 					}
 				}
-				
-				
+
+
 				center_i = (int)(center_i / (ball + 1));
 				center_j = (int)(center_j / (ball + 1));
 				center_p = (int)(center_p / (hole + 1));
@@ -991,93 +991,55 @@ int main(void)
 							*(lcd + i * 180 + j) = 0x07e0;
 					}
 				}
-				
-				
-				if (center_i < 70)
+
+
+				if (center_i < 30)
 				{
 					printf("so long\n");
 					Send_Command(0x0c, 0xf3);
 					DelayLoop(100000000);
-				}						
+				}
 				else
 				{
 					printf("close\n");
 
-					if (70 < center_j && center_j < 110 && 0 < center_q && center_q < 60)
+					if (85 < center_j && center_j < 95)
+					{
+						printf("almost center\n");
+						if (center_i < 80)
 						{
-							printf("need to turn left\n");
-							Send_Command(0x07, 0xf8);
-							DelayLoop(100000000);
-							Send_Command(0x06, 0xf9);
-							DelayLoop(100000000);
-						}
-						else if (70 < center_j && center_j < 110 && 120 < center_q && center_q < 180)
-						{
-							printf("need to turn right\n");
-							Send_Command(0x08, 0xf7);
-							DelayLoop(100000000);
-							Send_Command(0x05, 0xfa);
+							printf("go\n");
+							Send_Command(0x0c, 0xf3);
 							DelayLoop(100000000);
 						}
 						else
 						{
-							if (85 < center_j && center_j < 95 && 85 < center_q && center_j < 95)
-							{
-								printf("almost center\n");
-								if (center_j - 3 < center_q && center_q < center_j + 3)
-								{
-									printf("center match!\n");
-									while (1)
-									{
-										if (center_i < 90)
-										{
-											Send_Command(0x0c, 0xf3);
-											DelayLoop(100000000);
-										}
-										else
-										{
-											Send_Command(0x0c, 0xf3);
-											DelayLoop(100000000);
-											Send_Command(0x0c, 0xf3);
-											DelayLoop(100000000);
-											Send_Command(0x06, 0xf9);
-											DelayLoop(100000000);
-											Send_Command(0x11, 0xe8);
-											DelayLoop(100000000);
-											break;
-										}
-									}
-								}
-								if (center_j - 5 > center_q)
-								{
-									printf("need to go right\n");
-									Send_Command(0x06, 0xf9);
-									DelayLoop(100000000);
-								}
-								if (center_q > center_j + 5)
-								{
-									printf("need to go left\n");
-									Send_Command(0x05, 0xfa);
-									DelayLoop(100000000);
-								}
-							}
-
-							if (center_j - 5 > center_q)
-							{
-								printf("need to go right\n");
-								Send_Command(0x06, 0xf9);
-								DelayLoop(100000000);
-							}
-
-							if (center_q > center_j + 5)
-							{
-								printf("need to go left\n");
-								Send_Command(0x05, 0xfa);
-								DelayLoop(100000000);
-							}
+							printf("shoot\n");
+							Send_Command(0x0c, 0xf3);
+							DelayLoop(100000000);
+							Send_Command(0x0c, 0xf3);
+							DelayLoop(100000000);
+							Send_Command(0x06, 0xf9);
+							DelayLoop(100000000);
+							Send_Command(0x11, 0xe8);
+							DelayLoop(100000000);
+							break;
 						}
+					}
+					else if (center_j > 95)
+					{
+						printf("need to go right\n");
+						Send_Command(0x06, 0xf9);
+						DelayLoop(100000000);
+					}
+					else if (center_j < 85)
+					{
+						printf("need to go left\n");
+						Send_Command(0x05, 0xfa);
+						DelayLoop(100000000);
+					}
 				}
-				
+
 
 				/////////////////////////////////stage5/////////////////////////////////
 				/*
