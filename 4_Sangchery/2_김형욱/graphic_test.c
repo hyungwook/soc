@@ -436,17 +436,14 @@ int main(void)
 				{
 					printf("motion1=%d", motion1);
 					printf("right screen\n");
-					Send_Command(0x04, 0xfb);
-					Send_Command(0x04, 0xfb);
-					Send_Command(0x04, 0xfb);
-					DelayLoop(20000000);
+					
 					for (j = 30; j < 150; j++)
 					{
-						for (i = 116; i >= 60; i--)
+						for (i = 115; i >= 60; i--)
 						{
 							if (*(xxx + 180 * i + j) == 1)
 							{
-								if (j < 80)
+								if (j < 77)
 									r_sum_left++;
 								else
 									r_sum_right++;
@@ -531,7 +528,7 @@ int main(void)
 				else if (motion1 == 8) //오른쪽평행비교하자~
 				{
 					r_sum_left = 0, r_sum_right = 0;
-					l_sum_left = 0, l_sum_right = 0;
+					
 
 					printf("motion1=%d", motion1);
 					printf("Second,face right!\n");
@@ -549,17 +546,14 @@ int main(void)
 
 					printf("motion1=%d", motion1);
 					printf("Second,right screen\n");
-					Send_Command(0x04, 0xfb);
-					Send_Command(0x04, 0xfb);
-					Send_Command(0x04, 0xfb);
-					DelayLoop(20000000);
+					
 					for (j = 30; j < 150; j++)
 					{
-						for (i = 116; i >= 60; i--)
+						for (i = 115; i >= 60; i--)
 						{
 							if (*(xxx + 180 * i + j) == 1)
 							{
-								if (j < 80)
+								if (j < 77)
 									r_sum_left++;
 								else
 									r_sum_right++;
@@ -589,20 +583,17 @@ int main(void)
 				{
 					printf("motion1=%d", motion1);
 					printf("Center\n");
-					Send_Command(0x04, 0xfb);
-					Send_Command(0x04, 0xfb);
-					Send_Command(0x04, 0xfb);
-					DelayLoop(20000000);
-					if (r_sum_right > r_sum_left + 350) // 왼쪽으로 돌아야함
-					{
-						motion1 = 11;
-						goto OUTLINE;
-					}
-					else if (r_sum_left > r_sum_right + 350) // 오른쪽으로 돌아야함
+					if (r_sum_left > r_sum_right + 450) // 오른쪽으로 돌아야함
 					{
 						motion1 = 12;
 						goto OUTLINE;
 					}
+					else if (r_sum_right > r_sum_left + 450) // 왼쪽으로 돌아야함
+					{
+						motion1 = 11;
+						goto OUTLINE;
+					}
+
 					else // 이제 가자
 					{
 						motion1 = 13;
@@ -1244,7 +1235,7 @@ int main(void)
 				
 				
 				
-				if (motion4 == 0)
+				if (motion4 == 10)
 				{
 					
 					if (st4_av_i >65 && cnt4 > 5)
@@ -1279,6 +1270,7 @@ int main(void)
 						goto GOUP;
 					}
 				}
+
 				
 				else if (motion4 == 1) // 올라가기 직전에 평행맞추기
 				{
@@ -1397,7 +1389,7 @@ int main(void)
 
 						goto GOUP;
 					}
-					else if ((int)degree < 179 && (int)degree >130)
+					else if ((int)degree < 179 && (int)degree >110)
 					{
 						Send_Command(0x1a, 0xe5);
 						Send_Command(0x1a, 0xe5);
@@ -1412,7 +1404,6 @@ int main(void)
 					}
 					else
 					{
-						motion4 = 5;
 						goto GOUP;
 					}
 				}
@@ -1433,10 +1424,6 @@ int main(void)
 					Send_Command(0x0c, 0xf3);
 					DelayLoop(70000000);
 
-					Send_Command(0x0c, 0xf3);
-					Send_Command(0x0c, 0xf3);
-					Send_Command(0x0c, 0xf3);
-					DelayLoop(70000000);
 
 
 					printf("Down!\n");
@@ -1445,9 +1432,12 @@ int main(void)
 					Send_Command(0x0f, 0xf0);//내리기
 					DelayLoop(250000000);
 					printf("Stage Clear!!\n");
-					
-					stage = 9;
-					goto GOUP;
+					Send_Command(0x02, 0xfd);
+					Send_Command(0x02, 0xfd);
+					Send_Command(0x02, 0xfd);
+					DelayLoop(40000000);
+					stage = 5;
+					goto OUTLINE;
 				}
 				
 			
@@ -1456,15 +1446,7 @@ int main(void)
 
 			}
 			//////////////////////////////////////////////////////////
-			else if (stage == 9)
-			{
-				Send_Command(0x02, 0xfd);
-				Send_Command(0x02, 0xfd);
-				Send_Command(0x02, 0xfd);
-				DelayLoop(40000000);
-				stage = 5;
-				goto OUTLINE;
-			}
+			
 			
 			////////////////////////5번째 장애물///////////////////////
 			else if (stage == 5)
@@ -1677,7 +1659,7 @@ int main(void)
 					{
 						for (j = 0; j < 180; j++)
 						{
-							if (*(xxx + 180 * i + j) != 3)
+							if (*(xxx + 180 * i + j) = 3)
 							{
 								if (j < 75)
 									st6_left++;
@@ -1690,18 +1672,7 @@ int main(void)
 					
 		
 
-					if (st6_left > st6_right + 1000)
-					{
-						printf("go right\n");
-						Send_Command(0x19, 0xe6);
-						Send_Command(0x19, 0xe6);
-						Send_Command(0x19, 0xe6);
-						DelayLoop(50000000);
-						
-
-						goto GOUP;
-					}
-					else if (st6_right > st6_left + 1000)
+					if (st6_left > st6_right + 2000)
 					{
 						printf("go left\n");
 						Send_Command(0x18, 0xe7);
@@ -1709,6 +1680,18 @@ int main(void)
 						Send_Command(0x18, 0xe7);
 						DelayLoop(50000000);
 
+						
+
+						goto GOUP;
+					}
+					else if (st6_right > st6_left + 2000)
+					{
+						printf("go right\n");
+
+						Send_Command(0x19, 0xe6);
+						Send_Command(0x19, 0xe6);
+						Send_Command(0x19, 0xe6);
+						DelayLoop(50000000);
 
 						goto GOUP;
 					}
@@ -1721,7 +1704,7 @@ int main(void)
 							Send_Command(0x12, 0xed);//바닥보고 총총걸음(이건 한~두걸음씩)
 							DelayLoop(30000000);
 
-							if ( cnt6_red < 30)
+							if ( cnt6_red < 50)
 							{
 								printf("Command Down!\n");
 								motion6 = 3;
@@ -1754,10 +1737,7 @@ int main(void)
 				else if (motion6 == 4)
 				{
 					printf("Down!\n");
-					Send_Command(0x0c, 0xf3);
-					Send_Command(0x0c, 0xf3);
-					Send_Command(0x0c, 0xf3);
-					DelayLoop(150000000);
+					
 					
 					Send_Command(0x14, 0xeb);
 					Send_Command(0x14, 0xeb);
