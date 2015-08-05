@@ -169,7 +169,9 @@ int main(void)
 	int ret;
 	int b_loop = 0;
 	int exer = 0;
-	int stage = 1;
+	int stage = 0;
+	int cnt_mask = 0;
+	int x = 0, y = 0;
 	//외곽선
 	int r_sum_left = 0, r_sum_right = 0;
 	int l_sum_left = 0, l_sum_right = 0;
@@ -323,39 +325,52 @@ int main(void)
 			}
 
 			//마스크
-			/*////////////////////마스크 추가///////////////////////////
+			///////////////////마스크 추가///////////////////////////
 			printf("mask start\n"); // 외곽선추출
 			int n = 1;
 
 			Mask[0] = -1.0f; Mask[1] = -1.0f; Mask[2] = -1.0f;
-			Mask[3] = -1.0f; Mask[4] = 8.0f; Mask[5] = -1.0f;
-			Mask[6] = -1.0f; Mask[7] = -1.0f; Mask[8] = -1.0f;
+			Mask[3] = 0.0f; Mask[4] = 0.0f; Mask[5] = 0.0f;
+			Mask[6] = 1.0f; Mask[7] = 1.0f; Mask[8] = 1.0f;
 
-			Mask1[0] = 1.0f; Mask1[1] = 1.0f; Mask1[2] = 1.0f;
-			Mask1[3] = 0.0f; Mask1[4] = 0.0f; Mask1[5] = 0.0f;
-			Mask1[6] = -1.0f; Mask1[7] = -1.0f; Mask1[8] = -1.0f;
-
+			//Mask1[0] = 1.0f; Mask1[1] = 1.0f; Mask1[2] = 1.0f;
+			//Mask1[3] = 0.0f; Mask1[4] = 0.0f; Mask1[5] = 0.0f;
+			//Mask1[6] = -1.0f; Mask1[7] = -1.0f; Mask1[8] = -1.0f;
+			cnt_mask = 0;
 			for (i = n; i < 120 - n; i++){
-			index1 = i * 180;
-			for (j = n; j < 180 - n; j++){
-			float sum1 = 0.0f;
-			float sum2 = 0.0f;
+				index1 = i * 180;
+				for (j = n; j < 180 - n; j++){
+					float sum1 = 0.0f;
+					float sum2 = 0.0f;
 
-			for (k = -n; k <= n; k++){
-			index2 = (i + k) * 180;
-			index3 = (k + n) * 3;
-			for (l = -n; l <= n; l++){
-			sum1 += gray[index2 + (j + l)] * Mask[index3 + l + n];
-			//sum2 += gray[index2 + (j + l)] * Mask1[index3 + l + n];
+					for (k = -n; k <= n; k++){
+						index2 = (i + k) * 180;
+						index3 = (k + n) * 3;
+						for (l = -n; l <= n; l++){
+							sum1 += gray[index2 + (j + l)] * Mask[index3 + l + n];
+							//sum2 += gray[index2 + (j + l)] * Mask1[index3 + l + n];
+						}
+					}
+					*(lcd + i * 180 + j) = 0x000f;
+					if (i>90&&j>30&&j<150){
+						if (sum1 > 60000){
+							*(lcd + i * 180 + j) = 0xffff;
+							cnt_mask++;
+						}
+
+						else
+							*(lcd + i * 180 + j) = 0x0000;
+						}
+						
+				}
 			}
-			}
-			*(lcd + i * 180 + j) = sum1 ;
-			}
-			}
+			printf("%d\n", cnt_mask);
 			printf("mask end\n");
-
-			//////////////////////////////////////////////////////////
-			*/
+			draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
+			draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
+			flip();
+			/////////////////////////////////////////////////////////
+			
 
 			for (i = 0; i < 120; i++)
 			{
@@ -373,15 +388,15 @@ int main(void)
 
 					else if (((int)*(red + i * 180 + j) > 15) && ((int)*(green + i * 180 + j) < 15) && ((int)*(blue + i * 180 + j) < 15) && ((((int)*(hue_joon + i * 180 + j) > 300)) || ((int)*(hue_joon + i * 180 + j) < 60)))
 						*(xxx + i * 180 + j) = 3;//빨강을표시
-					else if ((*(green + i * 180 + j) < *(red + i * 180 + j)) && (*(blue + i * 180 + j) < *(red + i * 180 + j)) && (((int)*(hue_joon + i * 180 + j) > 300) || ((int)*(hue_joon + i * 180 + j) < 600)))
+					else if ((*(green + i * 180 + j) < *(red + i * 180 + j)) && (*(blue + i * 180 + j) < *(red + i * 180 + j)) && (((int)*(hue_joon + i * 180 + j) > 300) || ((int)*(hue_joon + i * 180 + j) < 60)))
 						*(xxx + i * 180 + j) = 3;//빨강을표시
 
 					else if (((int)*(red + i * 180 + j) > 18) && ((int)*(green + i * 180 + j) > 18) && ((int)*(blue + i * 180 + j) < 15) && ((int)*(v_compare + i * 180 + j) > 15) && ((int)*(hue_joon + i * 180 + j) > 50) && ((int)*(hue_joon + i * 180 + j) < 80))
 						*(xxx + i * 180 + j) = 4;//노랑을표시
 
-					else if (((int)*(red + i * 180 + j) < 15) && ((int)*(green + i * 180 + j) > 15) && ((int)*(blue + i * 180 + j) < 15) && ((int)*(hue_joon + i * 180 + j) > 80) && ((int)*(hue_joon + i * 180 + j) < 120))
+					else if (((int)*(red + i * 180 + j) < 15) && ((int)*(green + i * 180 + j) > 15) && ((int)*(blue + i * 180 + j) < 15) && ((int)*(hue_joon + i * 180 + j) > 80) && ((int)*(hue_joon + i * 180 + j) < 150))
 						*(xxx + i * 180 + j) = 5;//초록을표시
-					else if ((*(red + i * 180 + j) < *(green + i * 180 + j)) && (*(blue + i * 180 + j) < *(green + i * 180 + j)) && ((int)*(hue_joon + i * 180 + j) > 80) && ((int)*(hue_joon + i * 180 + j) < 120))
+					else if ((*(red + i * 180 + j) < *(green + i * 180 + j)) && (*(blue + i * 180 + j) < *(green + i * 180 + j)) && ((int)*(hue_joon + i * 180 + j) > 80) && ((int)*(hue_joon + i * 180 + j) < 150))
 						*(xxx + i * 180 + j) = 5;//초록을표시
 
 					else if ((*(red + i * 180 + j) < *(blue + i * 180 + j)) && (*(green + i * 180 + j) < *(blue + i * 180 + j)) && ((int)*(hue_joon + i * 180 + j) > 180) && ((int)*(hue_joon + i * 180 + j) < 250) && *(satur_tmp + i * 180 + j) > 30)
@@ -394,6 +409,33 @@ int main(void)
 
 
 			}
+			/*/색깔뽑기
+			for (i = 80; i < 120; i++)
+				for (j = 0; j < 180; j++)
+					*(lcd + i * 180 + j) = 0;
+
+			
+			for (i = 0; i < 120; i++)
+			for (j = 0; j < 180; j++)
+			{
+
+				if (*(xxx + i * 180 + j) == 5)
+				{
+					if ((*(xxx + 180 * i + j) + *(xxx + 180 * i + j - 1) == 7)
+						|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j) == 7)
+						|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j - 1) == 7))
+						*(lcd + i * 180 + j) = 0xf000;
+				}
+				else if (*(xxx + i * 180 + j) == 2)
+					*(lcd + i * 180 + j) = 0x000f;
+			
+			}
+
+			draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
+			draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
+			flip();
+			//////////////////////////////////////////////////////////////////////*/
+
 			
 			switch (sw)
 			{
