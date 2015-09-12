@@ -1460,6 +1460,8 @@ int main(void)
 				Send_Command(0x02, 0xfd);
 				DelayLoop(60000000);
 				
+				
+
 				printf("Turn1\n");
 				Send_Command(0x07, 0xf8);
 				Send_Command(0x07, 0xf8);
