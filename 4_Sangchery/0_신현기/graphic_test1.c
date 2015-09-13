@@ -257,7 +257,10 @@ int main(void)
 
 		GOUP:
 			read_fpga_video_data(fpga_videodata);
-
+			Send_Command(0x04, 0xfb);
+			Send_Command(0x04, 0xfb);
+			Send_Command(0x04, 0xfb);
+			DelayLoop(40000000);
 			for (i = 0; i < 180 * 120; i++)
 			{
 
@@ -326,20 +329,21 @@ int main(void)
 
 			//마스크
 			///////////////////마스크 추가///////////////////////////
-			printf("mask start\n"); // 외곽선추출
+			//printf("mask start\n"); // 외곽선추출
 			int n = 1;
-
+			r_sum_right = 0;
+			r_sum_left = 0;
 			Mask[0] = -1.0f; Mask[1] = -1.0f; Mask[2] = -1.0f;
 			Mask[3] = 0.0f; Mask[4] = 0.0f; Mask[5] = 0.0f;
 			Mask[6] = 1.0f; Mask[7] = 1.0f; Mask[8] = 1.0f;
 
-			Mask1[0] = -1.0f; Mask1[1] = 0.0f; Mask1[2] = 1.0f;
-			Mask1[3] = -1.0f; Mask1[4] = 0.0f; Mask1[5] = 1.0f;
-			Mask1[6] = -1.0f; Mask1[7] = 0.0f; Mask1[8] = 1.0f;
+			//Mask1[0] = -1.0f; Mask1[1] = 0.0f; Mask1[2] = 1.0f;
+			//Mask1[3] = -1.0f; Mask1[4] = 0.0f; Mask1[5] = 1.0f;
+			//Mask1[6] = -1.0f; Mask1[7] = 0.0f; Mask1[8] = 1.0f;
 			cnt_mask = 0;
-			for (i = 120 - n; i > n; i--){
-				index1 = i * 180;
-				for (j = 180 - n; j > n; j--){
+			for (j = 90 - n; j > n; j--){
+				//index1 = i * 180;
+				for (i = 120 - n; i > n; i--){
 					float sum1 = 0.0f;
 					float sum2 = 0.0f;
 
@@ -348,29 +352,27 @@ int main(void)
 						index3 = (k + n) * 3;
 						for (l = -n; l <= n; l++){
 							sum1 += gray[index2 + (j + l)] * Mask[index3 + l + n];
-							sum2 += gray[index2 + (j + l)] * Mask1[index3 + l + n];
+							//sum2 += gray[index2 + (j + l)] * Mask1[index3 + l + n];
 						}
 					}
 					*(lcd + i * 180 + j) = 0x000f;
 					
-					if (sum1 > sum2 && sum1 > 65530){
+					if (sum1 > 65530){
 						*(lcd + i * 180 + j) = 0xffff;
-						cnt_mask++;
-						//break;
+						break;
 					}
-					else if (sum1 < sum2 && sum2 > 65530){
-						*(lcd + i * 180 + j) = 0xf000;
-						//break;
-					}
-					else
+					
+					else{
 						*(lcd + i * 180 + j) = 0x0000;
-					
-					
-							
+						if (j >= 47)
+							r_sum_right++;
+						else
+							r_sum_left++;
+					}
 				}
 			}
-			printf("%d\n", cnt_mask);
-			printf("mask end\n");
+			printf("sum : %d  right : %d  left : %d\n", r_sum_right+r_sum_left, r_sum_right, r_sum_left);
+			//printf("mask end\n");
 			draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
 			draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
 			flip();
