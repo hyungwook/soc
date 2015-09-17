@@ -355,7 +355,7 @@ int main(void)
 							//sum2 += gray[index2 + (j + l)] * Mask1[index3 + l + n];
 						}
 					}
-					*(lcd + i * 180 + j) = 0x000f;
+					//*(lcd + i * 180 + j) = *(fpga_videodata + i * 180 + j);
 					
 					if (sum1 > 65530){
 						*(lcd + i * 180 + j) = 0xffff;
