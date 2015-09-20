@@ -341,7 +341,7 @@ int main(void)
 			//Mask1[3] = -1.0f; Mask1[4] = 0.0f; Mask1[5] = 1.0f;
 			//Mask1[6] = -1.0f; Mask1[7] = 0.0f; Mask1[8] = 1.0f;
 			cnt_mask = 0;
-			for (j = 90 - n; j > n; j--){
+			for (j = 88 - n; j > n; j--){
 				//index1 = i * 180;
 				for (i = 120 - n; i > n; i--){
 					float sum1 = 0.0f;
@@ -364,7 +364,7 @@ int main(void)
 					
 					else{
 						*(lcd + i * 180 + j) = 0x0000;
-						if (j >= 47)
+						if (j >= 44)
 							r_sum_right++;
 						else
 							r_sum_left++;
