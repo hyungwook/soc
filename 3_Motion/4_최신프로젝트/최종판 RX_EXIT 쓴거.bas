@@ -2312,7 +2312,7 @@ GYRO_ST:
     '    ONE=0
 
     DELAY 400
-        SPEED 10
+    SPEED 10
     HIGHSPEED SETON
     GOSUB All_motor_mode3
 
@@ -2338,60 +2338,60 @@ GYRO_ST:
 
 
     '**********************
-   ' FOR I = 0 TO 1
-'전진종종2걸음_1:
-        MOVE G6A,95,  95, 120, 100, 104
-        MOVE G6D,104,  77, 146,  91,  102
-        MOVE G6B, 80,,,,,100
-        MOVE G6C,120,,,100
-        WAIT
+    ' FOR I = 0 TO 1
+    '전진종종2걸음_1:
+    MOVE G6A,95,  95, 120, 100, 104
+    MOVE G6D,104,  77, 146,  91,  102
+    MOVE G6B, 80,,,,,100
+    MOVE G6C,120,,,100
+    WAIT
 
 
-'전진종종2걸음_2:
-        MOVE G6A,95,  85, 130, 103, 104
-        MOVE G6D,104,  79, 146,  89,  100
-        WAIT
+    '전진종종2걸음_2:
+    MOVE G6A,95,  85, 130, 103, 104
+    MOVE G6D,104,  79, 146,  89,  100
+    WAIT
 
-'전진종종2걸음_3:
-        MOVE G6A,103,   85, 130, 103,  100
-        MOVE G6D, 95,  79, 146,  89, 102
-        WAIT
-'전진종종2걸음_4:
-        MOVE G6D,95,  95, 120, 100, 104
-        MOVE G6A,104,  77, 146,  91,  102
-        MOVE G6C, 80,,,100
-        MOVE G6B,120,,,,,100
-        WAIT
+    '전진종종2걸음_3:
+    MOVE G6A,103,   85, 130, 103,  100
+    MOVE G6D, 95,  79, 146,  89, 102
+    WAIT
+    '전진종종2걸음_4:
+    MOVE G6D,95,  95, 120, 100, 104
+    MOVE G6A,104,  77, 146,  91,  102
+    MOVE G6C, 80,,,100
+    MOVE G6B,120,,,,,100
+    WAIT
 
 
-'전진종종2걸음_5:
-        MOVE G6D,95,  85, 130, 103, 104
-        MOVE G6A,104,  79, 146,  89,  100
-        WAIT
+    '전진종종2걸음_5:
+    MOVE G6D,95,  85, 130, 103, 104
+    MOVE G6A,104,  79, 146,  89,  100
+    WAIT
 
-'전진종종2걸음_6:
-        MOVE G6D,103,   85, 130, 103,  100
-        MOVE G6A, 95,  79, 146,  89, 102
-        WAIT        
-        
-        
+    '전진종종2걸음_6:
+    MOVE G6D,103,   85, 130, 103,  100
+    MOVE G6A, 95,  79, 146,  89, 102
+    WAIT
+
+
     HIGHSPEED SETOFF
     SPEED 15
     GOSUB 안정화자세
     SPEED 10
     GOSUB 기본자세
 
-'    DELAY 400
+    '    DELAY 400
 
     GOSUB Leg_motor_mode1
 
-    
-    
- '   ONE = 0
-    
-    
+
+
+    '   ONE = 0
+
+
     GOSUB GYRO_OFF
-'    GOTO MAIN
+    '    GOTO MAIN
     GOTO RX_EXIT
 
 

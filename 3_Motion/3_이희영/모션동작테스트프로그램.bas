@@ -65,7 +65,7 @@ ONE = 1
 
 '***** 메인 반복루틴 **************
 MAIN:
-	GOSUB GYRO_INIT
+    GOSUB GYRO_INIT
     GOSUB GYRO_ON
     GOSUB GYRO_ST
 
@@ -1062,9 +1062,9 @@ MAIN:
     좌우속도 = 5'8'3
     좌우속도2 = 4'5'2
     '넘어진확인 = 0
-'    GOSUB GYRO_INIT
-'    GOSUB GYRO_ON
-'    GOSUB GYRO_ST
+    '    GOSUB GYRO_INIT
+    '    GOSUB GYRO_ON
+    '    GOSUB GYRO_ST
     GOSUB Leg_motor_mode3
 
 
