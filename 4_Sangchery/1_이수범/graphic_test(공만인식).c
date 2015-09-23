@@ -993,50 +993,64 @@ int main(void)
 				}
 
 
-				if (center_i < 30)
+				if (center_i < 60)
 				{
 					printf("so long\n");
 					Send_Command(0x0c, 0xf3);
-					DelayLoop(100000000);
+					Send_Command(0x0c, 0xf3);
+					Send_Command(0x0c, 0xf3);
+					DelayLoop(40000000);
 				}
 				else
 				{
 					printf("close\n");
 
-					if (85 < center_j && center_j < 95)
+					//고개숙인상태에서 영상처리 ㄱㄱ
+
+					if (90 < center_j && center_j < 100)
 					{
 						printf("almost center\n");
-						if (center_i < 80)
+						if (center_i < 100)
 						{
 							printf("go\n");
 							Send_Command(0x0c, 0xf3);
-							DelayLoop(100000000);
+							Send_Command(0x0c, 0xf3);
+							Send_Command(0x0c, 0xf3);
+							DelayLoop(40000000);
 						}
 						else
 						{
 							printf("shoot\n");
 							Send_Command(0x0c, 0xf3);
-							DelayLoop(100000000);
 							Send_Command(0x0c, 0xf3);
-							DelayLoop(100000000);
+							Send_Command(0x0c, 0xf3);
+							DelayLoop(40000000);
 							Send_Command(0x06, 0xf9);
-							DelayLoop(100000000);
-							Send_Command(0x11, 0xe8);
+							Send_Command(0x06, 0xf9);
+							Send_Command(0x06, 0xf9);
+							DelayLoop(50000000);
+							Send_Command(0x11, 0xee);
+							Send_Command(0x11, 0xee);
+							Send_Command(0x11, 0xee);
 							DelayLoop(100000000);
 							break;
 						}
 					}
-					else if (center_j > 95)
+					else if (center_j > 100)
 					{
 						printf("need to go right\n");
 						Send_Command(0x06, 0xf9);
-						DelayLoop(100000000);
+						Send_Command(0x06, 0xf9);
+						Send_Command(0x06, 0xf9);
+						DelayLoop(50000000);
 					}
-					else if (center_j < 85)
+					else if (center_j < 90)
 					{
 						printf("need to go left\n");
 						Send_Command(0x05, 0xfa);
-						DelayLoop(100000000);
+						Send_Command(0x05, 0xfa);
+						Send_Command(0x05, 0xfa);
+						DelayLoop(50000000);
 					}
 				}
 
