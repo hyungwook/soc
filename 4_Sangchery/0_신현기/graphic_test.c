@@ -175,8 +175,6 @@ int main(void)
 	int* st4_green = (int*)malloc(180 * 120 * 4);
 	int* st6_red = (int*)malloc(180 * 120 * 4);
 
-
-
 	int i = 0, j = 0, k = 0, l = 0;
 	float r = 0, g = 0, b = 0;
 	float max = 0.0f, min = 0.0f;
@@ -184,9 +182,9 @@ int main(void)
 	int ret,delta;
 	char input;
 	int b_loop = 0;
-	int stage = 0;
+	int stage = 100;
 	//외곽선
-	int first_out = 1;
+	int first_out = 0;
 	int r_sum_left = 0, r_sum_right = 0;
 	int l_sum_left = 0, l_sum_right = 0;
 	int r_sum = 0, l_sum = 0;
@@ -198,9 +196,11 @@ int main(void)
 	double degree = 0;
 	int go = 0;
 	//파란장애물
-	int cnt = 0, cnt1 = 0, sum1 = 0, sum2 = 0, sum3 = 0, sum4 = 0, sw = 0;
+	int cnt = 0, cnt1 = 0;
 	int cnt_st1 = 0;
 	int motion0 = 0;
+	int stop = 0;
+	int blue_up = 0, blue_right = 0, blue_left = 0, blue_center = 0;
 	//바리케이트
 	int motion2 = 0, cnt2 = 0;
 	//허들
@@ -474,10 +474,6 @@ int main(void)
 			
 			}
 
-			cnt = 0;
-			int m = 0;
-			float grad = 0;
-
 			for (i = 0; i < 120; i++)
 				for (j = 0; j < 180; j++)
 					*(lcd + i * 180 + j) = *(fpga_videodata + i * 180 + j);
@@ -509,13 +505,6 @@ int main(void)
 						*(xxx + i * 180 + j) = 7;//나머지
 					*/	
 			
-			switch (sw)
-			{
-			case 1:
-				sw = 0;
-				goto stage1;
-			}
-
 			///////////////////// 1번째 장애물 ///////////////////////////// 
 			if (stage == 1)
 			{
@@ -603,8 +592,6 @@ int main(void)
 			///////////////////////////////////////////////////////////////
 
 
-			
-			
 			/////////////////////// 2번째 장애물 //////////////////////
 			else if (stage == 2)
 			{
@@ -1053,74 +1040,123 @@ int main(void)
 			/////////////////////////////////////////////////////////////////
 			
 			///////////////////// 4번째,7번째 장애물 /////////////////////////////
-			else if (stage == 4 || stage == 7)
+			else if (stage == 100 || stage == 7)
 			{
 				//파란 장애물
 				if (motion0 == 0)
 				{
+					cnt1 = 0;
+					blue_center = 0;
+					for (i = 60; i < 120; i++)
+					{
+						for (j = 0; j < 180; j++)
+						{
+							*(lcd + i * 180 + j) = 0x0000;
+							if ((*(red + i * 180 + j) < *(blue + i * 180 + j)) && (*(green + i * 180 + j) < *(blue + i * 180 + j))
+								&& ((int)*(hue_joon + i * 180 + j) > 180) && ((int)*(hue_joon + i * 180 + j) < 250)
+								&& *(satur_tmp + i * 180 + j) > 30 && ((int)*(v_compare + i * 180 + j) < 20))//파란색 발견하면 cnt1증가 가로축j의 합을 sum2에 저장
+							{
+								cnt1++;
+								blue_center += j;
+								*(lcd + i * 180 + j) = 0x001f;
+							}
+						}
+
+					}
+					blue_center = blue_center/(cnt1 + 1);
+
+					draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
+					draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
+					flip();
+
+					printf("cnt1 : %d\n", cnt1);
+					if (cnt1 > 800)//앞에 파란장애물 보일 때
+					{
+						Send_Command(0x0d, 0xf2);
+						Send_Command(0x0d, 0xf2);
+						Send_Command(0x0d, 0xf2);
+						DelayLoop(75000000);//고개올리기
+						Send_Command(0x0d, 0xf2);
+						Send_Command(0x0d, 0xf2);
+						Send_Command(0x0d, 0xf2);
+						DelayLoop(75000000);//고개올리기
+						printf("down\n");
+						motion0 = 1;
+					}
+					else{
+						Send_Command(0x0b, 0xf4);
+						Send_Command(0x0b, 0xf4);
+						Send_Command(0x0b, 0xf4);//종종걸음 10걸음
+						DelayLoop(75000000);
+					}
+
+					goto GOUP;
+
+				}
+			
+				else if (motion0 == 1){
+					blue_left = 0;
+					blue_right = 0;
+					for (i = 0; i < 60; i++)
+					{
+						for (j = 0; j < 180; j++)
+						{
+							*(lcd + i * 180 + j) = 0x0000;
+
+							if ((*(red + i * 180 + j) < *(blue + i * 180 + j)) && (*(green + i * 180 + j) < *(blue + i * 180 + j))
+								&& ((int)*(hue_joon + i * 180 + j) > 180) && ((int)*(hue_joon + i * 180 + j) < 250)
+								&& *(satur_tmp + i * 180 + j) > 30 && ((int)*(v_compare + i * 180 + j) < 20))//파란색 발견하면 cnt1증가 가로축j의 합을 sum2에 저장
+							{
+								*(lcd + i * 180 + j) = 0x001f;
+								
+								if (j > 90)
+									blue_left++;
+								else
+									blue_right++;
+							}
+						}
+
+					}
+
+					draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
+					draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
+					flip();
+					printf("%d %d\n", blue_left, blue_right);
+					if (blue_right > blue_left){//왼쪽으로 한걸음
+						Send_Command(0x05, 0xfa);
+						Send_Command(0x05, 0xfa);
+						Send_Command(0x05, 0xfa);
+						DelayLoop(75000000);
+
+						Send_Command(0x05, 0xfa);
+						Send_Command(0x05, 0xfa);
+						Send_Command(0x05, 0xfa);
+						DelayLoop(75000000);
+					}
+
+					else{
+						Send_Command(0x06, 0xf9);//오른쪽으로 한걸음
+						Send_Command(0x06, 0xf9);
+						Send_Command(0x06, 0xf9);
+						DelayLoop(75000000);
+
+						Send_Command(0x06, 0xf9);
+						Send_Command(0x06, 0xf9);
+						Send_Command(0x06, 0xf9);
+						DelayLoop(75000000);
+						
+					}
+					printf("gggggo\n");
 					Send_Command(0x1c, 0xe3);
 					Send_Command(0x1c, 0xe3);
 					Send_Command(0x1c, 0xe3);//종종걸음 15걸음
 					DelayLoop(75000000);
-					motion0 = 1;
-				}
-
-				Send_Command(0x15, 0xea);
-				Send_Command(0x15, 0xea);//안정걷기
-				DelayLoop(75000000);
-
-				sw = 1;
-				goto GOUP;
-			stage1:
-				printf("stage1\n");
-				cnt1 = 0;
-				for (i = 60; i < 120; i++)
-				{
-					for (j = 0; j < 180; j++)
-					{
-						*(lcd + i * 180 + j) = 0x0000;
-						if (*(xxx + 180 * i + j) == 6)//파란색 발견하면 cnt1증가 가로축j의 합을 sum2에 저장
-						{
-							cnt1++;
-							sum2 = sum2 + j;
-							*(lcd + i * 180 + j) = 0x001f;
-						}
-					}
-
-				}
-				draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
-				draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
-				flip();
-				printf("%d\n", cnt1);
-				if (cnt1 > 200)
-				{
-					printf("d\n");
-
-					Send_Command(0x06, 0xf9);//오른쪽으로 한걸음
-					Send_Command(0x06, 0xf9);
-					Send_Command(0x06, 0xf9);
-					DelayLoop(75000000);
-
-					Send_Command(0x06, 0xf9);
-					Send_Command(0x06, 0xf9);
-					Send_Command(0x06, 0xf9);
-					DelayLoop(75000000);
-
-					Send_Command(0x06, 0xf9);
-					Send_Command(0x06, 0xf9);
-					Send_Command(0x06, 0xf9);
-					DelayLoop(75000000);
-
-					Send_Command(0x0b, 0xf4);
-					Send_Command(0x0b, 0xf4);
-					Send_Command(0x0b, 0xf4);
-					DelayLoop(130000000);
-
-					stage += 1;
+					
+					stage++;
+					motion0 = 0;
 					goto GOUP;
-
 				}
-
+				
 			}
 			
 			///////////////////////////////////////////////////////////////
