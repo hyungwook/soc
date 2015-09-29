@@ -1042,19 +1042,23 @@ int main(void)
 			///////////////////// 4번째,7번째 장애물 /////////////////////////////
 			else if (stage == 100 || stage == 7)
 			{
+				//first_out = 1;
+				//goto OUTLINE;
 				//파란 장애물
 				if (motion0 == 0)
 				{
 					cnt1 = 0;
+					blue_right = 0;
+					blue_left = 0;
 					blue_center = 0;
 					for (i = 60; i < 120; i++)
 					{
 						for (j = 0; j < 180; j++)
 						{
 							*(lcd + i * 180 + j) = 0x0000;
-							if ((*(red + i * 180 + j) < *(blue + i * 180 + j)) && (*(green + i * 180 + j) < *(blue + i * 180 + j))
+							if ((*(red + i * 180 + j) < *(blue + i * 180 + j)) && (*(green + i * 180 + j) < *(blue + i * 180 + j)) && (*(blue + i * 180 + j)>10)
 								&& ((int)*(hue_joon + i * 180 + j) > 180) && ((int)*(hue_joon + i * 180 + j) < 250)
-								&& *(satur_tmp + i * 180 + j) > 30 && ((int)*(v_compare + i * 180 + j) < 20))//파란색 발견하면 cnt1증가 가로축j의 합을 sum2에 저장
+								&& *(satur_tmp + i * 180 + j) > 30 && ((int)*(v_compare + i * 180 + j) < 15))//파란색 발견하면 cnt1증가 가로축j의 합을 sum2에 저장
 							{
 								cnt1++;
 								blue_center += j;
@@ -1063,30 +1067,87 @@ int main(void)
 						}
 
 					}
+					for (i = 0; i < 60; i++){
+						for (j = 0; j < 10; j++)
+						{
+							*(lcd + i * 180 + j) = 0x0000;
+							if ((*(red + i * 180 + j) < *(blue + i * 180 + j)) && (*(green + i * 180 + j) < *(blue + i * 180 + j)) && (*(blue + i * 180 + j)>10)
+								&& ((int)*(hue_joon + i * 180 + j) > 180) && ((int)*(hue_joon + i * 180 + j) < 250)
+								&& *(satur_tmp + i * 180 + j) > 30 && ((int)*(v_compare + i * 180 + j) < 15))//파란색 발견하면 cnt1증가 가로축j의 합을 sum2에 저장
+							{
+								blue_left++;
+								blue_center += j;
+								*(lcd + i * 180 + j) = 0x001f;
+							}
+						}
+						for (j = 170; j < 180; j++)
+						{
+							*(lcd + i * 180 + j) = 0x0000;
+							if ((*(red + i * 180 + j) < *(blue + i * 180 + j)) && (*(green + i * 180 + j) < *(blue + i * 180 + j)) && (*(blue + i * 180 + j)>10)
+								&& ((int)*(hue_joon + i * 180 + j) > 180) && ((int)*(hue_joon + i * 180 + j) < 250)
+								&& *(satur_tmp + i * 180 + j) > 30 && ((int)*(v_compare + i * 180 + j) < 15))//파란색 발견하면 cnt1증가 가로축j의 합을 sum2에 저장
+							{
+								blue_right++;
+								blue_center += j;
+								*(lcd + i * 180 + j) = 0x001f;
+							}
+						}
+
+					}
+					
 					blue_center = blue_center/(cnt1 + 1);
 
 					draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
 					draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
 					flip();
 
-					printf("cnt1 : %d\n", cnt1);
-					if (cnt1 > 800)//앞에 파란장애물 보일 때
+					printf("cnt1 : %d %d\n", cnt1, blue_right+blue_left);
+				if (blue_right > 100){
+					Send_Command(0x05, 0xfa);
+					Send_Command(0x05, 0xfa);
+					Send_Command(0x05, 0xfa);
+					DelayLoop(75000000);
+
+					Send_Command(0x05, 0xfa);
+					Send_Command(0x05, 0xfa);
+					Send_Command(0x05, 0xfa);
+					DelayLoop(75000000);
+
+					motion0 = 2;
+					goto GOUP;
+				}
+				else if (blue_left > 100){
+					Send_Command(0x06, 0xf9);
+					Send_Command(0x06, 0xf9);
+					Send_Command(0x06, 0xf9);
+					DelayLoop(75000000);
+
+					Send_Command(0x06, 0xf9);
+					Send_Command(0x06, 0xf9);
+					Send_Command(0x06, 0xf9);
+					DelayLoop(75000000);
+
+					motion0 = 2;
+					goto GOUP;
+				}
+					else if (cnt1 > 800)//앞에 파란장애물 보일 때
 					{
 						Send_Command(0x0d, 0xf2);
 						Send_Command(0x0d, 0xf2);
 						Send_Command(0x0d, 0xf2);
-						DelayLoop(75000000);//고개올리기
+						DelayLoop(55000000);//고개올리기
 						Send_Command(0x0d, 0xf2);
 						Send_Command(0x0d, 0xf2);
 						Send_Command(0x0d, 0xf2);
-						DelayLoop(75000000);//고개올리기
+						DelayLoop(55000000);//고개올리기
 						printf("down\n");
 						motion0 = 1;
 					}
+					
 					else{
-						Send_Command(0x0b, 0xf4);
-						Send_Command(0x0b, 0xf4);
-						Send_Command(0x0b, 0xf4);//종종걸음 10걸음
+						Send_Command(0x0c, 0xf3);
+						Send_Command(0x0c, 0xf3);
+						Send_Command(0x0c, 0xf3);//종종
 						DelayLoop(75000000);
 					}
 
@@ -1132,10 +1193,20 @@ int main(void)
 						Send_Command(0x05, 0xfa);
 						Send_Command(0x05, 0xfa);
 						DelayLoop(75000000);
+
+						Send_Command(0x05, 0xfa);
+						Send_Command(0x05, 0xfa);
+						Send_Command(0x05, 0xfa);
+						DelayLoop(75000000);
 					}
 
 					else{
 						Send_Command(0x06, 0xf9);//오른쪽으로 한걸음
+						Send_Command(0x06, 0xf9);
+						Send_Command(0x06, 0xf9);
+						DelayLoop(75000000);
+
+						Send_Command(0x06, 0xf9);
 						Send_Command(0x06, 0xf9);
 						Send_Command(0x06, 0xf9);
 						DelayLoop(75000000);
@@ -1157,6 +1228,16 @@ int main(void)
 					goto GOUP;
 				}
 				
+				else if (motion0 == 2){
+					Send_Command(0x1c, 0xe3);
+					Send_Command(0x1c, 0xe3);
+					Send_Command(0x1c, 0xe3);//종종걸음 15걸음
+					DelayLoop(75000000);
+					
+					stage++;
+					motion0 = 0;
+					goto GOUP;
+				}
 			}
 			
 			///////////////////////////////////////////////////////////////
