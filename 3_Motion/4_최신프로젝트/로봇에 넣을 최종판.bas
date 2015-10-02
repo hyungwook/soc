@@ -2115,7 +2115,7 @@ KEY19:
 KEY20:
     GOTO 내려가기
     GOTO MAIN
-    END
+    
 KEY21:
     GOTO 전진보행50
     GOTO MAIN
