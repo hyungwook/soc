@@ -1889,14 +1889,14 @@ KEY18:
     GOTO 판위에서전진종종2걸음
     'DELAY 1000
     GOTO MAIN
-<<<<<<< HEAD
+    <<<<<<< HEAD
 KEY19:
     GOTO 기어서올라가기
     GOTO MAIN
 KEY20:
     GOTO 내려가기
     GOTO MAIN
-    
+
 KEY21:
     GOTO 전진보행50
     GOTO MAIN
@@ -1904,4 +1904,4 @@ KEY21:
 =======
     END
 
->>>>>>> 014a22056b59f56ff07378014ac5b9847acb9f59
+    >>>>>>> 014a22056b59f56ff07378014ac5b9847acb9f59

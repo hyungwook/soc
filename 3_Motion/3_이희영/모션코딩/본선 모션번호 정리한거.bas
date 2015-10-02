@@ -128,12 +128,12 @@ RX_EXIT:
 
 
 기본자세:
-    GOSUB GYRO_INIT
-    GOSUB GYRO_ON
-    GOSUB GYRO_ST
+    'GOSUB GYRO_INIT
+    'GOSUB GYRO_ON
+    'GOSUB GYRO_ST
 
-    MOVE G6A,100,  83, 137,  94, 100, 100
-    MOVE G6D,100,  84, 136,  95, 100, 100
+    MOVE G6A,100,  83, 137,  96, 100, 100
+    MOVE G6D,100,  84, 136,  97, 100, 100
     MOVE G6B,100,  28,  81, 100, 100, 100
     MOVE G6C,100 ,  32,  80, 100, 135, 100
     WAIT
@@ -306,19 +306,129 @@ RX_EXIT:
 
     GOTO RX_EXIT
 
+고개90도전진보행: 'COMPLETE GREEN
+
+    GOSUB GYRO_INIT
+    GOSUB GYRO_ON
+    GOSUB GYRO_ST
+
+    'GOSUB SOUND_Walk_Ready
+    보행속도 = 10'5
+    좌우속도 = 5'8'3
+    좌우속도2 = 4'5'2
+    '넘어진확인 = 0
+    GOSUB Leg_motor_mode3
+    GOSUB 기본자세2
+
+    SPEED 4
+    '오른쪽기울기
+    MOVE G6A, 88,  71, 152,  91, 110
+    MOVE G6D,106,  76, 146,  93,  96
+    MOVE G6B,100,37
+    MOVE G6C,100,35,,,
+    WAIT
+
+    SPEED 10'보행속도
+    '왼발들기
+    MOVE G6A, 90, 100, 115, 105, 114
+    MOVE G6D,109,  78, 146,  93,  96
+    MOVE G6B,90
+    MOVE G6C,110
+    WAIT
+
+
+    '        GOTO 전진보행50_1
+
+
+
+고개90도전진보행_1:
+    FOR I = 0 TO 1
+
+        SPEED 보행속도
+        '왼발뻣어착지
+        MOVE G6A, 85,  44, 163, 113, 117
+        MOVE G6D,108,  77, 146,  93,  92
+        WAIT
+
+
+
+        SPEED 좌우속도
+        'GOSUB Leg_motor_mode3
+        '왼발중심이동
+        MOVE G6A,108,  76, 144, 100,  93
+        MOVE G6D,86, 93, 155,  71, 112
+        WAIT
+
+
+
+        SPEED 보행속도
+        'GOSUB Leg_motor_mode2
+        '오른발들기10
+        MOVE G6A,110,  77, 146,  93, 94
+        MOVE G6D,90, 100, 105, 110, 114
+        MOVE G6B,110
+        MOVE G6C,90
+        WAIT
+
+
+
+고개90도전진보행_2:
+
+
+        SPEED 보행속도
+        '오른발뻣어착지
+        MOVE G6D,87,  44, 163, 113, 117
+        MOVE G6A,108,  77, 147,  94,  92
+        WAIT
+
+        SPEED 좌우속도
+        'GOSUB Leg_motor_mode3
+        '오른발중심이동
+        MOVE G6D,108,  76, 144, 100,  93
+        MOVE G6A, 85, 93, 155,  71, 112
+        WAIT
+
+
+        SPEED 보행속도
+        'GOSUB Leg_motor_mode2
+        '왼발들기10
+        MOVE G6A, 90, 100, 105, 110, 114
+        MOVE G6D,110,  77, 146,  93,  94
+        MOVE G6B, 90
+        MOVE G6C,110
+        WAIT
+
+
+
+    NEXT I
+
+ 
+
+
+
+    'GOSUB 안정화자세2
+    GOSUB 기본자세2
+    GOSUB GYRO_OFF
+    GOTO RX_EXIT
+
+    'GOTO MAIN
+    'GOSUB 앞뒤기울기측정
+    'GOSUB 좌우기울기측정
+
 
 왼쪽턴10: ' COMPLETE
 
+    GOSUB GYRO_OFF
     GOSUB 기본자세
     GOSUB Leg_motor_mode2
     SPEED 12
-    MOVE G6A,97,  86, 145,  83, 103, 100
-    MOVE G6D,97,  66, 145,  103, 103, 100
+    MOVE G6A,97,  86, 146,  85, 102, 100
+    MOVE G6D,97,  66, 145,  104, 102, 100
     WAIT
 
     SPEED 12
-    MOVE G6A,94,  86, 145,  83, 101, 100
-    MOVE G6D,94,  66, 145,  103, 101, 100
+    MOVE G6A,92,  86, 146,  85, 101, 100
+    MOVE G6D,94,  66, 145,  104, 100, 100
     WAIT
 
     SPEED 6
@@ -327,6 +437,7 @@ RX_EXIT:
     MOVE G6B,100,  30,  80
     MOVE G6C,100,  30,  80
     WAIT
+
 
     GOSUB 기본자세
     GOSUB Leg_motor_mode1
@@ -500,7 +611,106 @@ RX_EXIT:
     GOSUB Leg_motor_mode1
     GOSUB GYRO_OFF
     GOTO RX_EXIT
+전진종종비비기:
+    '    넘어진확인 = 0
+    GOSUB GYRO_INIT
+    GOSUB GYRO_ON
+    GOSUB GYRO_ST
+    SPEED 10
+    HIGHSPEED SETON
+    GOSUB All_motor_mode3
 
+    '    IF 보행순서 = 0 THEN
+    '        보행순서 = 1
+    MOVE G6A,95,  76, 145,  93, 101
+    MOVE G6D,101,  77, 145,  93, 98
+    MOVE G6B,100,  35,,,,100
+    MOVE G6C,100,  35,, 100, 135
+    WAIT
+
+    '        GOTO 전진종종걸음_1
+    '    ELSE
+    '        보행순서 = 0
+    '        MOVE G6D,95,  76, 145,  93, 101
+    '        MOVE G6A,101,  77, 145,  93, 98
+    '        MOVE G6B,100,  35
+    '        MOVE G6C,100,  35
+    '        WAIT
+
+    '       GOTO 전진종종걸음_4
+    '    ENDIF
+
+
+    '**********************
+    FOR I = 0 TO 3
+전진종종비비기_1:
+        MOVE G6A,95,  95, 120, 100, 104
+        MOVE G6D,104,  77, 146,  91,  102
+        MOVE G6B, 80,,,,,100
+        MOVE G6C,120,,,100
+        WAIT
+
+
+전진종종비비기_2:
+        MOVE G6A,95,  85, 130, 103, 104
+        MOVE G6D,104,  79, 146,  89,  100
+        WAIT
+
+전진종종비비기_3:
+        MOVE G6A,103,   85, 130, 103,  100
+        MOVE G6D, 95,  79, 146,  89, 102
+        WAIT
+
+        '    GOSUB 앞뒤기울기측정
+        '    IF 넘어진확인 = 1 THEN
+        '        넘어진확인 = 0
+        '        GOTO MAIN
+        '    ENDIF
+        '
+        '    ERX 4800,A, 전진종종걸음_4
+        '    IF A <> A_old THEN  GOTO 전진종종걸음_멈춤
+
+        '*********************************
+
+전진종종비비기_4:
+        MOVE G6D,95,  95, 120, 100, 104
+        MOVE G6A,104,  77, 146,  91,  102
+        MOVE G6C, 80,,,100
+        MOVE G6B,120,,,,,100
+        WAIT
+
+
+전진종종비비기_5:
+        MOVE G6D,95,  85, 130, 103, 104
+        MOVE G6A,104,  79, 146,  89,  100
+        WAIT
+
+전진종종비비기_6:
+        MOVE G6D,103,   85, 130, 103,  100
+        MOVE G6A, 95,  79, 146,  89, 102
+        WAIT
+    NEXT I
+    '    GOSUB 앞뒤기울기측정
+    '    IF 넘어진확인 = 1 THEN
+    '        넘어진확인 = 0
+    '        GOTO MAIN
+    '    ENDIF
+    '
+    '    ERX 4800,A, 전진종종걸음_1
+    '    IF A <> A_old THEN  GOTO 전진종종걸음_멈춤
+
+전진종종비비기_멈춤:
+    HIGHSPEED SETOFF
+    SPEED 15
+    GOSUB 안정화자세
+    SPEED 10
+    GOSUB 기본자세
+
+
+
+    GOSUB Leg_motor_mode1
+    GOSUB GYRO_OFF'보행순서=0
+    GOTO RX_EXIT
 
 
 
@@ -593,28 +803,29 @@ RX_EXIT:
 
 오른쪽턴10: ' COMPLETE
 
-
+    GOSUB GYRO_OFF
     GOSUB 기본자세
     GOSUB Leg_motor_mode2
-    SPEED 10
-    MOVE G6D,97,  86, 145,  83, 103, 100
-    MOVE G6A,97,  66, 145,  103, 103, 100
+    SPEED 12
+    MOVE G6D,97,  86, 146,  85, 102, 100
+    MOVE G6A,97,  66, 145,  104, 102, 100
     WAIT
 
-    SPEED 10
-    MOVE G6D,94,  86, 145,  83, 101, 100
-    MOVE G6A,94,  66, 145,  103, 101, 100
+    SPEED 12
+    MOVE G6D,92,  86, 146,  85, 101, 100
+    MOVE G6A,94,  66, 145,  104, 100, 100
     WAIT
 
-    SPEED 7
+    SPEED 6
     MOVE G6D,101,  76, 146,  93, 99, 100
     MOVE G6A,101,  76, 146,  93, 99, 100
     MOVE G6B,100,  30,  80
     MOVE G6C,100,  30,  80
     WAIT
 
-    GOSUB Leg_motor_mode1
+
     GOSUB 기본자세
+    GOSUB Leg_motor_mode1
     GOTO RX_EXIT
 
 
@@ -674,13 +885,13 @@ RX_EXIT:
 
     GOSUB 기본자세
     SPEED 12
-    MOVE G6D,95,  126, 145,  43, 105, 100
-    MOVE G6A,95,  26, 145,  143, 105, 100
+    MOVE G6D,95,  116, 145,  53, 105, 100
+    MOVE G6A,95,  36, 145,  133, 105, 100
     WAIT
 
     SPEED 12
-    MOVE G6D,90,  126, 145,  43, 105, 100
-    MOVE G6A,90,  26, 145,  143, 105, 100
+    MOVE G6D,90,  116, 145,  53, 105, 100
+    MOVE G6A,90,  36, 145,  133, 105, 100
     WAIT
 
     SPEED 10
@@ -817,16 +1028,17 @@ RX_EXIT:
     '고개90도턴,옆으로
 고개90도왼쪽턴10: ' COMPLETE
 
+    GOSUB GYRO_OFF
     GOSUB 기본자세2
     GOSUB Leg_motor_mode2
     SPEED 12
-    MOVE G6A,97,  86, 145,  83, 103, 100
-    MOVE G6D,97,  66, 145,  103, 103, 100
+    MOVE G6A,97,  86, 146,  85, 102, 100
+    MOVE G6D,97,  66, 145,  104, 102, 100
     WAIT
 
     SPEED 12
-    MOVE G6A,94,  86, 145,  83, 101, 100
-    MOVE G6D,94,  66, 145,  103, 101, 100
+    MOVE G6A,92,  86, 146,  85, 101, 100
+    MOVE G6D,94,  66, 145,  104, 100, 100
     WAIT
 
     SPEED 6
@@ -835,6 +1047,7 @@ RX_EXIT:
     MOVE G6B,100,  30,  80
     MOVE G6C,100,  30,  80
     WAIT
+
 
     GOSUB 기본자세2
     GOSUB Leg_motor_mode1
@@ -892,27 +1105,29 @@ RX_EXIT:
 고개90도오른쪽턴10: ' COMPLETE
 
 
+    GOSUB GYRO_OFF
     GOSUB 기본자세2
     GOSUB Leg_motor_mode2
-    SPEED 10
-    MOVE G6D,97,  86, 145,  83, 103, 100
-    MOVE G6A,97,  66, 145,  103, 103, 100
+    SPEED 12
+    MOVE G6D,97,  86, 146,  85, 102, 100
+    MOVE G6A,97,  66, 145,  104, 102, 100
     WAIT
 
-    SPEED 10
-    MOVE G6D,94,  86, 145,  83, 101, 100
-    MOVE G6A,94,  66, 145,  103, 101, 100
+    SPEED 12
+    MOVE G6D,92,  86, 146,  85, 101, 100
+    MOVE G6A,94,  66, 145,  104, 100, 100
     WAIT
 
-    SPEED 7
+    SPEED 6
     MOVE G6D,101,  76, 146,  93, 99, 100
     MOVE G6A,101,  76, 146,  93, 99, 100
     MOVE G6B,100,  30,  80
     MOVE G6C,100,  30,  80
     WAIT
 
-    GOSUB Leg_motor_mode1
+
     GOSUB 기본자세2
+    GOSUB Leg_motor_mode1
     GOTO RX_EXIT
 
 
@@ -1307,7 +1522,7 @@ RX_EXIT:
     MOVE G6A,100,  85, 137,  94, 100, 100
     MOVE G6D,100,  86, 137,  94, 100, 100
     MOVE G6B,10,  10,  51, 100, 100, 190
-    MOVE G6C,10 ,  15,  55, 100, 152, 100
+    MOVE G6C,10 ,  15,  55, 100, 135, 100' 153
     WAIT
 
     RETURN
@@ -1331,144 +1546,68 @@ RX_EXIT:
     MOVE G6C, 190, 14, 100
     WAIT
 
-    SPEED 10
-    MOVE G6A,90,  82, 145,  86, 110, 100
-    MOVE G6D,90,  83, 145,  86, 110, 100
-    MOVE G6B, 185, 10, 100
-    MOVE G6C, 190, 14, 100
-    WAIT
-
-
 
     SPEED 10
-    MOVE G6A, 90,  76, 145,  93, 110, 100
-    MOVE G6D, 90,  76, 145,  93, 110, 100
-    MOVE G6B, 185,  10,  100
-    MOVE G6C, 190,  14,  100
-    WAIT
-
-    SPEED 6
-    MOVE G6A, 90,  75, 145,  140, 110, 100
-    MOVE G6D, 90,  76, 145,  140, 110, 100
-    MOVE G6B, 185,  10,  80 , 100, 100
-    MOVE G6C, 190,  14,  80 , 100, 190
+    MOVE G6A, 100,  75, 145,  140, 100, 100
+    MOVE G6D, 100,  76, 145,  140, 100, 100
+    MOVE G6B, 170,  10,  80 , 100, 100
+    MOVE G6C, 175,  14,  80 , 100, 170
     WAIT
     '=------------------------------------------
-    SPEED 6
-    MOVE G6A, 100,  76, 145,  130, 100, 100
-    MOVE G6D, 100,  76, 145,  130, 100, 100
-    MOVE G6B, 152,  35,  85
-    MOVE G6C, 155,  35,  85
+    DELAY 600
+
+
+
+    SPEED 15
+    MOVE G6A,100,  56, 110,  26, 100, 100
+    MOVE G6D,100,  71, 177, 162, 100, 100
+    MOVE G6B,190,  40,  70
+    MOVE G6C,190,  40,  70,
     WAIT
 
-    SPEED 6
-    MOVE G6A,100,  100, 95,  10, 100, 100
-    MOVE G6D,100,  100, 95,  10, 100, 100
-    MOVE G6B, 152,  20,  85
-    MOVE G6C, 155,  24,  85
+    SPEED 15
+    MOVE G6A,100,  60, 110,  15, 100, 100
+    MOVE G6D,100,  60, 110, 15, 100, 100
+    MOVE G6B,190,  40,  70
+    MOVE G6C,190,  42,  70
     WAIT
 
+    SPEED 15
+    MOVE G6A,100,  60, 110,  10, 100, 100
+    MOVE G6D,100,  60, 110,  10, 100, 100
+    MOVE G6B,190,  40,  70
+    MOVE G6C,190,  40,  70
+    WAIT
+    DELAY 50
 
-    '-------------------------------------
-    SPEED 6
-    MOVE G6A,100,  15, 55,  139, 100, 100
-    MOVE G6D,100,  11, 51,  140, 100, 100
-    MOVE G6B, 97,  26,  80
-    MOVE G6C, 100,  30,  80, 100, 100
+    SPEED 15
+    MOVE G6A,100, 110, 74,  65, 100, 100
+    MOVE G6D,100, 110, 70,  65, 100, 100
+    MOVE G6B,190, 165, 115
+    MOVE G6C,190, 165, 115
     WAIT
 
-    SPEED 6
-    MOVE G6A,100,  10, 55,  140, 100, 100
-    MOVE G6D,100,  10, 55,  140, 100, 100
-    MOVE G6B, 100,  100,  80
-    MOVE G6C, 100,  100,  80, 100, 100
-    WAIT
-
-    SPEED 6
-    MOVE G6A,100,  10, 55,  140, 190, 100
-    MOVE G6D,100,  10, 55,  140, 190, 100
-    MOVE G6B, 100,  100,  80
-    MOVE G6C, 100,  100,  80, 100, 100
-    WAIT
-
-    SPEED 6
-    MOVE G6A,100,  60, 55,  140, 190, 100
-    MOVE G6D,100,  60, 55,  140, 190, 100
-    MOVE G6B, 100,  100,  80
-    MOVE G6C, 100,  100,  80, 100, 100
-    WAIT
-
-    SPEED 6
-    MOVE G6A,100,  60, 55,  140, 100, 100
-    MOVE G6D,100,  60, 55,  140, 100, 100
-    MOVE G6B, 100,  100,  80
-    MOVE G6C, 100,  100,  80, 100, 100
-    WAIT
-
-
-
-    '--------------------------------------------
-    SPEED 10
-    MOVE G6A,100, 150, 170,  40, 100
-    MOVE G6D,100, 150, 170,  40, 100
-    MOVE G6B, 150, 150,  45
-    MOVE G6C, 150, 150,  45
+    SPEED 15
+    MOVE G6A,100, 171,  73,  15, 100, 100
+    MOVE G6D,100, 170,  70,  15, 100, 100
+    MOVE G6B,190, 160, 120
+    MOVE G6C,190, 160, 120
     WAIT
 
     SPEED 10
-    MOVE G6A,  100, 155,  110, 120, 100
-    MOVE G6D,  100, 155,  110, 120, 100
-    MOVE G6B, 190, 80,  15
-    MOVE G6C, 190, 80,  15
+    MOVE G6A,100, 171,  30,  110, 100, 100
+    MOVE G6D,100, 170,  30,  110, 100, 100
+    MOVE G6B,190,  40,  60
+    MOVE G6C,190,  40,  60
     WAIT
 
-    SPEED 10
-    MOVE G6A,  100, 165,  25, 162, 100
-    MOVE G6D,  100, 165,  25, 162, 100
-    MOVE G6B,  155, 15, 90
-    MOVE G6C,  155, 15, 90
-    WAIT
-
-    '-------------- 일어나기 -----------------
-    SPEED 9
-    MOVE G6A, 60, 162,  30, 162, 145, 100
-    MOVE G6D, 60, 162,  30, 162, 145, 100
-    MOVE G6B,160,  32, 70, 100, 100, 100
-    MOVE G6C,160,  32, 70, 100, 100, 100
-    WAIT
-
-
-    MOVE G6A, 60, 150,  28, 155, 140, 100
-    MOVE G6D, 60, 150,  28, 155, 140, 100
-    MOVE G6B,150,  60,  90, 100, 100, 100
-    MOVE G6C,150,  60,  90, 100, 100, 100
-    WAIT
-    '''''''''''''''''''''''''=
-
-    '---------------'추가분'-----------------
-    MOVE G6A,100, 150,  28, 140, 100, 100
-    MOVE G6D,100, 150,  28, 140, 100, 100
-    MOVE G6B,130,  50,  85, 100, 100, 100
-    MOVE G6C,130,  50,  85, 100, 100, 100
-    WAIT
-    DELAY 100
-
-    SPEED 9
-    MOVE G6A,100, 130,  48, 136, 100, 100
-    MOVE G6D,100, 130,  48, 136, 100, 100
-    MOVE G6B,130,  50,  85, 100, 100, 100
-    MOVE G6C,130,  50,  85, 100, 100, 100
-    WAIT
-
-
-    '---------------------------------------
-
-
-
+    SPEED 13
+    GOSUB 앉은자세
 
     SPEED 10
     GOSUB 기본자세
-    'DELAY 600
+
+
     GOTO RX_EXIT
 
 
@@ -1478,81 +1617,89 @@ RX_EXIT:
     GOSUB All_motor_mode3
     GOSUB All_motor_mode3
 
-    SPEED 2
+    SPEED 4
     MOVE G6D, 88,  71, 152,  91, 110
     MOVE G6A,108,  77, 146,  93,  94
     MOVE G6B,100,40
     MOVE G6C,100,40
     WAIT
 
-    SPEED 2
+    SPEED 8
     MOVE G6D, 90, 100, 110, 100, 114
-    MOVE G6A,110,  78, 146,  93,  94
+    MOVE G6A,112,  78, 146,  93,  94
     WAIT
 
     GOSUB Leg_motor_mode2
 
-    SPEED 4
+    SPEED 8
     MOVE G6D, 90, 140, 35, 130, 114
-    MOVE G6A,110,  71, 155,  90,  94
+    MOVE G6A,112,  71, 155,  90,  94
     WAIT
 
 
-    SPEED 4
-    MOVE G6D,  80, 55, 130, 140, 114,
+    SPEED 8
+    MOVE G6D,  80, 55, 120, 160, 114,
     MOVE G6A,110,  70, 155,  90,  94
     WAIT
 
+    SPEED 8
+    MOVE G6D,  90, 55, 120, 150, 114,
+    MOVE G6A,110,  70, 160,  85,  94
+    WAIT
+
+
+
+
     GOSUB Leg_motor_mode3
 
-    SPEED 4
-    MOVE G6D, 105, 75, 100, 155, 100,
-    MOVE G6A,95,  90, 165,  70, 100
+    SPEED 8
+    MOVE G6D, 106, 75, 100, 150, 100,
+    MOVE G6A,95,  90, 165,  65, 100
     MOVE G6C,160,50
     MOVE G6B,160,40
     WAIT
 
-    SPEED 4
-    MOVE G6D, 112, 90, 90, 155,100,
-    MOVE G6A,95,  100, 165,  65, 105
+    SPEED 8
+    MOVE G6D, 111, 87, 90, 153,100,
+    MOVE G6A,95,  100, 165,  62, 105
     MOVE G6C,180,50
     MOVE G6B,180,30
     WAIT
 
     '****************************
     GOSUB Leg_motor_mode2	
-    SPEED 4
-    MOVE G6D, 113, 90, 100, 150,95,
+    SPEED 8
+    MOVE G6D, 113, 87, 100, 150,95,
     MOVE G6A,95,  90, 165,  70, 105
     WAIT
 
-    SPEED 4
-    MOVE G6D, 113, 90, 100, 150,95,
+    SPEED 8
+    MOVE G6D, 113, 87, 100, 150,95,
     MOVE G6A,90,  120, 40,  140, 108
     WAIT
 
-    SPEED 4
-    MOVE G6D, 113, 90, 110, 130,95,
+    SPEED 8
+    MOVE G6D, 113, 90, 110, 128,95,
     MOVE G6A,90,  95, 90,  145, 108
     MOVE G6C,140,50
     MOVE G6B,140,30
     WAIT
 
-    SPEED 4
-    MOVE G6D, 110, 90, 110, 130,95,
+    SPEED 8
+    MOVE G6D, 110, 90, 110, 127,95,
     MOVE G6A,80,  85, 110,  135, 108
     MOVE G6B,110,40
     MOVE G6C,110,40
     WAIT
 
     SPEED 4
-    MOVE G6A, 98, 90, 110, 125,99,
-    MOVE G6D,98,  90, 110,  125, 99
+    MOVE G6A, 98, 90, 110, 125,102,
+    MOVE G6D,98,  90, 110,  125, 102
     MOVE G6B,110,40
     MOVE G6C,110,40
     WAIT
 
-    SPEED 4
+    SPEED 8
     MOVE G6A,100,  77, 145,  93, 100, 100
     MOVE G6D,100,  77, 145,  93, 100, 100
     MOVE G6B,100,  30,  80
@@ -1561,7 +1708,6 @@ RX_EXIT:
     GOSUB All_motor_Reset
 
     GOSUB 기본자세
-
     GOTO RX_EXIT
     '********************************************************
 
@@ -1575,7 +1721,7 @@ RX_EXIT:
     MOVE G6C,100,40
     WAIT
 
-    SPEED 4
+    SPEED 8
     MOVE G6A, 90, 100, 115, 105, 114
     MOVE G6D,112,  76, 145,  93,  94
     WAIT
@@ -1583,14 +1729,14 @@ RX_EXIT:
     GOSUB Leg_motor_mode2
 
 
-    SPEED 4
+    SPEED 8
     MOVE G6A,  80, 30, 155, 150, 114,
     MOVE G6D,112,  65, 155,  90,  94
     WAIT
 
     GOSUB Leg_motor_mode2
 
-    SPEED 4
+    SPEED 8
     MOVE G6A,  80, 30, 175, 150, 114,
     MOVE G6D,112,  115, 65,  140,  94
     MOVE G6B,70,50
@@ -1598,7 +1744,7 @@ RX_EXIT:
     WAIT
 
     GOSUB Leg_motor_mode3
-    SPEED 4
+    SPEED 8
     MOVE G6A,90, 20, 150, 150, 105
     MOVE G6D,110,  155, 45,  120,94
     MOVE G6B,100,50
@@ -1607,14 +1753,14 @@ RX_EXIT:
 
     '****************************
 
-    SPEED 4
+    SPEED 8
     MOVE G6A,104, 30, 150, 150, 104
     MOVE G6D,85,  155, 80,  100,100
     MOVE G6B,140,50
     MOVE G6C,100,40
     WAIT
 
-    SPEED 4
+    SPEED 8
     MOVE G6A,111, 68, 128, 150, 94
     MOVE G6D,75,  125, 140,  88,114
     MOVE G6B,170,50
@@ -1622,31 +1768,31 @@ RX_EXIT:
     WAIT
 
     'GOSUB Leg_motor_mode2	
-    SPEED 4
+    SPEED 8
     MOVE G6A,111, 68, 128, 150, 94
     MOVE G6D,80,  125, 50,  150,114
     WAIT
     GOSUB Leg_motor_mode2	
-    SPEED 4
+    SPEED 8
     MOVE G6A,111, 75, 128, 120, 94
     MOVE G6D,80,  85, 90,  150,114
     WAIT
 
-    SPEED 2
-    MOVE G6A,111, 80, 128, 110, 94
-    MOVE G6D,80,  75,130,  115,114
+    SPEED 4
+    MOVE G6A,111, 80, 128, 113, 94
+    MOVE G6D,80,  75,130,  118,114
     MOVE G6B,130,50
     MOVE G6C,100,40
     WAIT
 
-    SPEED 2
-    MOVE G6D, 98, 80, 130, 105,99,
-    MOVE G6A,98,  80, 130,  105, 99
+    SPEED 4
+    MOVE G6D, 98, 80, 130, 110,101,
+    MOVE G6A,98,  80, 130,  110, 101
     MOVE G6B,110,40
     MOVE G6C,110,40
     WAIT
 
-    SPEED 2
+    SPEED 4
     GOSUB 기본자세
     GOSUB All_motor_Reset
     GOSUB 앞뒤기울기측정
@@ -2196,6 +2342,8 @@ KEY3:
     GOTO 전진보행
     GOTO MAIN
 KEY4: '기본걷기
+    GOTO 고개90도전진보행
+    GOTO MAIN
 KEY5: '기본걷기
 KEY6: '기본걷기
 KEY7: '기본걷기
@@ -2209,6 +2357,8 @@ KEY10: '종종걸음2
     GOTO 전진종종2걸음
     GOTO MAIN
 KEY11: '종종걸음
+    GOTO 전진종종비비기
+    GOTO MAIN
 KEY12: '종종걸음
 KEY13: '달리기
 KEY14: '달리기
@@ -2281,7 +2431,7 @@ KEY38: '빨간색장애물앞구르기로올라가기
     GOTO MAIN
 KEY39:
 
-    GOTO 외각선자세
+    GOSUB 외각선자세
     GOTO MAIN
 
 KEY40: '빨간색장애물앞구르기로내려가기
