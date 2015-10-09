@@ -173,8 +173,6 @@ RX_EXIT:
 
 전진보행: 'COMPLETE
 
-    GOSUB 기본자세
-
     GOSUB GYRO_INIT
     GOSUB GYRO_ON
     GOSUB GYRO_ST
@@ -492,7 +490,6 @@ RX_EXIT:
     GOTO RX_EXIT
     '**********************************************************************************
 전진종종10걸음:
-
     GOSUB 기본자세
 
     SPEED 15
@@ -615,9 +612,8 @@ RX_EXIT:
     GOSUB GYRO_OFF
     GOTO RX_EXIT
 전진종종비비기:
-    '    넘어진확인 = 0
     GOSUB 기본자세
-
+    '    넘어진확인 = 0
     GOSUB GYRO_INIT
     GOSUB GYRO_ON
     GOSUB GYRO_ST
@@ -939,7 +935,6 @@ RX_EXIT:
 왼쪽옆으로20:
 
     GOSUB 기본자세
-
     SPEED 10
     MOVE G6A, 90,  90, 120, 105, 104, 100
     MOVE G6D,100,  76, 146,  93, 101, 100
@@ -1005,7 +1000,6 @@ RX_EXIT:
 왼쪽옆으로70:
 
     GOSUB 기본자세
-
     SPEED 10
     MOVE G6A, 90,  90, 120, 105, 110, 100
     MOVE G6D,100,  76, 146,  93, 107, 100
@@ -1395,8 +1389,8 @@ RX_EXIT:
     SPEED 20
     MOVE G6A,100,  60, 110,  15, 100, 100
     MOVE G6D,100,  60, 110, 15, 100, 100
-    MOVE G6B,170,  42,  70
-    MOVE G6C,173,  40,  70
+    MOVE G6B,169,  41,  68
+    MOVE G6C,171,  40,  70
     WAIT
 
     SPEED 20
@@ -1433,13 +1427,14 @@ RX_EXIT:
 
     SPEED 10
     GOSUB 기본자세
+
     GOSUB 앞뒤기울기측정
     GOSUB 좌우기울기측정
+
 
     GOTO RX_EXIT
 
 앞으로덤블링2:
-
 
     GOSUB 기본자세
 
@@ -1518,11 +1513,11 @@ RX_EXIT:
     SPEED 10
     GOSUB 기본자세
 
-    GOSUB 앞뒤기울기측정
-    GOSUB 좌우기울기측정
 
 
     GOTO RX_EXIT
+
+
 
 
 외각선자세:
@@ -1537,8 +1532,8 @@ RX_EXIT:
 
 허들넘기: 'USE
 
-
     GOSUB 기본자세
+
 
     SPEED 13
     MOVE G6A,100,  82, 145,  86, 100, 100
@@ -1547,7 +1542,7 @@ RX_EXIT:
     MOVE G6C,102 , 100,  80, 100, 100, 100
     WAIT
 
-    SPEED 10
+    SPEED 15
     MOVE G6A,100,  82, 145,  86, 100, 100
     MOVE G6D,100,  83, 145,  86, 100, 100
     MOVE G6B, 185, 10, 100
@@ -1555,35 +1550,35 @@ RX_EXIT:
     WAIT
 
 
-    SPEED 10
+    SPEED 15
     MOVE G6A, 100,  75, 145,  140, 100, 100
     MOVE G6D, 100,  76, 145,  140, 100, 100
-    MOVE G6B, 170,  10,  80 , 100, 100
-    MOVE G6C, 175,  14,  80 , 100, 170
+    MOVE G6B, 175,  10,  80 , 100, 100
+    MOVE G6C, 180,  14,  80 , 100, 185
     WAIT
     '=------------------------------------------
-    DELAY 600
+    DELAY 500
 
 
 
     SPEED 15
     MOVE G6A,100,  56, 110,  26, 100, 100
-    MOVE G6D,100,  71, 177, 162, 100, 100
-    MOVE G6B,190,  40,  70
-    MOVE G6C,190,  40,  70,
+    MOVE G6D,100,  71, 177, 152, 100, 100
+    MOVE G6B,180,  40,  70
+    MOVE G6C,180,  40,  70,
     WAIT
 
     SPEED 15
     MOVE G6A,100,  60, 110,  15, 100, 100
     MOVE G6D,100,  60, 110, 15, 100, 100
-    MOVE G6B,190,  40,  70
-    MOVE G6C,190,  42,  70
+    MOVE G6B,180,  40,  70
+    MOVE G6C,180,  42,  70
     WAIT
 
     SPEED 15
     MOVE G6A,100,  60, 110,  10, 100, 100
     MOVE G6D,100,  60, 110,  10, 100, 100
-    MOVE G6B,190,  40,  70
+    MOVE G6B,190,  37,  70
     MOVE G6C,190,  40,  70
     WAIT
     DELAY 50
@@ -1614,9 +1609,11 @@ RX_EXIT:
 
     SPEED 10
     GOSUB 기본자세
- 
+
     GOSUB 앞뒤기울기측정
     GOSUB 좌우기울기측정
+
+
     GOTO RX_EXIT
 
 
@@ -2045,12 +2042,82 @@ RX_EXIT:
     넘어진확인 = 1
     RETURN
     '**************************************************************
-
 전진종종2걸음:
-    GOSUB GYRO_INIT
-    GOSUB GYRO_ON
-    GOSUB GYRO_ST
+    '    넘어진확인 = 0
+    'GOSUB GYRO_INIT
+    'GOSUB GYRO_ON
+    'GOSUB GYRO_ST
+    GOSUB 기본자세
+    SPEED 10
+    HIGHSPEED SETON
+    GOSUB All_motor_mode3
 
+
+    MOVE G6A,97,  76, 145,  93, 100
+    MOVE G6D,99,  77, 145,  93, 100
+    MOVE G6B,100,  35,,,,100
+    MOVE G6C,100,  35,, 100, 135
+    WAIT
+
+    '**********************
+    FOR I = 0 TO 1
+전진종종2걸음_1:
+        MOVE G6A,95,  95, 120, 100, 103
+        MOVE G6D,104,  77, 146,  92,  103
+        MOVE G6B, 80
+        MOVE G6C,120
+        WAIT
+
+
+전진종종2걸음_2:
+        MOVE G6A,95,  85, 130, 103, 103
+        MOVE G6D,104,  79, 146,  89,  100
+        WAIT
+
+전진종종2걸음_3:
+        MOVE G6A,103,  85, 130, 103,  100
+        MOVE G6D, 95,  79, 146,  89, 102
+        WAIT
+
+        '*********************************
+
+전진종종2걸음_4:
+        MOVE G6D,95,  94, 122, 101, 104
+        MOVE G6A,104,  77, 146,  91,  102
+        MOVE G6C, 80,,,100
+        MOVE G6B,120,,,,,100
+        WAIT
+
+
+전진종종2걸음_5:
+        MOVE G6D,95,  85, 130, 105, 104
+        MOVE G6A,104,  79, 146,  89,  100
+        WAIT
+
+전진종종2걸음_6:
+        MOVE G6D,103,  84, 131, 104,  100
+        MOVE G6A, 95,  79, 148,  87, 101
+        WAIT
+
+    NEXT I
+    GOTO 전진종종2걸음_멈춤
+
+전진종종2걸음_멈춤:
+    HIGHSPEED SETOFF
+    SPEED 15
+    GOSUB 안정화자세
+    SPEED 10
+    GOSUB 기본자세
+
+
+    GOSUB Leg_motor_mode1
+    GOSUB GYRO_OFF'보행순서=0
+    'GOTO MAIN
+    GOTO RX_EXIT
+
+
+    '*****************************************************
+전진종종4걸음:
     GOSUB 기본자세
 
     SPEED 15
@@ -2065,7 +2132,7 @@ RX_EXIT:
         MOVE G6C,100,  35
         WAIT
 
-        GOTO 전진종종2걸음_1
+        GOTO 전진종종4걸음_1
     ELSE
         보행순서 = 0
         MOVE G6D,97,  76, 145,  93, 101
@@ -2074,14 +2141,14 @@ RX_EXIT:
         MOVE G6C,100,  35
         WAIT
 
-        GOTO 전진종종2걸음_4
+        GOTO 전진종종4걸음_4
     ENDIF
 
 
 
     '**********************
-전진종종2걸음_1:
-    FOR I = 0 TO 1
+전진종종4걸음_1:
+    FOR I = 0 TO 2
         '전진종종걸음최종_1:
         MOVE G6A,97,  95, 120, 102, 103
         MOVE G6D,102, 78, 146,  91,  101
@@ -2117,11 +2184,11 @@ RX_EXIT:
         MOVE G6A, 96,   81, 144,  91, 102
         WAIT
     NEXT I
-    GOTO 전진종종2걸음멈춤
+    GOTO 전진종종4걸음멈춤
 
 
-전진종종2걸음_4:
-    FOR I = 0 TO 1
+전진종종4걸음_4:
+    FOR I = 0 TO 2
         '전진종종걸음최종_4:
         MOVE G6D,97,  97, 120,  101, 103
         MOVE G6A,103, 78, 146,  92,  101
@@ -2156,10 +2223,12 @@ RX_EXIT:
         MOVE G6A,101,  84, 130, 103,  101
         MOVE G6D, 96,  81, 147,  90, 102
         WAIT
-    NEXT I
-    GOTO 전진종종2걸음멈춤
 
-전진종종2걸음멈춤:
+
+    NEXT I
+    GOTO 전진종종4걸음멈춤
+
+전진종종4걸음멈춤:
     HIGHSPEED SETOFF
     SPEED 15
     GOSUB 안정화자세
@@ -2171,7 +2240,8 @@ RX_EXIT:
     GOSUB GYRO_OFF
     GOTO RX_EXIT
 
-    '*************
+
+
 
 고개90도오른쪽옆으로10:
 
@@ -2237,7 +2307,79 @@ RX_EXIT:
     GOTO RX_EXIT
 
 
+    '***************************************************************
+전진종종고개90도3걸음:
+    GOSUB 기본자세
+    GOSUB GYRO_OFF
+    'GOSUB GYRO_ON
+    'GOSUB GYRO_ST
+    SPEED 10
+    HIGHSPEED SETON
+    GOSUB All_motor_mode3
 
+
+    MOVE G6A,97,  76, 145,  93, 100
+    MOVE G6D,99,  77, 145,  93, 100
+    MOVE G6B,100,  35,,,,100
+    MOVE G6C,100,  35,, 100, 190
+    WAIT
+
+    '**********************
+    FOR I = 0 TO 2
+        '전진종종4걸음_1:
+        MOVE G6A,95,  95, 120, 100, 103
+        MOVE G6D,104,  77, 146,  92,  103
+        MOVE G6B, 80
+        MOVE G6C,120
+        WAIT
+
+
+        '전진종종4걸음_2:
+        MOVE G6A,95,  85, 130, 103, 103
+        MOVE G6D,104,  79, 146,  89,  100
+        WAIT
+
+        '전진종종4걸음_3:
+        MOVE G6A,103,  85, 130, 103,  100
+        MOVE G6D, 95,  79, 146,  89, 102
+        WAIT
+
+        '*********************************
+
+        '전진종종4걸음_4:
+        MOVE G6D,95,  94, 122, 101, 104
+        MOVE G6A,104,  77, 146,  91,  102
+        MOVE G6C, 80,,,100
+        MOVE G6B,120,,,,,100
+        WAIT
+
+
+        '전진종종4걸음_5:
+        MOVE G6D,95,  85, 130, 105, 104
+        MOVE G6A,104,  79, 146,  89,  100
+        WAIT
+
+        '전진종종4걸음_6:
+        MOVE G6D,103,  84, 131, 104,  100
+        MOVE G6A, 95,  79, 148,  87, 101
+        WAIT
+
+    NEXT I
+    GOTO 전진종종고개90도3걸음_멈춤
+
+전진종종고개90도3걸음_멈춤:
+    HIGHSPEED SETOFF
+    'SPEED 15
+    'GOSUB 안정화자세
+    SPEED 10
+    GOSUB 기본자세2
+
+    DELAY 2500
+
+    GOSUB Leg_motor_mode1
+    GOSUB GYRO_OFF'보행순서=0
+    GOTO RX_EXIT
+    '***************************************************************
 
 
 
@@ -2359,7 +2501,7 @@ KEY5: '기본걷기
 KEY6: '기본걷기
 KEY7: '기본걷기
 KEY8: '종종걸음
-    GOTO 고개90도종종걸음3걸음
+    GOTO 전진종종고개90도3걸음
     GOTO MAIN
 KEY9: '종종걸음
     GOTO 전진종종10걸음
@@ -2371,6 +2513,8 @@ KEY11: '종종걸음
     GOTO 전진종종비비기
     GOTO MAIN
 KEY12: '종종걸음
+	GOTO 전진종종4걸음
+	GOTO MAIN
 KEY13: '달리기
 KEY14: '달리기
 KEY15: '달리기
@@ -2431,10 +2575,10 @@ KEY35: '고개90도옆으로가기
     GOTO 고개90도오른쪽옆으로70
     GOTO MAIN
 KEY36: '고개90도옆으로가기
-    GOTO 고개90도오른쪽옆으로20
+    GOTO 고개90도왼쪽옆으로20
     GOTO MAIN
 KEY37: '고개90도옆으로가기
-    GOTO 고개90도오른쪽옆으로70
+    GOTO 고개90도왼쪽옆으로70
     GOTO MAIN
 KEY38: '빨간색장애물앞구르기로올라가기
 
