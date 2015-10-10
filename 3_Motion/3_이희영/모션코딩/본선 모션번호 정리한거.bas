@@ -2513,8 +2513,8 @@ KEY11: '종종걸음
     GOTO 전진종종비비기
     GOTO MAIN
 KEY12: '종종걸음
-	GOTO 전진종종4걸음
-	GOTO MAIN
+    GOTO 전진종종4걸음
+    GOTO MAIN
 KEY13: '달리기
 KEY14: '달리기
 KEY15: '달리기
