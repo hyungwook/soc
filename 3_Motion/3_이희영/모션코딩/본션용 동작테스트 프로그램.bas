@@ -90,8 +90,8 @@ MAIN:
         'GOTO 전진보행10걸음
         'GOTO 판위에서전진보행50
         'GOTO 왼쪽덤블링
-        GOTO 앞으로덤블링2
-        'GOTO 허들넘기
+        'GOTO 앞으로덤블링
+        GOTO 허들넘기
         'GOTO 전진종종4걸음
         'GOTO 왼쪽턴10
         'GOTO 오른쪽턴20
@@ -355,7 +355,7 @@ MAIN:
 
     SPEED 4
     MOVE G6D, 88,  71, 152,  91, 110
-    MOVE G6A,108,  77, 146,  93,  94
+    MOVE G6A,107,  77, 146,  93,  94
     MOVE G6B,100,40
     MOVE G6C,100,40
     WAIT
@@ -428,19 +428,26 @@ MAIN:
     MOVE G6C,110,40
     WAIT
 
-    SPEED 4
-    MOVE G6A, 98, 90, 110, 125,102,
-    MOVE G6D,98,  90, 110,  125, 102
+    SPEED 8
+    MOVE G6D, 110, 90, 110, 127,103,
+    MOVE G6A,80,  70, 160,  100, 103
     MOVE G6B,110,40
     MOVE G6C,110,40
     WAIT
 
-    SPEED 8
-    MOVE G6A,100,  77, 145,  93, 100, 100
-    MOVE G6D,100,  77, 145,  93, 100, 100
-    MOVE G6B,100,  30,  80
-    MOVE G6C,100,  30,  80
+    SPEED 4
+    MOVE G6A, 97, 90, 110, 125,102,
+    MOVE G6D,97,  90, 110,  125, 102
+    MOVE G6B,110,40
+    MOVE G6C,110,40
     WAIT
+
+    'SPEED 8
+    'MOVE G6A,100,  77, 145,  93, 100, 100
+    'MOVE G6D,100,  77, 145,  93, 100, 100
+    'MOVE G6B,100,  30,  80
+    'MOVE G6C,100,  30,  80
+    'WAIT
     GOSUB All_motor_Reset
 
     GOSUB 기본자세
@@ -1040,7 +1047,7 @@ MAIN:
     MOVE G6C,140,  70,  20,,190
     WAIT
 
-	
+
 
 
     SPEED 20
@@ -2039,8 +2046,8 @@ MAIN:
     SPEED 15
     MOVE G6A, 100,  75, 145,  140, 100, 100
     MOVE G6D, 100,  76, 145,  140, 100, 100
-    MOVE G6B, 175,  10,  80 , 100, 100
-    MOVE G6C, 180,  14,  80 , 100, 185
+    MOVE G6B, 175,  50,  80 , 100, 100
+    MOVE G6C, 180,  54,  80 , 100, 185
     WAIT
     '=------------------------------------------
     DELAY 500
@@ -2050,8 +2057,8 @@ MAIN:
     SPEED 15
     MOVE G6A,100,  56, 110,  26, 100, 100
     MOVE G6D,100,  71, 177, 152, 100, 100
-    MOVE G6B,180,  40,  70
-    MOVE G6C,180,  40,  70,
+    MOVE G6B,180,  50,  70
+    MOVE G6C,180,  54,  70,
     WAIT
 
     SPEED 15
