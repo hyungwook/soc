@@ -196,7 +196,7 @@ int main(void)
 	//st7
 	int cnt7 = 0, motion7 = 0;
 	//st8
-	int cnt8 = 0, cnt8_1 = 0, cnt8_2 = 0, motion8 = 0;
+	int cnt8 = 0, cnt8_1 = 0, cnt8_2 = 0, motion8 = 0, cnt8_3 = 0, cnt8_4 = 0;
 
 
 	SURFACE* bmpsurf = 0;
@@ -514,7 +514,9 @@ int main(void)
 					else if ((*(green + i * 180 + j) < *(red + i * 180 + j)) && (*(blue + i * 180 + j) < *(red + i * 180 + j)) && (((int)*(hue_joon + i * 180 + j) > 300) || ((int)*(hue_joon + i * 180 + j) < 60)) && ((int)*(v_compare + i * 180 + j) < 22) && ((int)*(v_compare + i * 180 + j) > 10))
 						*(xxx + i * 180 + j) = 7;//빨강을표시
 
-					else if ( ((int)*(hue_joon + i * 180 + j) > 30) && ((int)*(hue_joon + i * 180 + j) < 70))
+					else if (((int)*(red + i * 180 + j) > (int)*(blue + i * 180 + j)) && ((int)*(green + i * 180 + j) > (int)*(blue + i * 180 + j))
+						&& ((int)*(satur_tmp+i*180+j)>10)
+						&& ((int)*(hue_joon + i * 180 + j) > 40) && ((int)*(hue_joon + i * 180 + j) < 60))
 						*(xxx + i * 180 + j) = 4;//노랑을표시
 
 					else if (((int)*(red + i * 180 + j) < 15) && ((int)*(green + i * 180 + j) > 15) && ((int)*(blue + i * 180 + j) < 15) && ((int)*(hue_joon + i * 180 + j) > 120) && ((int)*(hue_joon + i * 180 + j) < 170))
@@ -1726,25 +1728,33 @@ int main(void)
 			////////////////////////8번째장애물////////////////////////
 			else if (stage == 100)
 			{
-				printf("stage 8 start!\n");
+				//printf("stage 8 start!\n");
 				cnt8 = 0;
-				cnt8_1 = 0;
+				cnt8_1 = 0, cnt8_3 = 0, cnt8_4 = 0;
 
-				for (i = 30; i < 100; i++) // 적절한 거리를 찾아서 i값의 범위 지정하기!
+				for (i = 27; i < 57; i++) // 적절한 거리를 찾아서 i값의 범위 지정하기!
 				{
-					for (j = 130; j < 150; j++)
+					for (j = 30; j < 150; j++)
 					{
-						if (*(xxx + i * 180 + j) == 1)
+						if (*(xxx + i * 180 + j) != 2)
 						{
 							cnt8_1++;
 							*(lcd + 180 * i + j) = 0x0000;
 						}
-						else
+						else if (*(xxx + i * 180 + j) == 1)
+						{
+							cnt8_4++;
+							*(lcd + 180 * i + j) = 0x00ff;
+						}
+						else if (*(xxx + i * 180 + j) == 2)
 						{
 							cnt8++;
 							*(lcd + 180 * i + j) = 0x7000;
 						}
 					}
+					for (j = 90; j < 150; j++)
+						if (*(xxx + i * 180 + j) == 2)
+							cnt8_3++;
 				}
 
 				draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
@@ -1755,28 +1765,36 @@ int main(void)
 				{
 					printf("go up!\n");
 
-					Send_Command(0x0c, 0xf3); //오르기 전 계단과 평행 맞추기
-					Send_Command(0x0c, 0xf3);
-					Send_Command(0x0c, 0xf3);
+					Send_Command(0x0b, 0xf4); //오르기 전 계단과 평행 맞추기
+					Send_Command(0x0b, 0xf4);
+					Send_Command(0x0b, 0xf4);
 					DelayLoop(100000000);
 
-					Send_Command(0x0e, 0xf1); //오르기
-					Send_Command(0x0e, 0xf1);
-					Send_Command(0x0e, 0xf1);
-					DelayLoop(300000000);
+					Send_Command(0x2a, 0xd5); //오르기
+					Send_Command(0x2a, 0xd5);
+					Send_Command(0x2a, 0xd5);
+					DelayLoop(220000000);
+
+					Send_Command(0x08, 0xf7);
+					Send_Command(0x08, 0xf7);
+					Send_Command(0x08, 0xf7);
+					DelayLoop(25000000);
 
 					motion8 = 1;
+
 					goto GOUP;
 				}
 				else if (motion8 == 1)
 				{
-					if (cnt8 < 1200) //cnt8값을 뽑아서 적당한 값을 정해야 한다!!
+					printf("cnt8 = %d\n",cnt8);
+
+					if (cnt8 <= 1200) //cnt8값을 뽑아서 적당한 값을 정해야 한다!!
 					{
-						printf("up stair!\n");
-						Send_Command(0x12, 0xed); //2cm계단을 올라갔을때 평행하다고 가정한 후 걷기
-						Send_Command(0x12, 0xed);
-						Send_Command(0x12, 0xed);
-						DelayLoop(120000000);
+						printf("go straight!\n");
+						Send_Command(0x08, 0xf7); //2cm계단을 올라갔을때 평행하다고 가정한 후 걷기
+						Send_Command(0x08, 0xf7);
+						Send_Command(0x08, 0xf7);
+						DelayLoop(25000000);
 					}
 					else
 						motion8 = 2; //노란색이 아닌색이 어느정도 이상이면 옆으로 이동
@@ -1786,27 +1804,28 @@ int main(void)
 				else if (motion8 == 2)
 				{
 					printf("go left and go straight!!!!!!!!!!!!!!\n");
+					printf("cnt8_3 = %d\n", cnt8_3);
 
-					if (cnt8_1 <= 1200)
+					if (cnt8_3 >= 350)
 					{
-						Send_Command(0x16, 0xe9); //왼쪽으로 이동 후 
-						Send_Command(0x16, 0xe9);
-						Send_Command(0x16, 0xe9);
-						DelayLoop(10000000);
+						Send_Command(0x24, 0xdb); //왼쪽으로 이동 후 
+						Send_Command(0x24, 0xdb);
+						Send_Command(0x24, 0xdb);
+						DelayLoop(25000000);
 
 						cnt8_2++;
 					}
 					else 
 					{
-						Send_Command(0x02, 0xfd); //직진
-						Send_Command(0x02, 0xfd);
-						Send_Command(0x02, 0xfd);
+						Send_Command(0x03, 0xfc); //직진
+						Send_Command(0x03, 0xfc);
+						Send_Command(0x03, 0xfc);
 						DelayLoop(10000000);
 
-						Send_Command(0x02, 0xfd); //또 직진
-						Send_Command(0x02, 0xfd);
-						Send_Command(0x02, 0xfd);
-						DelayLoop(10000000);
+						Send_Command(0x03, 0xfc); //또 직진
+						Send_Command(0x03, 0xfc);
+						Send_Command(0x03, 0xfc);
+						DelayLoop(400000000); // 다음 for문 때문에 delay 길게 줌
 
 						motion8 = 3; //함정 통과 후 오른쪽으로 이동 & 직진
 					}
@@ -1816,37 +1835,42 @@ int main(void)
 				else if (motion8 == 3)
 				{
 					printf("GO RIGHT!!!!!!!!!!!\n");
+					printf("cnt8_2 : %d\n",cnt8_2);
 
-					for (i = 0; i < cnt8_2;i++)
+					for (i = 0 ; i < cnt8_2 + 2; i++)
 					{
-						Send_Command(0x17, 0xe8); //함정 통과 후 오른쪽으로 이동
-						Send_Command(0x17, 0xe8);
-						Send_Command(0x17, 0xe8);
-						DelayLoop(10000000);
+						Send_Command(0x22, 0xdd); //함정 통과 후 오른쪽으로 이동
+						Send_Command(0x22, 0xdd);
+						Send_Command(0x22, 0xdd);
+						DelayLoop(40000000);
 					}
 
-					if (cnt8 < 1200)
-					{
-						Send_Command(0x12, 0xed); 
-						Send_Command(0x12, 0xed);
-						Send_Command(0x12, 0xed);
-						DelayLoop(120000000);
-					}
-					else
-						motion8 = 4; //노란색이 아닌색이 어느정도 이상이면 내려가자
-					
+					motion8 = 4; //노란색이 아닌색이 어느정도 이상이면 내려가자
 					goto GOUP;
 				}
 				else if (motion8 == 4)
 				{
+					printf("GO straight!!!!!!!!!!!\n");
+
+					Send_Command(0x09, 0xf6);
+					Send_Command(0x09, 0xf6);
+					Send_Command(0x09, 0xf6);
+					DelayLoop(120000000);
+
+					motion8 = 5;
+
+					goto GOUP;
+				}
+				else if (motion8 == 5)
+				{
 					printf("go down!\n");
-					Send_Command(0x0f, 0xf0); //내려가기
-					Send_Command(0x0f, 0xf0);
-					Send_Command(0x0f, 0xf0);
+
+					Send_Command(0x32, 0xdd); //내려가기
+					Send_Command(0x32, 0xdd);
+					Send_Command(0x32, 0xdd);
 					DelayLoop(50000000);
 
-					//stage = 9;
-					//goto GOUP;
+					printf("The End\n");
 				}
 			}
 		}
