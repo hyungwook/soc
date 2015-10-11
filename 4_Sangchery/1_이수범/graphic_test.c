@@ -1732,7 +1732,7 @@ int main(void)
 				cnt8 = 0;
 				cnt8_1 = 0, cnt8_3 = 0, cnt8_4 = 0;
 
-				for (i = 25; i < 55; i++) // 적절한 거리를 찾아서 i값의 범위 지정하기!
+				for (i = 27; i < 57; i++) // 적절한 거리를 찾아서 i값의 범위 지정하기!
 				{
 					for (j = 30; j < 150; j++)
 					{
@@ -1752,13 +1752,9 @@ int main(void)
 							*(lcd + 180 * i + j) = 0x7000;
 						}
 					}
-					/*for (j = 100; j < 160; j++)
-						if ((((*(xxx + i * 180 + j) + *(xxx + (i - 1) * 180 + j)) == 6) && *(xxx + i * 180 + j) == 2)
-							|| (((*(xxx + i * 180 + j) + *(xxx + (i + 1) * 180 + j)) == 6) && *(xxx + i * 180 + j) == 2))
-						{
+					for (j = 90; j < 150; j++)
+						if (*(xxx + i * 180 + j) == 2)
 							cnt8_3++;
-							*(lcd + 180 * i + j) = 0x00ff;
-						}	*/
 				}
 
 				draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
@@ -1777,12 +1773,12 @@ int main(void)
 					Send_Command(0x2a, 0xd5); //오르기
 					Send_Command(0x2a, 0xd5);
 					Send_Command(0x2a, 0xd5);
-					DelayLoop(300000000);
+					DelayLoop(250000000);
 
-					Send_Command(0x0c, 0xf3);
-					Send_Command(0x0c, 0xf3);
-					Send_Command(0x0c, 0xf3);
-					DelayLoop(10000000);
+					Send_Command(0x08, 0xf7);
+					Send_Command(0x08, 0xf7);
+					Send_Command(0x08, 0xf7);
+					DelayLoop(25000000);
 
 					motion8 = 1;
 
@@ -1792,13 +1788,13 @@ int main(void)
 				{
 					printf("cnt8 = %d\n",cnt8);
 
-					if (cnt8 <= 600) //cnt8값을 뽑아서 적당한 값을 정해야 한다!!
+					if (cnt8 <= 1200) //cnt8값을 뽑아서 적당한 값을 정해야 한다!!
 					{
 						printf("go straight!\n");
-						Send_Command(0x0c, 0xf3); //2cm계단을 올라갔을때 평행하다고 가정한 후 걷기
-						Send_Command(0x0c, 0xf3);
-						Send_Command(0x0c, 0xf3);
-						DelayLoop(120000000);
+						Send_Command(0x08, 0xf7); //2cm계단을 올라갔을때 평행하다고 가정한 후 걷기
+						Send_Command(0x08, 0xf7);
+						Send_Command(0x08, 0xf7);
+						DelayLoop(25000000);
 					}
 					else
 						motion8 = 2; //노란색이 아닌색이 어느정도 이상이면 옆으로 이동
@@ -1808,14 +1804,14 @@ int main(void)
 				else if (motion8 == 2)
 				{
 					printf("go left and go straight!!!!!!!!!!!!!!\n");
-					printf("cnt8 = %d\n", cnt8);
+					printf("cnt8_3 = %d\n", cnt8_3);
 
-					if (cnt8 >= 450)
+					if (cnt8_3 >= 300)
 					{
 						Send_Command(0x24, 0xdb); //왼쪽으로 이동 후 
 						Send_Command(0x24, 0xdb);
 						Send_Command(0x24, 0xdb);
-						DelayLoop(10000000);
+						DelayLoop(15000000);
 
 						cnt8_2++;
 					}
@@ -1829,7 +1825,7 @@ int main(void)
 						Send_Command(0x03, 0xfc); //또 직진
 						Send_Command(0x03, 0xfc);
 						Send_Command(0x03, 0xfc);
-						DelayLoop(10000000);
+						DelayLoop(400000000); // 다음 for문 때문에 delay 길게 줌
 
 						motion8 = 3; //함정 통과 후 오른쪽으로 이동 & 직진
 					}
@@ -1846,34 +1842,35 @@ int main(void)
 						Send_Command(0x22, 0xdd); //함정 통과 후 오른쪽으로 이동
 						Send_Command(0x22, 0xdd);
 						Send_Command(0x22, 0xdd);
-						DelayLoop(10000000);
+						DelayLoop(35000000);
 					}
 
-					printf("GO straight!!!!!!!!!!!\n");
-					printf("cnt8_4 : %d\n", cnt8_4);
-
-					if (cnt8_4 < 500)
-					{
-						Send_Command(0x0c, 0xf3);
-						Send_Command(0x0c, 0xf3);
-						Send_Command(0x0c, 0xf3);
-						DelayLoop(120000000);
-					}
-					else
-						motion8 = 4; //노란색이 아닌색이 어느정도 이상이면 내려가자
-					
+					motion8 = 4; //노란색이 아닌색이 어느정도 이상이면 내려가자
 					goto GOUP;
 				}
 				else if (motion8 == 4)
 				{
+					printf("GO straight!!!!!!!!!!!\n");
+
+					Send_Command(0x09, 0xf6);
+					Send_Command(0x09, 0xf6);
+					Send_Command(0x09, 0xf6);
+					DelayLoop(120000000);
+
+					motion8 = 5;
+
+					goto GOUP;
+				}
+				else if (motion8 == 5)
+				{
 					printf("go down!\n");
-					Send_Command(0x2b, 0xd4); //내려가기
-					Send_Command(0x2b, 0xd4);
-					Send_Command(0x2b, 0xd4);
+
+					Send_Command(0x32, 0xdd); //내려가기
+					Send_Command(0x32, 0xdd);
+					Send_Command(0x32, 0xdd);
 					DelayLoop(50000000);
 
-					//stage = 9;
-					//goto GOUP;
+					printf("The End\n");
 				}
 			}
 		}
