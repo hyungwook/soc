@@ -90,8 +90,8 @@ MAIN:
         'GOTO 전진보행10걸음
         'GOTO 판위에서전진보행50
         'GOTO 왼쪽덤블링
-        'GOTO 앞으로덤블링
-        GOTO 허들넘기
+        GOTO 앞으로덤블링
+        'GOTO 허들넘기
         'GOTO 전진종종4걸음
         'GOTO 왼쪽턴10
         'GOTO 오른쪽턴20
@@ -1054,7 +1054,7 @@ MAIN:
     MOVE G6A,100,  56, 110,  26, 100, 100
     MOVE G6D,100,  128, 150, 147, 100, 100
     MOVE G6B,170,  40,  70
-    MOVE G6C,170,  40,  70,,170
+    MOVE G6C,170,  40,  70,,175
     WAIT
 
     SPEED 20
@@ -1101,12 +1101,12 @@ MAIN:
 
 
 
-    GOTO main
+    'goto main
 
 앞으로덤블링2:
 
 
-
+    'DELAY 3000
     SPEED 8
     MOVE G6A,100, 155,  27, 140, 100, 100
     MOVE G6D,100, 155,  27, 140, 100, 100
