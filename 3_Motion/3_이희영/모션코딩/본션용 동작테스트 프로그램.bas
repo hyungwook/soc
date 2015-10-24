@@ -81,13 +81,15 @@ MAIN:
         'GOTO 계단오른발오르기1cm
         'GOTO 기어서올라가기
         'GOTO 허들넘기
-        
+
         'GOTO 전진종종걸음
 
         'GOTO 판위에서전진종종2걸음
         'GOTO 판위에서전진보행50
         DELAY 6000
-        GOTO 전진보행50
+        'GOTO 전진보행50
+        
+        GOTO 고개90도전진보행
         'GOTO 전진보행10걸음
         'GOTO 판위에서전진보행50
         'GOTO 왼쪽덤블링
@@ -120,6 +122,123 @@ MAIN:
     '    ONE = 0
     '    GOTO MAIN
     '**********************************************
+기본자세0:
+    '자이로 꺼진 고개 90도(TH)
+    GOSUB GYRO_OFF
+    MOVE G6A,101,  83, 137,  94, 100, 100
+    MOVE G6D,101,  85, 137,  94, 100, 100
+    MOVE G6B,100,  28,  81, 100	, 100, 100
+    MOVE G6C,100 ,  32,  80, 100, 190, 100
+    WAIT
+    RETURN
+
+
+고개90도전진보행: 'COMPLETE GREEN
+
+    'GOSUB GYRO_INIT
+    'GOSUB GYRO_ON
+    'GOSUB GYRO_ST
+
+    'GOSUB SOUND_Walk_Ready
+    보행속도 = 10'5
+    좌우속도 = 5'8'3
+    좌우속도2 = 4'5'2
+    '넘어진확인 = 0
+    GOSUB 기본자세0
+    GOSUB Leg_motor_mode3
+
+
+    SPEED 4
+    '오른쪽기울기
+    MOVE G6A, 88,  71, 152,  91, 110
+    MOVE G6D,106,  76, 146,  93,  96
+    MOVE G6B,100,37
+    MOVE G6C,100,35,,,
+    WAIT
+
+    SPEED 10'보행속도
+    '왼발들기
+    MOVE G6A, 90, 100, 115, 105, 114
+    MOVE G6D,112,  78, 146,  93,  96
+    MOVE G6B,90
+    MOVE G6C,110
+    WAIT
+
+
+    '        GOTO 전진보행50_1
+
+
+
+고개90도전진보행_1:
+    FOR I = 0 TO 1
+
+        SPEED 보행속도
+        '왼발뻣어착지
+        MOVE G6A, 85,  44, 163, 113, 117
+        MOVE G6D,108,  77, 146,  93,  92
+        WAIT
+
+
+
+        SPEED 좌우속도
+        'GOSUB Leg_motor_mode3
+        '왼발중심이동
+        MOVE G6A,108,  76, 144, 100,  93
+        MOVE G6D,86, 93, 155,  71, 112
+        WAIT
+
+
+
+        SPEED 보행속도
+        'GOSUB Leg_motor_mode2
+        '오른발들기10
+        MOVE G6A,110,  77, 146,  93, 94
+        MOVE G6D,90, 100, 105, 110, 114
+        MOVE G6B,110
+        MOVE G6C,90
+        WAIT
+
+
+
+고개90도전진보행_2:
+
+
+        SPEED 보행속도
+        '오른발뻣어착지
+        MOVE G6D,87,  44, 163, 113, 117
+        MOVE G6A,108,  77, 147,  94,  92
+        WAIT
+
+        SPEED 좌우속도
+        'GOSUB Leg_motor_mode3
+        '오른발중심이동
+        MOVE G6D,108,  76, 144, 100,  93
+        MOVE G6A, 85, 93, 155,  71, 112
+        WAIT
+
+
+        SPEED 보행속도
+        'GOSUB Leg_motor_mode2
+        '왼발들기10
+        MOVE G6A, 90, 100, 105, 110, 114
+        MOVE G6D,112,  77, 146,  93,  94
+        MOVE G6B, 90
+        MOVE G6C,110
+        WAIT
+
+
+
+    NEXT I
+
+
+
+
+
+    'GOSUB 안정화자세2
+    GOSUB 기본자세0
+    GOTO main
+
+
 전진종종4걸음:
     GOSUB 기본자세
 

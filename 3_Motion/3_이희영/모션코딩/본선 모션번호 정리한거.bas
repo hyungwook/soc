@@ -344,7 +344,7 @@ RX_EXIT:
 
     SPEED 4
     '오른쪽기울기
-    MOVE G6A, 89,  71, 152,  91, 110
+    MOVE G6A, 88,  71, 152,  91, 110
     MOVE G6D,106,  76, 146,  93,  96
     MOVE G6B,100,37
     MOVE G6C,100,35,,,
@@ -353,7 +353,7 @@ RX_EXIT:
     SPEED 10'보행속도
     '왼발들기
     MOVE G6A, 90, 100, 115, 105, 114
-    MOVE G6D,109,  78, 146,  93,  96
+    MOVE G6D,112,  78, 146,  93,  96
     MOVE G6B,90
     MOVE G6C,110
     WAIT
@@ -415,7 +415,7 @@ RX_EXIT:
         'GOSUB Leg_motor_mode2
         '왼발들기10
         MOVE G6A, 90, 100, 105, 110, 114
-        MOVE G6D,110,  77, 146,  93,  94
+        MOVE G6D,112,  77, 146,  93,  94
         MOVE G6B, 90
         MOVE G6C,110
         WAIT
