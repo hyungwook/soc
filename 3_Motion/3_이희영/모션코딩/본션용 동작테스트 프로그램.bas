@@ -81,20 +81,21 @@ MAIN:
         'GOTO 계단오른발오르기1cm
         'GOTO 기어서올라가기
         'GOTO 허들넘기
-        'GOTO 전진보행50
+        
         'GOTO 전진종종걸음
 
         'GOTO 판위에서전진종종2걸음
         'GOTO 판위에서전진보행50
         DELAY 6000
+        GOTO 전진보행50
         'GOTO 전진보행10걸음
         'GOTO 판위에서전진보행50
         'GOTO 왼쪽덤블링
-        GOTO 앞으로덤블링
+        'GOTO 앞으로덤블링
         'GOTO 허들넘기
         'GOTO 전진종종4걸음
         'GOTO 왼쪽턴10
-        'GOTO 오른쪽턴20
+        'GOTO 오른쪽턴10
         'GOTO 오른쪽옆으로10
         'GOTO 왼쪽옆으로70
         'GOTO 계단오른발오르기2cm
@@ -1106,7 +1107,7 @@ MAIN:
 앞으로덤블링2:
 
 
-    'DELAY 3000
+    DELAY 3000
     SPEED 8
     MOVE G6A,100, 155,  27, 140, 100, 100
     MOVE G6D,100, 155,  27, 140, 100, 100
@@ -2024,7 +2025,7 @@ MAIN:
 
 
 허들넘기: 'USE
-
+    GOSUB GYRO_OFF
     GOSUB 기본자세
 
 
@@ -2054,36 +2055,36 @@ MAIN:
 
 
 
-    SPEED 15
+    SPEED 20
     MOVE G6A,100,  56, 110,  26, 100, 100
     MOVE G6D,100,  71, 177, 152, 100, 100
     MOVE G6B,180,  50,  70
     MOVE G6C,180,  54,  70,
     WAIT
 
-    SPEED 15
+    SPEED 20
     MOVE G6A,100,  60, 110,  15, 100, 100
     MOVE G6D,100,  60, 110, 15, 100, 100
     MOVE G6B,180,  40,  70
     MOVE G6C,180,  42,  70
     WAIT
 
-    SPEED 15
+    SPEED 20
     MOVE G6A,100,  60, 110,  10, 100, 100
     MOVE G6D,100,  60, 110,  10, 100, 100
     MOVE G6B,190,  37,  70
-    MOVE G6C,190,  40,  70
+    MOVE G6C,190,  40,  70,,190
     WAIT
     DELAY 50
 
-    SPEED 15
+    SPEED 20
     MOVE G6A,100, 110, 74,  65, 100, 100
     MOVE G6D,100, 110, 70,  65, 100, 100
     MOVE G6B,190, 165, 115
     MOVE G6C,190, 165, 115
     WAIT
 
-    SPEED 15
+    SPEED 20
     MOVE G6A,100, 171,  73,  15, 100, 100
     MOVE G6D,100, 170,  70,  15, 100, 100
     MOVE G6B,190, 160, 120
@@ -2102,6 +2103,8 @@ MAIN:
 
     SPEED 10
     GOSUB 기본자세
+    'GOSUB 앞뒤기울기측정
+    'GOSUB 좌우기울기측정
 
 
 
@@ -2474,7 +2477,7 @@ MAIN:
     MOVE G6A, 88,  71, 152,  91, 116
     MOVE G6D,108,  76, 146,  93,  94
     MOVE G6B,100,35
-    MOVE G6C,100,35
+    MOVE G6C,100,35,,,
     WAIT
 
     SPEED 10'보행속도
@@ -2491,7 +2494,7 @@ MAIN:
 
 
 전진보행50_1:
-    FOR I = 0 TO 50
+    FOR I = 0 TO 1
         SPEED 보행속도
         '왼발뻣어착지
         MOVE G6A, 85,  44, 163, 113, 114
