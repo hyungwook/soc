@@ -147,7 +147,7 @@ RX_EXIT:
     RETURN
 
     'GOSUB GYRO_OFF
-    RETURN
+
 
 기본자세2:
     GOSUB GYRO_INIT
@@ -1529,7 +1529,90 @@ RX_EXIT:
 
 
     GOTO RX_EXIT
+앞으로덤블링3:
 
+    SPEED 4
+    MOVE G6A,100, 155,  27, 140, 100, 100
+    MOVE G6D,100, 155,  27, 140, 100, 100
+    MOVE G6B,160,  30,  85,,,
+    MOVE G6C,160,  30,  85,,
+    WAIT
+
+
+    SPEED 4	
+    MOVE G6A, 100, 165,  55, 165, 100, 100
+    MOVE G6D, 100, 165,  55, 165, 100, 100
+    MOVE G6B,185,  40, 97
+    MOVE G6C,185,  40, 100
+    WAIT
+
+    'SPEED 4
+    'MOVE G6A,100, 165, 110, 140, 100, 100
+    'MOVE G6D,100, 165, 110, 140, 100, 100
+    'MOVE G6B,140,  80,  40,,,
+    'MOVE G6C,140,  80,  40,,190
+    'WAIT
+
+    SPEED 4
+    MOVE G6A,100, 128, 140, 147, 100, 100
+    MOVE G6D,100, 128, 140, 147, 100, 100
+    MOVE G6B,160,  80,  40
+    MOVE G6C,160,  80,  40,,190
+    WAIT
+
+
+
+
+    SPEED 20
+    MOVE G6A,100,  56, 110,  26, 100, 100
+    MOVE G6D,100,  128, 150, 147, 100, 100
+    MOVE G6B,170,  50,  70
+    MOVE G6C,170,  50,  70,,175
+    WAIT
+
+    SPEED 20
+    MOVE G6A,100,  60, 110,  15, 100, 100
+    MOVE G6D,100,  60, 110, 15, 100, 100
+    MOVE G6B,169,  51,  68
+    MOVE G6C,171,  50,  70
+    WAIT
+
+    SPEED 20
+    MOVE G6A,100,  60, 110,  10, 100, 100
+    MOVE G6D,100,  60, 110,  10, 100, 100
+    MOVE G6B,190,  50,  70
+    MOVE G6C,190,  50,  70,,190
+    WAIT
+    DELAY 50
+
+    SPEED 20
+    MOVE G6A,100, 110, 74,  65, 100, 100
+    MOVE G6D,100, 110, 70,  65, 100, 100
+    MOVE G6B,190, 165, 115
+    MOVE G6C,190, 165, 115
+    WAIT
+
+    SPEED 13
+    MOVE G6A,100, 171,  73,  15, 100, 100
+    MOVE G6D,100, 170,  70,  15, 100, 100
+    MOVE G6B,190, 160, 120
+    MOVE G6C,190, 160, 120
+    WAIT
+
+    SPEED 10
+    MOVE G6A,100, 171,  30,  110, 100, 100
+    MOVE G6D,100, 170,  30,  110, 100, 100
+    MOVE G6B,190,  40,  60
+    MOVE G6C,190,  40,  60
+    WAIT
+
+    SPEED 13
+    GOSUB 앉은자세
+
+    SPEED 10
+    GOSUB 기본자세
+
+	GOTO rx_exit
 
 외각선자세:
 
@@ -2076,42 +2159,42 @@ RX_EXIT:
 
     '**********************
     FOR I = 0 TO 1
-전진종종2걸음_1:
-        MOVE G6A,96,  88, 128, 111, 103
-        MOVE G6D,104,  76, 146,  94,  101
+        '전진종종걸음_1:
+        MOVE G6A,95,  95, 127, 102, 101
+        MOVE G6D,106,  77, 146, 94,  100
         MOVE G6B, 80
         MOVE G6C,120
         WAIT
 
 
-전진종종2걸음_2:
-        MOVE G6A,95,  89, 130, 103, 103
-        MOVE G6D,104, 79, 146,  89,  100
+        '전진종종걸음_2:
+        MOVE G6A,95,   73, 146,  99, 101
+        MOVE G6D,106,  79, 146,  89,  100
         WAIT
 
-전진종종2걸음_3:
-        MOVE G6A,103,  58, 148,  113,  100
-        MOVE G6D, 95,  74, 152,  93, 102
+        '전진종종걸음_3:
+        MOVE G6A,103,  80, 130, 106, 101
+        MOVE G6D, 95,  79, 144,  92, 99
         WAIT
 
         '*********************************
 
-전진종종2걸음_4:
-        MOVE G6D,95,  88, 130, 111, 102
-        MOVE G6A,104,  76, 145,  94,  101
-        MOVE G6C, 80,,,100
-        MOVE G6B,120,,,,,100
+        '전진종종걸음_4:
+        MOVE G6D,95,  97, 127, 104, 102
+        MOVE G6A,106, 79, 146, 94,  100
+        MOVE G6C, 80
+        MOVE G6B,120
         WAIT
 
 
-전진종종2걸음_5:
-        MOVE G6D,95,   91, 130, 103, 100
-        MOVE G6A,104,  78, 146,  89,  101
+        '전진종종걸음_5:
+        MOVE G6D,97,   62, 148, 105, 100
+        MOVE G6A,100,  74, 146,  89,  102
         WAIT
 
-전진종종2걸음_6:
-        MOVE G6D,103,  59, 150, 112,  100
-        MOVE G6A, 95,  75, 151,  93, 102
+        '전진종종걸음_6:
+        MOVE G6D,105,  66, 142, 105, 103
+        MOVE G6A, 97,  74, 146,  95, 98
         WAIT
     NEXT I
     GOTO 전진종종2걸음_멈춤
@@ -2279,7 +2362,7 @@ MAIN:
 
 
 
-    ON A GOTO MAIN,KEY1,KEY2,KEY3,KEY4,KEY5,KEY6,KEY7,KEY8,KEY9,KEY10,KEY11,KEY12,KEY13,KEY14,KEY15,KEY16,KEY17,KEY18,KEY19,KEY20,KEY21,KEY22,KEY23,KEY24,KEY25,KEY26,KEY27,KEY28,KEY29,KEY30,KEY31,KEY32,KEY33,KEY34,KEY35,KEY36,KEY37,KEY38,KEY39,KEY40,KEY41,KEY42,KEY43,KEY44,KEY45,KEY46,KEY47,KEY48, KEY49, KEY50
+    ON A GOTO MAIN,KEY1,KEY2,KEY3,KEY4,KEY5,KEY6,KEY7,KEY8,KEY9,KEY10,KEY11,KEY12,KEY13,KEY14,KEY15,KEY16,KEY17,KEY18,KEY19,KEY20,KEY21,KEY22,KEY23,KEY24,KEY25,KEY26,KEY27,KEY28,KEY29,KEY30,KEY31,KEY32,KEY33,KEY34,KEY35,KEY36,KEY37,KEY38,KEY39,KEY40,KEY41,KEY42,KEY43,KEY44,KEY45,KEY46,KEY47,KEY48, KEY49, KEY50, KEY51
     GOTO MAIN
     '*******************************************
     '		MAIN 라벨로 가기
@@ -2525,7 +2608,9 @@ KEY49:
 KEY50:
     GOTO 내려가기
     GOTO MAIN
-
+KEY51:
+	GOTO 앞으로덤블링3
+	GOTO MAIN
 
     '*******************************************************
 
