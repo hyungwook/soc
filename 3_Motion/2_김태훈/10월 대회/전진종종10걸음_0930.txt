@@ -29,7 +29,7 @@
 
     '**********************
 전진종종10걸음_1:
-    FOR I = 0 TO 9
+    FOR I = 0 TO 5
         '전진종종걸음최종_1:
         MOVE G6A,97,  95, 120, 102, 103
         MOVE G6D,102, 78, 146,  91,  101
@@ -69,7 +69,7 @@
 
 
 전진종종10걸음_4:
-    FOR I = 0 TO 9
+    FOR I = 0 TO 5
         '전진종종걸음최종_4:
         MOVE G6D,97,  97, 120,  101, 103
         MOVE G6A,103, 78, 146,  92,  101
@@ -116,9 +116,7 @@
     SPEED 10
     GOSUB 기본자세
 
-    DELAY 2500
 
     GOSUB Leg_motor_mode1
     GOSUB GYRO_OFF
     GOTO RX_EXIT
-

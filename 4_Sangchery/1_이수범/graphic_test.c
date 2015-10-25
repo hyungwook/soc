@@ -1773,7 +1773,7 @@ int main(void)
 					Send_Command(0x2a, 0xd5); //오르기
 					Send_Command(0x2a, 0xd5);
 					Send_Command(0x2a, 0xd5);
-					DelayLoop(250000000);
+					DelayLoop(220000000);
 
 					Send_Command(0x08, 0xf7);
 					Send_Command(0x08, 0xf7);
@@ -1806,12 +1806,12 @@ int main(void)
 					printf("go left and go straight!!!!!!!!!!!!!!\n");
 					printf("cnt8_3 = %d\n", cnt8_3);
 
-					if (cnt8_3 >= 300)
+					if (cnt8_3 >= 350)
 					{
 						Send_Command(0x24, 0xdb); //왼쪽으로 이동 후 
 						Send_Command(0x24, 0xdb);
 						Send_Command(0x24, 0xdb);
-						DelayLoop(15000000);
+						DelayLoop(25000000);
 
 						cnt8_2++;
 					}
@@ -1837,12 +1837,12 @@ int main(void)
 					printf("GO RIGHT!!!!!!!!!!!\n");
 					printf("cnt8_2 : %d\n",cnt8_2);
 
-					for (i = 0 ; i < cnt8_2 ; i++)
+					for (i = 0 ; i < cnt8_2 + 2; i++)
 					{
 						Send_Command(0x22, 0xdd); //함정 통과 후 오른쪽으로 이동
 						Send_Command(0x22, 0xdd);
 						Send_Command(0x22, 0xdd);
-						DelayLoop(35000000);
+						DelayLoop(40000000);
 					}
 
 					motion8 = 4; //노란색이 아닌색이 어느정도 이상이면 내려가자
