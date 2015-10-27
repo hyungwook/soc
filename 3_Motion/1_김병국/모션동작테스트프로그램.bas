@@ -61,7 +61,7 @@ MUSIC "O23EAB7EA>3#C"
 'GOSUB GYRO_ON
 'GOSUB GYRO_ST
 SPEED 5
-GOSUB 기본자세2
+GOSUB 기본자세
 
 
 ONE = 1
@@ -78,7 +78,7 @@ MAIN:
         ' GOTO 오른쪽옆으로20
         'GOTO 앞으로덤블링
         ' GOTO 계단오른발오르기2cm
-        GOTO 계단왼발내리기2cm
+        GOTO 오른쪽옆으로70
         ' GOTO 전진달리기최종
         'GOTO 희영오르기
     ENDIF
@@ -102,6 +102,45 @@ MAIN:
     RETURN
     '******************************************************
 
+기본자세:
+
+    GOSUB GYRO_INIT
+    GOSUB GYRO_ON
+    GOSUB GYRO_ST
+
+    SPEED 15
+    MOVE G6A,100,  85, 137,  94, 100, 100
+    MOVE G6D,100,  86, 137,  94, 100, 100
+    MOVE G6B,10,  10,  51, 100, 100, 190
+    MOVE G6C,10 ,  15,  55, 100, 135, 100' 153
+    WAIT
+
+    RETURN
+오른쪽옆으로70:
+
+    GOSUB 기본자세
+    SPEED 12
+    MOVE G6D, 93,  90, 120, 105, 110, 100
+    MOVE G6A,103,  76, 145,  93, 104, 100
+    WAIT
+
+    SPEED 12
+    MOVE G6D, 102,  77, 145, 94, 100, 100
+    MOVE G6A,90,  80, 140,  96, 107, 100
+    WAIT
+
+    SPEED 15
+    MOVE G6D,98,  76, 145,  93, 100, 100
+    MOVE G6A,98,  76, 145,  93, 100, 100
+    WAIT
+
+    SPEED 8
+
+    GOSUB 기본자세
+
+    DELAY 3000
+
+    GOTO RX_EXIT
 오른쪽옆으로20:
 
     GOSUB 기본자세2
@@ -221,7 +260,7 @@ MAIN:
     SPEED 4
     GOSUB 기본자세
     GOSUB All_motor_Reset
-    
+
 
 
     GOTO RX_EXIT
@@ -448,7 +487,7 @@ old오른쪽옆으로20:
 
     '*************************************************************************************
 
-오른쪽옆으로70:
+오른쪽옆으로760:
 
     SPEED 10
     MOVE G6D, 90,  90, 120, 105, 110, 100
@@ -1052,8 +1091,8 @@ GYRO_MIN:
     GYROSENSE G6D,100,50,50,50,50
     RETURN
 GYRO_ST:
-    GYROSENSE G6A,100,30,20,10,
-    GYROSENSE G6D,100,30,20,10 ,
+    GYROSENSE G6A,5,,,5,
+    GYROSENSE G6D,5,,,5,
     RETURN
 
 

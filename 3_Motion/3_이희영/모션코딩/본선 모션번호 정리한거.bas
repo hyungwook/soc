@@ -115,6 +115,11 @@ GYRO_ST:
     GYROSENSE G6A,120,50,40,30,100
     GYROSENSE G6D,120,50,40,30,100
     RETURN
+GYRO_STT:
+    GYROSENSE G6A,5,,,5,
+    GYROSENSE G6D,5,,,5,
+    RETURN
+
 
 RX_EXIT:
     'GOSUB SOUND_STOP
@@ -1473,6 +1478,60 @@ RX_EXIT:
     'DELAY 5000
 
     GOTO RX_EXIT
+
+외각선오른쪽옆으로70:
+
+    GOSUB 외각선자세2
+    SPEED 12
+    MOVE G6D, 93,  90, 120, 105, 110, 100
+    MOVE G6A,103,  76, 145,  93, 104, 100
+    WAIT
+
+    SPEED 12
+    MOVE G6D, 102,  77, 145, 93, 100, 100
+    MOVE G6A,90,  80, 140,  95, 107, 100
+    WAIT
+
+    SPEED 15
+    MOVE G6D,98,  76, 145,  93, 100, 100
+    MOVE G6A,98,  76, 145,  93, 100, 100
+    WAIT
+
+    SPEED 8
+
+    GOSUB 외각선자세2
+    GOSUB GYRO_OFF
+
+    GOTO RX_EXIT
+
+외각선왼쪽옆으로70:
+
+    GOSUB 외각선자세2
+    SPEED 12
+    MOVE G6A, 93,  90, 120, 105, 110, 100
+    MOVE G6D,103,  76, 145,  93, 104, 100
+    WAIT
+
+    SPEED 12
+    MOVE G6A, 102,  77, 145, 93, 100, 100
+    MOVE G6D,90,  80, 140,  95, 107, 100
+    WAIT
+
+    SPEED 15
+    MOVE G6A,98,  76, 145,  93, 100, 100
+    MOVE G6D,98,  76, 145,  93, 100, 100
+    WAIT
+
+    SPEED 8
+
+    GOSUB 외각선자세2
+    GOSUB GYRO_OFF
+    GOTO RX_EXIT
+
+    'DELAY 5000
+
+    GOTO RX_EXIT
+    '*************
     '*************
     '*******************************************************************************************************************************
     '고개90도턴,옆으로
@@ -1659,66 +1718,48 @@ RX_EXIT:
 고개90도오른쪽옆으로20:
 
 
-    GOSUB 기본자세2
-    SPEED 10
-    MOVE G6D, 90,  90, 120, 105, 104, 100
-    MOVE G6A,100,  76, 146,  93, 101, 100
-    MOVE G6B,100,  40
-    MOVE G6C,100,  40
+    GOSUB 기본자세0
+    SPEED 12
+    MOVE G6D, 93,  90, 120, 105, 106, 100
+    MOVE G6A,103,  76, 145,  93, 104, 100
     WAIT
 
     SPEED 12
-    MOVE G6D, 102,  77, 147, 93, 100, 100
-    MOVE G6A,83,  78, 140,  96, 109, 100
-    WAIT
-
-
-    SPEED 12
-    MOVE G6D,100,  76, 146,  93, 100, 100
-    MOVE G6A,90,  76, 143,  93, 102, 100
-
-    SPEED 5
-    MOVE G6D,99,  76, 146,  93, 100, 100
-    MOVE G6A,99,  76, 146,  93, 100, 100
+    MOVE G6D, 102,  77, 145, 93, 100, 100
+    MOVE G6A,90,  80, 140,  95, 107, 100
     WAIT
 
     SPEED 15
-    GOSUB 기본자세2
+    MOVE G6D,98,  76, 145,  93, 100, 100
+    MOVE G6A,98,  76, 145,  93, 100, 100
+    WAIT
 
-    'DELAY 5000
+    SPEED 8
 
-    GOTO RX_EXIT
+    GOSUB 기본자세0
     '*************
 
 고개90도왼쪽옆으로20:
 
-    GOSUB 기본자세2
-    SPEED 10
-    MOVE G6A, 90,  90, 120, 105, 104, 100
-    MOVE G6D,100,  76, 146,  93, 101, 100
-    MOVE G6B,100,  40
-    MOVE G6C,100,  40
+    GOSUB 기본자세0
+    SPEED 12
+    MOVE G6A, 93,  90, 120, 105, 106, 100
+    MOVE G6D,103,  76, 145,  93, 104, 100
     WAIT
 
     SPEED 12
-    MOVE G6A, 102,  77, 147, 93, 100, 100
-    MOVE G6D,83,  78, 140,  96, 109, 100
-    WAIT
-
-
-    SPEED 12
-    MOVE G6A,100,  76, 146,  93, 100, 100
-    MOVE G6D,90,  76, 143,  93, 102, 100
-
-    SPEED 5
-    MOVE G6A,99,  76, 146,  93, 100, 100
-    MOVE G6D,99,  76, 146,  93, 100, 100
+    MOVE G6A, 102,  77, 145, 93, 100, 100
+    MOVE G6D,90,  80, 140,  95, 107, 100
     WAIT
 
     SPEED 15
-    GOSUB 기본자세2
+    MOVE G6A,98,  76, 145,  93, 100, 100
+    MOVE G6D,98,  76, 145,  93, 100, 100
+    WAIT
 
-    'DELAY 5000
+    SPEED 8
+
+    GOSUB 기본자세0
 
     GOTO RX_EXIT
     '*************
@@ -2036,6 +2077,21 @@ RX_EXIT:
     GOTO rx_exit
 
 외각선자세:
+
+    SPEED 15
+    MOVE G6A,100,  85, 137,  94, 100, 100
+    MOVE G6D,100,  86, 137,  94, 100, 100
+    MOVE G6B,10,  10,  51, 100, 100, 190
+    MOVE G6C,10 ,  15,  55, 100, 135, 100' 153
+    WAIT
+
+    RETURN
+
+외각선자세2:
+
+    GOSUB GYRO_INIT
+    GOSUB GYRO_ON
+    GOSUB GYRO_STT
 
     SPEED 15
     MOVE G6A,100,  85, 137,  94, 100, 100
