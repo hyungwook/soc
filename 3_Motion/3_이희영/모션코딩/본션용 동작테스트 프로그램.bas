@@ -88,12 +88,12 @@ MAIN:
         'GOTO 판위에서전진보행50
         DELAY 6000
         'GOTO 전진보행50
-        
-        GOTO 고개90도전진보행
+
+        'GOTO 고개90도전진보행
         'GOTO 전진보행10걸음
         'GOTO 판위에서전진보행50
         'GOTO 왼쪽덤블링
-        'GOTO 앞으로덤블링
+        GOTO 앞으로덤블링3
         'GOTO 허들넘기
         'GOTO 전진종종4걸음
         'GOTO 왼쪽턴10
@@ -1307,6 +1307,91 @@ MAIN:
     GOTO main
 
 
+앞으로덤블링3:
+
+    SPEED 4
+    MOVE G6A,100, 155,  27, 140, 100, 100
+    MOVE G6D,100, 155,  27, 140, 100, 100
+    MOVE G6B,160,  30,  85,,,
+    MOVE G6C,160,  30,  85,,
+    WAIT
+
+
+    SPEED 4	
+    MOVE G6A, 100, 165,  55, 165, 100, 100
+    MOVE G6D, 100, 165,  55, 165, 100, 100
+    MOVE G6B,185,  40, 97
+    MOVE G6C,185,  40, 100
+    WAIT
+
+    'SPEED 4
+    'MOVE G6A,100, 165, 110, 140, 100, 100
+    'MOVE G6D,100, 165, 110, 140, 100, 100
+    'MOVE G6B,140,  80,  40,,,
+    'MOVE G6C,140,  80,  40,,190
+    'WAIT
+
+    SPEED 4
+    MOVE G6A,100, 128, 140, 147, 100, 100
+    MOVE G6D,100, 128, 140, 147, 100, 100
+    MOVE G6B,160,  80,  40
+    MOVE G6C,160,  80,  40,,190
+    WAIT
+
+
+
+
+    SPEED 20
+    MOVE G6A,100,  56, 110,  26, 100, 100
+    MOVE G6D,100,  128, 150, 147, 100, 100
+    MOVE G6B,170,  50,  70
+    MOVE G6C,170,  50,  70,,175
+    WAIT
+
+    SPEED 20
+    MOVE G6A,100,  60, 110,  15, 100, 100
+    MOVE G6D,100,  60, 110, 15, 100, 100
+    MOVE G6B,169,  51,  68
+    MOVE G6C,171,  50,  70
+    WAIT
+
+    SPEED 20
+    MOVE G6A,100,  60, 110,  10, 100, 100
+    MOVE G6D,100,  60, 110,  10, 100, 100
+    MOVE G6B,190,  50,  70
+    MOVE G6C,190,  50,  70,,190
+    WAIT
+    DELAY 50
+
+    SPEED 20
+    MOVE G6A,100, 110, 74,  65, 100, 100
+    MOVE G6D,100, 110, 70,  65, 100, 100
+    MOVE G6B,190, 165, 115
+    MOVE G6C,190, 165, 115
+    WAIT
+
+    SPEED 13
+    MOVE G6A,100, 171,  73,  15, 100, 100
+    MOVE G6D,100, 170,  70,  15, 100, 100
+    MOVE G6B,190, 160, 120
+    MOVE G6C,190, 160, 120
+    WAIT
+
+    SPEED 10
+    MOVE G6A,100, 171,  30,  110, 100, 100
+    MOVE G6D,100, 170,  30,  110, 100, 100
+    MOVE G6B,190,  40,  60
+    MOVE G6C,190,  40,  60
+    WAIT
+
+    SPEED 13
+    GOSUB 앉은자세
+
+    SPEED 10
+    GOSUB 기본자세
+
+
+    GOTO main
 
 왼쪽덤블링:
     GOSUB Leg_motor_mode1
