@@ -85,7 +85,7 @@ MAIN:
 
         'GOTO 판위에서전진종종2걸음
         'GOTO 판위에서전진보행50
-        DELAY 2000
+        DELAY 5000
         'GOTO 전진보행50
 
         'GOTO 고개90도전진보행
@@ -98,15 +98,16 @@ MAIN:
         'GOTO 전진종종걸음
         'GOTO 외각선오른쪽턴20
 
-        'GOTO 앞으로덤블링
+        GOTO 앞으로덤블링
         'GOTO 허들넘기
-        'GOTO 전진종종4걸음
+        'GOTO 전진종종4걸
+
         'GOTO 왼쪽턴45
         'GOTO 오른쪽턴10
         'GOTO 오른쪽옆으로10
         'GOTO 왼쪽옆으로70
         'GOTO 계단오른발오르기2cm
-        GOTO 계단왼발내리기2cm
+        'GOTO 계단왼발내리기2cm
     ENDIF
 
 
@@ -217,8 +218,8 @@ MAIN:
     SPEED 4
     GOSUB 기본자세
     GOSUB All_motor_Reset
-    
-    
+
+
 
 
 
@@ -1574,22 +1575,22 @@ qwer계단왼발내리기2cm: ' GREEN USE
     SPEED 20
     MOVE G6A,100,  128, 150, 147, 100, 100
     MOVE G6D,100,  128, 150, 147, 100, 100
-    MOVE G6B,150,  40,  70
-    MOVE G6C,153,  40,  70,,190
+    MOVE G6B,155,  40,  70
+    MOVE G6C,150,  40,  70,,190
     WAIT
 
     SPEED 20
-    MOVE G6D,100,  56, 110,  26, 100, 100
-    MOVE G6A,100,  128, 150, 147, 100, 100
-    MOVE G6B,150,  40,  70
+    MOVE G6A,100,  56, 110,  26, 100, 100
+    MOVE G6D,100,  128, 150, 147, 100, 100
+    MOVE G6B,155,  40,  70
     MOVE G6C,153,  40,  70,,
     WAIT
 
     SPEED 20
     MOVE G6D,100,  60, 110,  15, 100, 100
     MOVE G6A,100,  60, 110, 15, 100, 100
-    MOVE G6B,179,  41,  68
-    MOVE G6C,181,  40,  70
+    MOVE G6C,179,  41,  68
+    MOVE G6B,175,  40,  70
     WAIT
 
     SPEED 20
@@ -1746,8 +1747,8 @@ qwer계단왼발내리기2cm: ' GREEN USE
     'WAIT
 
     SPEED 4
-    MOVE G6A,100, 128, 140, 147, 100, 100
-    MOVE G6D,100, 128, 140, 147, 100, 100
+    MOVE G6A,100, 108, 140, 147, 100, 100
+    MOVE G6D,100, 108, 140, 147, 100, 100
     MOVE G6B,160,  80,  40
     MOVE G6C,160,  80,  40,,190
     WAIT
@@ -1784,7 +1785,7 @@ qwer계단왼발내리기2cm: ' GREEN USE
     MOVE G6C,190, 165, 115
     WAIT
 
-    SPEED 13
+    SPEED 20
     MOVE G6A,100, 171,  73,  15, 100, 100
     MOVE G6D,100, 170,  70,  15, 100, 100
     MOVE G6B,190, 160, 120

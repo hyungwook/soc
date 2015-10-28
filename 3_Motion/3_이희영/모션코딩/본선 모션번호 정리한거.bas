@@ -756,15 +756,15 @@ RX_EXIT:
     GOSUB 기본자세
     GOSUB Leg_motor_mode2
     SPEED 10
-    MOVE G6A,95,  112, 145,  55, 105, 100
-    MOVE G6D,95,  38, 145,  129, 105, 100
+    MOVE G6A,95,  116, 145,  53, 105, 100
+    MOVE G6D,95,  36, 145,  133, 105, 100
     MOVE G6B,115
     MOVE G6C,85
     WAIT
 
     SPEED 12
-    MOVE G6A,93,  112, 145,  56, 105, 100
-    MOVE G6D,93,  38, 145,  127, 105, 100
+    MOVE G6A,93,  116, 145,  53, 105, 100
+    MOVE G6D,93,  36, 145,  133, 105, 100
     WAIT
 
     SPEED 10
@@ -1950,6 +1950,8 @@ RX_EXIT:
     SPEED 8
 
     GOSUB 기본자세0
+    
+    GOTO RX_EXIT
     '*************
 
 고개90도왼쪽옆으로20:
@@ -2074,22 +2076,22 @@ RX_EXIT:
     SPEED 20
     MOVE G6A,100,  128, 150, 147, 100, 100
     MOVE G6D,100,  128, 150, 147, 100, 100
-    MOVE G6B,150,  40,  70
-    MOVE G6C,153,  40,  70,,190
+    MOVE G6B,155,  40,  70
+    MOVE G6C,150,  40,  70,,190
     WAIT
 
     SPEED 20
     MOVE G6A,100,  56, 110,  26, 100, 100
     MOVE G6D,100,  128, 150, 147, 100, 100
-    MOVE G6B,150,  40,  70
+    MOVE G6B,155,  40,  70
     MOVE G6C,153,  40,  70,,
     WAIT
 
     SPEED 20
     MOVE G6D,100,  60, 110,  15, 100, 100
     MOVE G6A,100,  60, 110, 15, 100, 100
-    MOVE G6B,179,  41,  68
-    MOVE G6C,181,  40,  70
+    MOVE G6C,179,  41,  68
+    MOVE G6B,175,  40,  70
     WAIT
 
     SPEED 20
@@ -2142,8 +2144,8 @@ RX_EXIT:
     SPEED 8	
     MOVE G6A, 100, 155,  60, 165, 100, 100
     MOVE G6D, 100, 157,  55, 165, 100, 100
-    MOVE G6B,185,  40, 70
-    MOVE G6C,185,  40, 70
+    MOVE G6B,185,  20, 70
+    MOVE G6C,185,  20, 70
     WAIT
 
 
@@ -2157,13 +2159,6 @@ RX_EXIT:
 
 
 
-
-    SPEED 15
-    MOVE G6A,100,  71, 177, 162, 100, 100
-    MOVE G6D,100,  71, 177, 162, 100, 100
-    MOVE G6B,170,  40,  70
-    MOVE G6C,170,  40,  70,
-    WAIT
 
     SPEED 15
     MOVE G6A,100,  56, 110,  26, 100, 100
@@ -2222,16 +2217,16 @@ RX_EXIT:
     SPEED 4
     MOVE G6A,100, 155,  27, 140, 100, 100
     MOVE G6D,100, 155,  27, 140, 100, 100
-    MOVE G6B,160,  30,  85,,,
-    MOVE G6C,160,  30,  85,,
+    MOVE G6B,160,  50,  85,,,
+    MOVE G6C,160,  50,  85,,
     WAIT
 
 
     SPEED 4	
     MOVE G6A, 100, 165,  55, 165, 100, 100
     MOVE G6D, 100, 165,  55, 165, 100, 100
-    MOVE G6B,185,  40, 97
-    MOVE G6C,185,  40, 100
+    MOVE G6B,185,  50, 97
+    MOVE G6C,185,  50, 100
     WAIT
 
     'SPEED 4
@@ -2523,14 +2518,14 @@ RX_EXIT:
 
     SPEED 4
     MOVE G6A, 88,  71, 152,  91, 110
-    MOVE G6D,105,  77, 145,  93,  94
+    MOVE G6D,106,  77, 145,  93,  94
     MOVE G6B,100,40
     MOVE G6C,100,40
     WAIT
 
     SPEED 8
     MOVE G6A, 90, 100, 115, 105, 114
-    MOVE G6D,111,  76, 145,  93,  94
+    MOVE G6D,112,  76, 145,  93,  94
     WAIT
 
     GOSUB Leg_motor_mode2
@@ -2640,7 +2635,7 @@ RX_EXIT:
     GOSUB Leg_motor_mode2
     HIGHSPEED SETON
 
-    SPEED 5
+    SPEED 10
     MOVE G6D,111,  81, 141,  87,  95
     MOVE G6A, 83,  20, 172,  135, 110
     MOVE G6B,50
