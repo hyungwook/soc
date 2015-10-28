@@ -201,6 +201,17 @@ RX_EXIT:
     MOVE G6C,100 ,  32,  80, 100, 135, 100
     WAIT
     RETURN
+골프공자세:
+    GOSUB GYRO_OFF
+    MOVE G6A,101,  83, 137,  94, 100, 100
+    MOVE G6D,101,  84, 137,  94, 100, 100
+    MOVE G6B,100,  28,  81, 100	, 100, 100
+    MOVE G6C,100 ,  32,  80, 100, 145, 100
+    WAIT
+    RETURN
+
+
+
 
 안정화자세:
     MOVE G6A,98,  77, 145,  93, 101, 100
@@ -483,7 +494,7 @@ RX_EXIT:
 
 
 고개90도전진보행_1:
-    FOR I = 0 TO 1
+    FOR I = 0 TO 4
 
         SPEED 보행속도
         '왼발뻣어착지
@@ -745,15 +756,15 @@ RX_EXIT:
     GOSUB 기본자세
     GOSUB Leg_motor_mode2
     SPEED 10
-    MOVE G6A,95,  116, 145,  53, 105, 100
-    MOVE G6D,95,  36, 145,  133, 105, 100
+    MOVE G6A,95,  110, 145,  57, 105, 100
+    MOVE G6D,95,  40, 145,  127, 105, 100
     MOVE G6B,115
     MOVE G6C,85
     WAIT
 
     SPEED 12
-    MOVE G6A,93,  116, 145,  53, 105, 100
-    MOVE G6D,93,  36, 145,  133, 105, 100
+    MOVE G6A,93,  110, 145,  58, 105, 100
+    MOVE G6D,93,  40, 145,  128, 105, 100
     WAIT
 
     SPEED 10
@@ -985,7 +996,83 @@ RX_EXIT:
     GOSUB Leg_motor_mode1
     GOSUB GYRO_OFF'보행순서=0
     GOTO RX_EXIT
+초록색전진보행50:
 
+    
+    보행속도 = 10'5
+    좌우속도 = 5'8'3
+    좌우속도2 = 4'5'2
+    '넘어진확인 = 0
+    GOSUB Leg_motor_mode3
+
+    SPEED 4
+    '오른쪽기울기
+    MOVE G6A, 88,  71, 152,  91, 116
+    MOVE G6D,107,  76, 146,  93,  94
+    MOVE G6B,100,35
+    MOVE G6C,100,35,,,190
+    WAIT
+
+    SPEED 10'보행속도
+    '왼발들기
+    MOVE G6A, 90, 100, 115, 105, 116
+    MOVE G6D,111,  78, 146,  93,  92
+    MOVE G6B,90
+    MOVE G6C,110
+    WAIT
+
+
+
+    '*******************************
+
+
+초록색전진보행50_1:
+    'FOR I = 0 TO 1
+    SPEED 보행속도
+    '왼발뻣어착지
+    MOVE G6A, 95,  64, 143, 103, 110
+    MOVE G6D,108,  77, 146,  93,  94
+    WAIT
+
+
+
+    SPEED 4
+    'GOSUB Leg_motor_mode3
+    '왼발중심이동
+    MOVE G6A,106,  76, 144, 90,  93
+    MOVE G6D,88, 93, 155,  71, 112
+    WAIT
+
+
+    'GOSUB 앞뒤기울기측정
+    'IF 넘어진확인 = 1 THEN
+    '    넘어진확인 = 0
+    '    GOTO MAIN
+    'ENDIF
+
+
+    SPEED 보행속도
+    'GOSUB Leg_motor_mode2
+    '오른발들기10
+    MOVE G6A,107,  77, 146,  93, 94
+    MOVE G6D,85, 100, 105, 110, 114
+    MOVE G6B,110
+    MOVE G6C,90
+    WAIT
+
+	MOVE G6A,104,  83, 136,  93, 102
+    MOVE G6D,100, 80, 143, 90, 103
+    MOVE G6B,110
+    MOVE G6C,90
+    WAIT
+
+    MOVE G6A,99,  83, 137,  94, 98, 100
+    MOVE G6D,99,  84, 137,  94, 98, 100
+    MOVE G6B,100,  28,  81, 100	, 100, 100
+    MOVE G6C,100 ,  32,  80, 100, 190, 100
+    WAIT
+
+	GOTO RX_EXIT
 
 
 고개90도종종걸음3걸음:
@@ -1072,6 +1159,87 @@ RX_EXIT:
     GOTO RX_EXIT
 
     '**********************************************************************************
+고개45도종종걸음3걸음:
+    GOSUB 골프공자세
+    SPEED 13
+    HIGHSPEED SETON
+    GOSUB All_motor_mode3
+
+    MOVE G6D,97,  76, 145,  93, 101
+    MOVE G6A,101,  77, 145,  93, 98
+    MOVE G6B,100,  35
+    MOVE G6C,100 , 35,,,145
+    WAIT
+
+    GOTO 고개45도종종걸음3걸음_1
+    'ENDIF
+
+고개45도종종걸음3걸음_1:
+    '4
+    MOVE G6D,96, 82, 128, 105,  101
+    MOVE G6A,104, 76, 146,  92,  100
+    MOVE G6C,80
+    MOVE G6B,120
+    WAIT
+
+    '5:
+    MOVE G6D,96,  74, 132, 107, 101
+    MOVE G6A,104, 79, 146,  88,  100
+    WAIT
+
+    '6:
+    MOVE G6D, 100,  84, 131,  103, 101
+    MOVE G6A, 100,  73, 146,  98, 100
+    WAIT
+    '--------------------------------------
+    '1:
+    MOVE G6A,96,  88, 128, 105, 101
+    MOVE G6D,102, 80, 146,  95,  100
+    MOVE G6B, 80
+    MOVE G6C,120
+    WAIT
+
+    '2:
+    MOVE G6A,96,   78, 126, 114, 101
+    MOVE G6D,102,  79, 146,  91, 100
+    WAIT
+
+    '3:
+    MOVE G6A,100,  78, 135,  107, 101
+    MOVE G6D,100,  77, 146,  93, 100
+    WAIT
+    '--------------------------------------
+    '4
+    MOVE G6D,96, 82, 128, 105,  101
+    MOVE G6A,104, 76, 146,  92,  100
+    MOVE G6C, 80,
+    MOVE G6B,120
+    WAIT
+
+    '5:
+    MOVE G6D,96,  74, 132, 107, 101
+    MOVE G6A,104, 79, 146,  88,  100
+    WAIT
+
+    '6:
+    MOVE G6D, 100,  84, 131,  103, 101
+    MOVE G6A, 100,  73, 146,  98, 100
+    WAIT
+
+
+    GOTO 고개45도종종걸음3걸음멈춤
+
+고개45도종종걸음3걸음멈춤:
+    HIGHSPEED SETOFF
+    SPEED 10
+    GOSUB 골프공자세
+
+
+
+    GOSUB Leg_motor_mode1
+    GOSUB GYRO_OFF
+    GOTO RX_EXIT
+
 
 
 
@@ -1376,6 +1544,30 @@ RX_EXIT:
     GOSUB 기본자세
 
     GOTO RX_EXIT
+골프공오른쪽옆으로20:
+
+    GOSUB 골프공자세
+    SPEED 12
+    MOVE G6D, 93,  90, 120, 105, 106, 100
+    MOVE G6A,103,  76, 145,  93, 104, 100
+    WAIT
+
+    SPEED 12
+    MOVE G6D, 102,  77, 145, 93, 100, 100
+    MOVE G6A,90,  80, 140,  95, 107, 100
+    WAIT
+
+    SPEED 15
+    MOVE G6D,98,  76, 145,  93, 100, 100
+    MOVE G6A,98,  76, 145,  93, 100, 100
+    WAIT
+
+    SPEED 8
+
+    GOSUB 골프공자세
+
+    GOTO RX_EXIT
+
 왼쪽옆으로10:
 
     GOSUB 기본자세
@@ -1426,6 +1618,30 @@ RX_EXIT:
 
     GOTO RX_EXIT
     '*************
+골프공왼쪽옆으로20:
+
+    GOSUB 골프공자세
+    SPEED 12
+    MOVE G6A, 93,  90, 120, 105, 106, 100
+    MOVE G6D,103,  76, 145,  93, 104, 100
+    WAIT
+
+    SPEED 12
+    MOVE G6A, 102,  77, 145, 93, 100, 100
+    MOVE G6D,90,  80, 140,  95, 107, 100
+    WAIT
+
+    SPEED 15
+    MOVE G6A,98,  76, 145,  93, 100, 100
+    MOVE G6D,98,  76, 145,  93, 100, 100
+    WAIT
+
+    SPEED 8
+
+    GOSUB 골프공자세
+
+    GOTO RX_EXIT
+
 오른쪽옆으로70:
 
     GOSUB 기본자세
@@ -1482,23 +1698,22 @@ RX_EXIT:
 외각선오른쪽옆으로70:
 
     GOSUB 외각선자세2
-    SPEED 12
-    MOVE G6D, 93,  90, 120, 105, 110, 100
-    MOVE G6A,103,  76, 145,  93, 104, 100
-    WAIT
-
-    SPEED 12
-    MOVE G6D, 102,  77, 145, 93, 100, 100
-    MOVE G6A,90,  80, 140,  95, 107, 100
-    WAIT
-
-    SPEED 15
-    MOVE G6D,98,  76, 145,  93, 100, 100
-    MOVE G6A,98,  76, 145,  93, 100, 100
+    SPEED 8
+    MOVE G6D, 93,  93, 123, 103, 110, 100
+    MOVE G6A,103,  79, 148,  91, 104, 100
     WAIT
 
     SPEED 8
+    MOVE G6D, 102,  80, 147, 91, 100, 100
+    MOVE G6A,90,  83, 142,  93, 107, 100
+    WAIT
 
+    SPEED 10
+    MOVE G6D,98,  79, 145,  93, 100, 100
+    MOVE G6A,98,  79, 145,  93, 100, 100
+    WAIT
+
+    SPEED 8
     GOSUB 외각선자세2
     GOSUB GYRO_OFF
 
@@ -1507,19 +1722,19 @@ RX_EXIT:
 외각선왼쪽옆으로70:
 
     GOSUB 외각선자세2
-    SPEED 12
-    MOVE G6A, 93,  90, 120, 105, 110, 100
-    MOVE G6D,103,  76, 145,  93, 104, 100
+    SPEED 8
+    MOVE G6A, 93,  93, 123, 103, 110, 100
+    MOVE G6D,103,  79, 148,  91, 104, 100
     WAIT
 
-    SPEED 12
-    MOVE G6A, 102,  77, 145, 93, 100, 100
-    MOVE G6D,90,  80, 140,  95, 107, 100
+    SPEED 8
+    MOVE G6A, 102,  80, 147, 91, 100, 100
+    MOVE G6D,90,  83, 142,  93, 107, 100
     WAIT
 
-    SPEED 15
-    MOVE G6A,98,  76, 145,  93, 100, 100
-    MOVE G6D,98,  76, 145,  93, 100, 100
+    SPEED 10
+    MOVE G6A,98,  79, 145,  93, 100, 100
+    MOVE G6D,98,  79, 145,  93, 100, 100
     WAIT
 
     SPEED 8
@@ -1845,31 +2060,38 @@ RX_EXIT:
     MOVE G6A,100, 152, 110, 140, 100, 100
     MOVE G6D,100, 152, 110, 140, 100, 100
     MOVE G6B,130,  70,  20,,,
-    MOVE G6C,130,  70,  20,,190
+    MOVE G6C,130,  80,  20,,190
     WAIT
 
-    SPEED 13
+    SPEED 15
     MOVE G6A,100, 128, 140, 147, 100, 100
     MOVE G6D,100, 128, 140, 147, 100, 100
     MOVE G6B,140,  70,  20
-    MOVE G6C,140,  70,  20,,190
+    MOVE G6C,140,  80,  20,,190
     WAIT
 
 
 
 
     SPEED 20
-    MOVE G6A,100,  56, 110,  26, 100, 100
+    MOVE G6A,100,  128, 150, 147, 100, 100
     MOVE G6D,100,  128, 150, 147, 100, 100
-    MOVE G6B,170,  40,  70
-    MOVE G6C,170,  40,  70,,175
+    MOVE G6B,150,  40,  70
+    MOVE G6C,153,  40,  70,,190
     WAIT
 
     SPEED 20
-    MOVE G6A,100,  60, 110,  15, 100, 100
-    MOVE G6D,100,  60, 110, 15, 100, 100
-    MOVE G6B,169,  41,  68
-    MOVE G6C,171,  40,  70
+    MOVE G6D,100,  56, 110,  26, 100, 100
+    MOVE G6A,100,  128, 150, 147, 100, 100
+    MOVE G6B,150,  40,  70
+    MOVE G6C,153,  40,  70,,
+    WAIT
+
+    SPEED 20
+    MOVE G6D,100,  60, 110,  15, 100, 100
+    MOVE G6A,100,  60, 110, 15, 100, 100
+    MOVE G6B,179,  41,  68
+    MOVE G6C,181,  40,  70
     WAIT
 
     SPEED 20
@@ -1878,7 +2100,6 @@ RX_EXIT:
     MOVE G6B,190,  40,  70
     MOVE G6C,190,  40,  70,,190
     WAIT
-    DELAY 50
 
     SPEED 20
     MOVE G6A,100, 110, 74,  65, 100, 100
@@ -1887,7 +2108,7 @@ RX_EXIT:
     MOVE G6C,190, 165, 115
     WAIT
 
-    SPEED 13
+    SPEED 20
     MOVE G6A,100, 171,  73,  15, 100, 100
     MOVE G6D,100, 170,  70,  15, 100, 100
     MOVE G6B,190, 160, 120
@@ -1923,8 +2144,8 @@ RX_EXIT:
     SPEED 8	
     MOVE G6A, 100, 155,  60, 165, 100, 100
     MOVE G6D, 100, 157,  55, 165, 100, 100
-    MOVE G6B,185,  20, 70
-    MOVE G6C,185,  20, 70
+    MOVE G6B,185,  40, 70
+    MOVE G6C,185,  40, 70
     WAIT
 
 
@@ -1938,6 +2159,13 @@ RX_EXIT:
 
 
 
+
+    SPEED 15
+    MOVE G6A,100,  71, 177, 162, 100, 100
+    MOVE G6D,100,  71, 177, 162, 100, 100
+    MOVE G6B,170,  40,  70
+    MOVE G6C,170,  40,  70,
+    WAIT
 
     SPEED 15
     MOVE G6A,100,  56, 110,  26, 100, 100
@@ -2054,7 +2282,7 @@ RX_EXIT:
     MOVE G6C,190, 165, 115
     WAIT
 
-    SPEED 13
+    SPEED 20
     MOVE G6A,100, 171,  73,  15, 100, 100
     MOVE G6D,100, 170,  70,  15, 100, 100
     MOVE G6B,190, 160, 120
@@ -2900,7 +3128,7 @@ MAIN:
 
 
 
-    ON A GOTO MAIN,KEY1,KEY2,KEY3,KEY4,KEY5,KEY6,KEY7,KEY8,KEY9,KEY10,KEY11,KEY12,KEY13,KEY14,KEY15,KEY16,KEY17,KEY18,KEY19,KEY20,KEY21,KEY22,KEY23,KEY24,KEY25,KEY26,KEY27,KEY28,KEY29,KEY30,KEY31,KEY32,KEY33,KEY34,KEY35,KEY36,KEY37,KEY38,KEY39,KEY40,KEY41,KEY42,KEY43,KEY44,KEY45,KEY46,KEY47,KEY48, KEY49, KEY50, KEY51, KEY52, KEY53, KEY54
+    ON A GOTO MAIN,KEY1,KEY2,KEY3,KEY4,KEY5,KEY6,KEY7,KEY8,KEY9,KEY10,KEY11,KEY12,KEY13,KEY14,KEY15,KEY16,KEY17,KEY18,KEY19,KEY20,KEY21,KEY22,KEY23,KEY24,KEY25,KEY26,KEY27,KEY28,KEY29,KEY30,KEY31,KEY32,KEY33,KEY34,KEY35,KEY36,KEY37,KEY38,KEY39,KEY40,KEY41,KEY42,KEY43,KEY44,KEY45,KEY46,KEY47,KEY48, KEY49, KEY50, KEY51, KEY52, KEY53, KEY54, KEY55, KEY56, KEY57, KEY58, KEY59, KEY60, KEY61, KEY62, KEY63, KEY64
     GOTO MAIN
     '*******************************************
     '		MAIN 라벨로 가기
@@ -3010,7 +3238,8 @@ KEY5: '기본걷기
 KEY6: '기본걷기
 KEY7: '기본걷기
 KEY8: '종종걸음
-    GOTO 고개90도종종걸음3걸음
+    'GOTO 고개90도종종걸음3걸음
+    GOTO 초록색전진보행50
     GOTO MAIN
 KEY9: '종종걸음
     GOTO 전진종종10걸음
@@ -3161,6 +3390,45 @@ KEY53:
 KEY54:
     GOTO 전진보행4걸음
     GOTO MAIN
+KEY55:
+    GOTO 외각선왼쪽옆으로70
+    GOTO MAIN
+KEY56:
+    GOTO 외각선오른쪽옆으로70
+    GOTO MAIN
+KEY57:
+    GOTO 외각선왼쪽턴10
+    GOTO MAIN
+KEY58:
+    GOTO 외각선왼쪽턴20
+    GOTO MAIN
+KEY59:
+    GOTO 외각선오른쪽턴10
+    GOTO MAIN
+KEY60:
+    GOTO 외각선오른쪽턴20
+    GOTO MAIN
+KEY61:
+    '골프공자세:
+    GOSUB GYRO_OFF
+    MOVE G6A,101,  83, 137,  94, 100, 100
+    MOVE G6D,101,  84, 137,  94, 100, 100
+    MOVE G6B,100,  28,  81, 100	, 100, 100
+    MOVE G6C,100 ,  32,  80, 100, 145, 100
+    WAIT
+    GOTO MAIN
+KEY62:
+    GOTO 골프공왼쪽옆으로20
+    GOTO MAIN
+KEY63:
+    GOTO 골프공오른쪽옆으로20
+    GOTO MAIN
+KEY64:
+    GOTO 고개45도종종걸음3걸음
+    GOTO MAIN
+
+
+
 
     '*******************************************************
 
