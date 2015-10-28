@@ -128,7 +128,7 @@ RX_EXIT:
     GOTO RX_EXIT
 
     '************************************************
-<<<<<<< HEAD
+    <<<<<<< HEAD
 =======
 턴자세:
     'GOSUB GYRO_INIT
@@ -154,7 +154,7 @@ RX_EXIT:
     WAIT
     RETURN
 
->>>>>>> 51f8bb993ba9359ad88f82b7e3003c77f4bba7c9
+    >>>>>>> 51f8bb993ba9359ad88f82b7e3003c77f4bba7c9
 기본자세0:
     '자이로 꺼진 고개 90도(TH)
     GOSUB GYRO_OFF
@@ -1298,10 +1298,10 @@ RX_EXIT:
 
 외각선왼쪽턴20: ' COMPLETE
     GOSUB GYRO_OFF
-<<<<<<< HEAD
+    <<<<<<< HEAD
     GOSUB 기본자세
 =======
->>>>>>> 51f8bb993ba9359ad88f82b7e3003c77f4bba7c9
+    >>>>>>> 51f8bb993ba9359ad88f82b7e3003c77f4bba7c9
     GOSUB Leg_motor_mode2
     SPEED 10
     MOVE G6A,100,  85, 137,  91, 100, 100
@@ -1335,22 +1335,22 @@ RX_EXIT:
     MOVE G6C,10 ,  15,  55, 100, 135, 100' 153
     WAIT
 
-<<<<<<< HEAD
+    <<<<<<< HEAD
     SPEED 8
     GOSUB 기본자세
 =======
->>>>>>> 51f8bb993ba9359ad88f82b7e3003c77f4bba7c9
+    >>>>>>> 51f8bb993ba9359ad88f82b7e3003c77f4bba7c9
     GOSUB Leg_motor_mode1
     GOTO RX_EXIT
 
 
 
-<<<<<<< HEAD
+    <<<<<<< HEAD
     GOSUB GYRO_OFF
 =======
 오른쪽옆으로10:
 
->>>>>>> 51f8bb993ba9359ad88f82b7e3003c77f4bba7c9
+    >>>>>>> 51f8bb993ba9359ad88f82b7e3003c77f4bba7c9
     GOSUB 기본자세
     SPEED 12
     MOVE G6D, 93,  90, 120, 103, 99, 100
@@ -1362,7 +1362,7 @@ RX_EXIT:
     MOVE G6A,90,  80, 140,  95, 107, 100
     WAIT
 
-<<<<<<< HEAD
+    <<<<<<< HEAD
     SPEED 10
     GOSUB 기본자세
     GOTO RX_EXIT
@@ -1371,7 +1371,7 @@ RX_EXIT:
     MOVE G6D,98,  76, 145,  93, 100, 100
     MOVE G6A,98,  76, 145,  93, 100, 100
     WAIT
->>>>>>> 51f8bb993ba9359ad88f82b7e3003c77f4bba7c9
+    >>>>>>> 51f8bb993ba9359ad88f82b7e3003c77f4bba7c9
 
     SPEED 8
 
@@ -2049,7 +2049,7 @@ RX_EXIT:
 
 
     GOTO RX_EXIT
-<<<<<<< HEAD
+    <<<<<<< HEAD
 =======
 앞으로덤블링3:
 
@@ -2127,7 +2127,7 @@ RX_EXIT:
     MOVE G6B,190,  40,  60
     MOVE G6C,190,  40,  60
     WAIT
->>>>>>> 51f8bb993ba9359ad88f82b7e3003c77f4bba7c9
+    >>>>>>> 51f8bb993ba9359ad88f82b7e3003c77f4bba7c9
 
 
 외각선자세:
@@ -2412,7 +2412,7 @@ RX_EXIT:
     MOVE G6C,100,40
     WAIT
 
-<<<<<<< HEAD
+    <<<<<<< HEAD
     'GOSUB Leg_motor_mode2	
     SPEED 8
     MOVE G6A,111, 68, 128, 150, 94
@@ -2435,7 +2435,7 @@ RX_EXIT:
     GOSUB Leg_motor_mode2
     SPEED 6
     MOVE G6A,111, 75, 128, 117, 94
->>>>>>> 51f8bb993ba9359ad88f82b7e3003c77f4bba7c9
+    >>>>>>> 51f8bb993ba9359ad88f82b7e3003c77f4bba7c9
     MOVE G6D,80,  85, 90,  150,114
     WAIT
 
@@ -2757,32 +2757,32 @@ RX_EXIT:
         WAIT
 
         '전진종종걸음_3:
-<<<<<<< HEAD
+        <<<<<<< HEAD
         MOVE G6A,103,  80, 130, 106, 101
         MOVE G6D, 95,  79, 144,  92, 99
 =======
         MOVE G6A,103,  80, 130, 102, 99
         MOVE G6D, 99,  79, 144,  88, 102
->>>>>>> 51f8bb993ba9359ad88f82b7e3003c77f4bba7c9
+        >>>>>>> 51f8bb993ba9359ad88f82b7e3003c77f4bba7c9
         WAIT
 
         '*********************************
 
         '전진종종걸음_4:
-<<<<<<< HEAD
+        <<<<<<< HEAD
         MOVE G6D,95,  97, 127, 104, 102
         MOVE G6A,106, 79, 146, 94,  100
 =======
         MOVE G6D,95,  95, 127, 100, 102
         MOVE G6A,106, 79, 146, 90,  98
->>>>>>> 51f8bb993ba9359ad88f82b7e3003c77f4bba7c9
+        >>>>>>> 51f8bb993ba9359ad88f82b7e3003c77f4bba7c9
         MOVE G6C, 80
         MOVE G6B,120
         WAIT
 
 
         '전진종종걸음_5:
-<<<<<<< HEAD
+        <<<<<<< HEAD
         MOVE G6D,97,   62, 148, 105, 100
         MOVE G6A,100,  74, 146,  89,  102
         WAIT
@@ -2798,7 +2798,7 @@ RX_EXIT:
         '전진종종걸음_6:
         MOVE G6D, 99,  72, 142, 103, 104
         MOVE G6A, 102,  75, 146,  94, 97
->>>>>>> 51f8bb993ba9359ad88f82b7e3003c77f4bba7c9
+        >>>>>>> 51f8bb993ba9359ad88f82b7e3003c77f4bba7c9
         WAIT
 
     NEXT I
@@ -3022,11 +3022,11 @@ MAIN:
 
 
 
-<<<<<<< HEAD
+    <<<<<<< HEAD
     ON A GOTO MAIN,KEY1,KEY2,KEY3,KEY4,KEY5,KEY6,KEY7,KEY8,KEY9,KEY10,KEY11,KEY12,KEY13,KEY14,KEY15,KEY16,KEY17,KEY18,KEY19,KEY20,KEY21,KEY22,KEY23,KEY24,KEY25,KEY26,KEY27,KEY28,KEY29,KEY30,KEY31,KEY32,KEY33,KEY34,KEY35,KEY36,KEY37,KEY38,KEY39,KEY40,KEY41,KEY42,KEY43,KEY44,KEY45,KEY46,KEY47,KEY48, KEY49, KEY50
 =======
     ON A GOTO MAIN,KEY1,KEY2,KEY3,KEY4,KEY5,KEY6,KEY7,KEY8,KEY9,KEY10,KEY11,KEY12,KEY13,KEY14,KEY15,KEY16,KEY17,KEY18,KEY19,KEY20,KEY21,KEY22,KEY23,KEY24,KEY25,KEY26,KEY27,KEY28,KEY29,KEY30,KEY31,KEY32,KEY33,KEY34,KEY35,KEY36,KEY37,KEY38,KEY39,KEY40,KEY41,KEY42,KEY43,KEY44,KEY45,KEY46,KEY47,KEY48, KEY49, KEY50, KEY51, KEY52, KEY53, KEY54
->>>>>>> 51f8bb993ba9359ad88f82b7e3003c77f4bba7c9
+    >>>>>>> 51f8bb993ba9359ad88f82b7e3003c77f4bba7c9
     GOTO MAIN
     '*******************************************
     '		MAIN 라벨로 가기
@@ -3275,7 +3275,7 @@ KEY49:
 KEY50:
     GOTO 내려가기
     GOTO MAIN
-<<<<<<< HEAD
+    <<<<<<< HEAD
 
 =======
 KEY51:
@@ -3290,7 +3290,7 @@ KEY53:
 KEY54:
     GOTO 전진보행4걸음
     GOTO MAIN
->>>>>>> 51f8bb993ba9359ad88f82b7e3003c77f4bba7c9
+    >>>>>>> 51f8bb993ba9359ad88f82b7e3003c77f4bba7c9
 
     '*******************************************************
 
