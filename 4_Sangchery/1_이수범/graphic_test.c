@@ -197,6 +197,7 @@ int main(void)
 	int cnt7 = 0, motion7 = 0;
 	//st8
 	int cnt8 = 0, cnt8_1 = 0, cnt8_2 = 0, motion8 = 0, cnt8_3 = 0, cnt8_4 = 0;
+	int st8_left = 0, st8_right = 0;
 
 
 	SURFACE* bmpsurf = 0;
@@ -1730,7 +1731,7 @@ int main(void)
 			{
 				//printf("stage 8 start!\n");
 				cnt8 = 0;
-				cnt8_1 = 0, cnt8_3 = 0, cnt8_4 = 0;
+				cnt8_1 = 0, cnt8_3 = 0, cnt8_4 = 0, st8_left = 0, st8_right = 0;
 
 				for (i = 27; i < 57; i++) // 적절한 거리를 찾아서 i값의 범위 지정하기!
 				{
@@ -1746,16 +1747,56 @@ int main(void)
 							cnt8_4++;
 							*(lcd + 180 * i + j) = 0x00ff;
 						}
-						else if (*(xxx + i * 180 + j) == 2)
+						else if (*(xxx + i * 180 + j) == 2 || *(xxx + i * 180 + j) == 6)
 						{
 							cnt8++;
 							*(lcd + 180 * i + j) = 0x7000;
 						}
 					}
-					for (j = 90; j < 150; j++)
-						if (*(xxx + i * 180 + j) == 2)
+					for (j = 90; j < 120; j++)
+						if (*(xxx + i * 180 + j) == 2 || *(xxx + i * 180 + j) == 6)
 							cnt8_3++;
 				}
+				/*for (i = 60; i < 110; i++) // 노란색에서 균형잡기
+					for (j = 0; j < 180; j++)
+						if (*(xxx + 180 * i + j) == 4)
+						{
+							*(lcd + 180 * i + j) = 0xf000;
+							if (j < 90)
+								st8_left++;
+							else
+								st8_right++;
+						}
+
+				draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
+				draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
+				flip();
+				printf("left : %d right : %d\n", st4_left, st4_right);
+
+				if (st8_left > st8_right + 600)
+				{
+					Send_Command(0x1a, 0xe5);
+					Send_Command(0x1a, 0xe5);
+					Send_Command(0x1a, 0xe5);
+					DelayLoop(30000000);
+					motion8 = 99;
+					goto GOUP;
+				}
+				else if (st8_right > st8_left + 600)
+				{	
+					Send_Command(0x18, 0xe7);
+					Send_Command(0x18, 0xe7);
+					Send_Command(0x18, 0xe7);
+					DelayLoop(30000000);
+					motion8 = 99;
+					goto GOUP;
+				}
+				else
+				{
+					motion8 = 0;
+					goto GOUP;
+				}
+				*/
 
 				draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
 				draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
@@ -1806,7 +1847,7 @@ int main(void)
 					printf("go left and go straight!!!!!!!!!!!!!!\n");
 					printf("cnt8_3 = %d\n", cnt8_3);
 
-					if (cnt8_3 >= 350)
+					if (cnt8_3 >= 200)
 					{
 						Send_Command(0x24, 0xdb); //왼쪽으로 이동 후 
 						Send_Command(0x24, 0xdb);
@@ -1825,7 +1866,7 @@ int main(void)
 						Send_Command(0x03, 0xfc); //또 직진
 						Send_Command(0x03, 0xfc);
 						Send_Command(0x03, 0xfc);
-						DelayLoop(400000000); // 다음 for문 때문에 delay 길게 줌
+						DelayLoop(300000000); // 다음 for문 때문에 delay 길게 줌
 
 						motion8 = 3; //함정 통과 후 오른쪽으로 이동 & 직진
 					}
@@ -1837,12 +1878,12 @@ int main(void)
 					printf("GO RIGHT!!!!!!!!!!!\n");
 					printf("cnt8_2 : %d\n",cnt8_2);
 
-					for (i = 0 ; i < cnt8_2 + 2; i++)
+					for (i = 0 ; i < cnt8_2 - 2; i++)
 					{
-						Send_Command(0x22, 0xdd); //함정 통과 후 오른쪽으로 이동
-						Send_Command(0x22, 0xdd);
-						Send_Command(0x22, 0xdd);
-						DelayLoop(40000000);
+						Send_Command(0x23, 0xdc); //함정 통과 후 오른쪽으로 이동
+						Send_Command(0x23, 0xdc);
+						Send_Command(0x23, 0xdc);
+						DelayLoop(48000000);
 					}
 
 					motion8 = 4; //노란색이 아닌색이 어느정도 이상이면 내려가자
@@ -1874,12 +1915,7 @@ int main(void)
 				}
 			}
 		}
-
 	}
-
-
-
-	//TestItemSelectRobot();
 
 	free(fpga_videodata);
 	free(lcd);

@@ -186,7 +186,7 @@ int main(void)
 	int ret,delta;
 	char input;
 	int b_loop = 0;
-	int stage = 1;
+	int stage = 8;
 
 	//외곽선
 	int first_out = 0;
@@ -266,7 +266,6 @@ int main(void)
 	}
 	if (input == 'z') // 코드 추가
 		direct_camera_display_on();
-
 	while (b_loop)
 	{
 		direct_camera_display_off();
@@ -876,7 +875,7 @@ int main(void)
 							*(lcd + i * 180 + j) = 0x0000;
 							if ((*(red + i * 180 + j) < *(blue + i * 180 + j)) && (*(green + i * 180 + j) < *(blue + i * 180 + j)) && (*(blue + i * 180 + j)>10)
 								&& ((int)*(hue_joon + i * 180 + j) > 180) && ((int)*(hue_joon + i * 180 + j) < 250)
-								&& *(satur_tmp + i * 180 + j) > 30 && ((int)*(v_compare + i * 180 + j) < 15))//파란색 발견하면 cnt1증가 가로축j의 합을 sum2에 저장
+								&& *(satur_tmp + i * 180 + j) > 30 && ((int)*(v_compare + i * 180 + j) < 12))//파란색 발견하면 cnt1증가 가로축j의 합을 sum2에 저장
 							{
 								cnt1++;
 								blue_center += j;
@@ -891,7 +890,7 @@ int main(void)
 							*(lcd + i * 180 + j) = 0x0000;
 							if ((*(red + i * 180 + j) < *(blue + i * 180 + j)) && (*(green + i * 180 + j) < *(blue + i * 180 + j)) && (*(blue + i * 180 + j)>10)
 								&& ((int)*(hue_joon + i * 180 + j) > 180) && ((int)*(hue_joon + i * 180 + j) < 250)
-								&& *(satur_tmp + i * 180 + j) > 30 && ((int)*(v_compare + i * 180 + j) < 15))//파란색 발견하면 cnt1증가 가로축j의 합을 sum2에 저장
+								&& *(satur_tmp + i * 180 + j) > 30 && ((int)*(v_compare + i * 180 + j) < 12))//파란색 발견하면 cnt1증가 가로축j의 합을 sum2에 저장
 							{
 								blue_left++;
 								blue_center += j;
@@ -903,7 +902,7 @@ int main(void)
 							*(lcd + i * 180 + j) = 0x0000;
 							if ((*(red + i * 180 + j) < *(blue + i * 180 + j)) && (*(green + i * 180 + j) < *(blue + i * 180 + j)) && (*(blue + i * 180 + j)>10)
 								&& ((int)*(hue_joon + i * 180 + j) > 180) && ((int)*(hue_joon + i * 180 + j) < 250)
-								&& *(satur_tmp + i * 180 + j) > 30 && ((int)*(v_compare + i * 180 + j) < 15))//파란색 발견하면 cnt1증가 가로축j의 합을 sum2에 저장
+								&& *(satur_tmp + i * 180 + j) > 30 && ((int)*(v_compare + i * 180 + j) < 12))//파란색 발견하면 cnt1증가 가로축j의 합을 sum2에 저장
 							{
 								blue_right++;
 								blue_center += j;
@@ -919,52 +918,54 @@ int main(void)
 					draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
 					flip();
 
-					printf("cnt1 : %d %d\n", cnt1, blue_right+blue_left);
+				//	printf("left : %d, center : %d, right : %d, left+right : %d\n", blue_left, cnt1, blue_right, blue_right+blue_left);
+				//	goto GOUP;//////////////////////////////////////////////<-------------------지우기
 					if (no_find == 10)
-					{
+					{//못찾았을 때 다음 스테이지로 이동
 						stage++;
 						no_find = 0;
+						motion0 = 0;
 						goto GOUP;
 					}
 					if (blue_right > 100 && blue_left > 100)
-					{
+					{//양쪽기둥이 다 조금씩 보였을 땐 가운데로 인식
 						motion0 = 2;
 						goto GOUP;
 					}
-				if (blue_right > 100){
-					Send_Command(0x1b, 0xe4);
-					Send_Command(0x1b, 0xe4);
-					Send_Command(0x1b, 0xe4);
-					DelayLoop(25000000);
+					if (blue_right > 100){
+						Send_Command(0x1b, 0xe4);
+						Send_Command(0x1b, 0xe4);
+						Send_Command(0x1b, 0xe4);
+						DelayLoop(25000000);
 
-					Send_Command(0x1b, 0xe4);
-					Send_Command(0x1b, 0xe4);
-					Send_Command(0x1b, 0xe4);
-					DelayLoop(25000000);
+						Send_Command(0x1b, 0xe4);
+						Send_Command(0x1b, 0xe4);
+						Send_Command(0x1b, 0xe4);
+						DelayLoop(25000000);
 
-					motion0 = 2;
-					goto GOUP;
-				}
-				else if (blue_left > 100){
-					Send_Command(0x19, 0xe6);
-					Send_Command(0x19, 0xe6);
-					Send_Command(0x19, 0xe6);
-					DelayLoop(25000000);
+						motion0 = 2;
+						goto GOUP;
+					}
+					else if (blue_left > 100){
+						Send_Command(0x19, 0xe6);
+						Send_Command(0x19, 0xe6);
+						Send_Command(0x19, 0xe6);
+						DelayLoop(25000000);
 
-					Send_Command(0x19, 0xe6);
-					Send_Command(0x19, 0xe6);
-					Send_Command(0x19, 0xe6);
-					DelayLoop(25000000);
+						Send_Command(0x19, 0xe6);
+						Send_Command(0x19, 0xe6);
+						Send_Command(0x19, 0xe6);
+						DelayLoop(25000000);
 
-					motion0 = 2;
-					goto GOUP;
-				}
-					else if (cnt1 > 800)//앞에 파란장애물 보일 때
+						motion0 = 2;
+						goto GOUP;
+					}
+					else if (cnt1 > 750)//앞에 파란장애물 보일 때
 					{
 						Send_Command(0x31, 0xce);
 						Send_Command(0x31, 0xce);
 						Send_Command(0x31, 0xce);
-						DelayLoop(20000000);//고개올리기
+						DelayLoop(30000000);//고개올리기
 						printf("down\n");
 						motion0 = 1;
 					}
@@ -973,7 +974,7 @@ int main(void)
 						Send_Command(0x0a, 0xf5);
 						Send_Command(0x0a, 0xf5);
 						Send_Command(0x0a, 0xf5);//종종
-						DelayLoop(40000000);
+						DelayLoop(42000000);
 					}
 
 					goto GOUP;
@@ -1050,6 +1051,7 @@ int main(void)
 					DelayLoop(120000000);
 					
 					stage++;
+					no_find = 0;
 					motion0 = 0;
 					goto GOUP;
 				}
@@ -1061,6 +1063,7 @@ int main(void)
 					DelayLoop(120000000);
 					
 					stage++;
+					no_find = 0;
 					motion0 = 0;
 					goto GOUP;
 				}
@@ -1923,27 +1926,22 @@ int main(void)
 				{
 					for (j = 30; j < 150; j++)
 					{
-						if (*(xxx + i * 180 + j) != 2)
-						{
-							cnt8_1++;
-							*(lcd + 180 * i + j) = 0x0000;
-						}
-						else if (*(xxx + i * 180 + j) == 1)
-						{
-							cnt8_4++;
-							*(lcd + 180 * i + j) = 0x00ff;
-						}
-						else if (*(xxx + i * 180 + j) == 2 || *(xxx + i * 180 + j) == 6)
+						if (*(xxx + i * 180 + j) == 2 || *(xxx + i * 180 + j) == 6)
 						{
 							cnt8++;
 							*(lcd + 180 * i + j) = 0x7000;
+							if (j < 87)//왼쪽
+								st8_left++;
+							else
+								st8_right++;
 						}
 					}
 					for (j = 90; j < 120; j++)
 						if (*(xxx + i * 180 + j) == 2 || *(xxx + i * 180 + j) == 6)
 							cnt8_3++;
 				}
-				
+				printf("black : %d, left : %d, right : %d\n", cnt8, st8_left, st8_right);
+				goto GOUP;
 				draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
 				draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
 				flip();
