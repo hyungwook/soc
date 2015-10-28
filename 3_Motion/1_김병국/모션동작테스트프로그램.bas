@@ -78,7 +78,7 @@ MAIN:
         ' GOTO 오른쪽옆으로20
         'GOTO 앞으로덤블링
         ' GOTO 계단오른발오르기2cm
-        GOTO 오른쪽옆으로70
+        GOTO 고개90도오른쪽옆으로10
         ' GOTO 전진달리기최종
         'GOTO 희영오르기
     ENDIF
@@ -104,18 +104,79 @@ MAIN:
 
 기본자세:
 
-    GOSUB GYRO_INIT
-    GOSUB GYRO_ON
-    GOSUB GYRO_ST
 
-    SPEED 15
-    MOVE G6A,100,  85, 137,  94, 100, 100
-    MOVE G6D,100,  87, 137,  94, 100, 100
-    MOVE G6B,10,  10,  51, 100, 100, 190
-    MOVE G6C,10 ,  15,  55, 100, 135, 100' 153
+     GOSUB GYRO_OFF
+    MOVE G6A,101,  83, 137,  94, 100, 100
+    MOVE G6D,101,  84, 137,  94, 100, 100
+    MOVE G6B,100,  28,  81, 100	, 100, 100
+    MOVE G6C,100 ,  32,  80, 100, 190, 100
     WAIT
+    RETURN
 
     RETURN
+    
+    
+    고개90도오른쪽옆으로10:
+
+    GOSUB 기본자세
+    SPEED 15
+    MOVE G6D, 93,  90, 120, 103, 99, 100
+    MOVE G6A,103,  76, 145,  91, 103, 100
+    WAIT
+
+    SPEED 15
+    MOVE G6D, 102,  77, 145, 93, 100, 100
+    MOVE G6A,90,  80, 140,  95, 102, 100
+    WAIT
+
+    SPEED 15
+    MOVE G6D,98,  76, 145,  93, 100, 100
+    MOVE G6A,98,  76, 145,  93, 100, 100
+    WAIT
+
+    SPEED 8
+
+    GOSUB 기본자세
+    
+	DELAY 3000
+	
+    GOTO RX_EXIT
+    
+    골프공오른쪽옆으로20:
+
+    GOSUB 골프공자세
+    SPEED 15
+    MOVE G6D, 93,  90, 120, 105, 100, 100
+    MOVE G6A,103,  76, 145,  93, 103, 100
+    WAIT
+
+    SPEED 15
+    MOVE G6D, 102,  77, 145, 93, 100, 100
+    MOVE G6A,90,  80, 140,  95, 106, 100
+    WAIT
+
+    SPEED 15
+    MOVE G6D,98,  76, 145,  93, 100, 100
+    MOVE G6A,98,  76, 145,  93, 100, 100
+    WAIT
+
+    SPEED 8
+
+    GOSUB 골프공자세
+    
+    DELAY 3000
+
+    GOTO RX_EXIT
+    
+ 골프공자세:
+    GOSUB GYRO_OFF
+	MOVE G6A,101,  83, 137,  94, 100, 100
+    MOVE G6D,101,  84, 137,  94, 100, 100
+    MOVE G6B,100,  28,  81, 100   , 100, 100
+    MOVE G6C,100 ,  32,  80, 100, 145, 100
+    WAIT
+    RETURN
+
 오른쪽옆으로70:
 
     GOSUB 기본자세
