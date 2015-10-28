@@ -998,7 +998,7 @@ RX_EXIT:
     GOTO RX_EXIT
 초록색전진보행50:
 
-    
+
     보행속도 = 10'5
     좌우속도 = 5'8'3
     좌우속도2 = 4'5'2
@@ -1060,7 +1060,7 @@ RX_EXIT:
     MOVE G6C,90
     WAIT
 
-	MOVE G6A,104,  83, 136,  93, 102
+    MOVE G6A,104,  83, 136,  93, 102
     MOVE G6D,100, 80, 143, 90, 103
     MOVE G6B,110
     MOVE G6C,90
@@ -1072,7 +1072,7 @@ RX_EXIT:
     MOVE G6C,100 ,  32,  80, 100, 190, 100
     WAIT
 
-	GOTO RX_EXIT
+    GOTO RX_EXIT
 
 
 고개90도종종걸음3걸음:
@@ -1547,14 +1547,14 @@ RX_EXIT:
 골프공오른쪽옆으로20:
 
     GOSUB 골프공자세
-    SPEED 12
-    MOVE G6D, 93,  90, 120, 105, 106, 100
-    MOVE G6A,103,  76, 145,  93, 104, 100
+    SPEED 15
+    MOVE G6D, 93,  90, 120, 105, 100, 100
+    MOVE G6A,103,  76, 145,  93, 103, 100
     WAIT
 
-    SPEED 12
+    SPEED 15
     MOVE G6D, 102,  77, 145, 93, 100, 100
-    MOVE G6A,90,  80, 140,  95, 107, 100
+    MOVE G6A,90,  80, 140,  95, 106, 100
     WAIT
 
     SPEED 15
@@ -1621,14 +1621,14 @@ RX_EXIT:
 골프공왼쪽옆으로20:
 
     GOSUB 골프공자세
-    SPEED 12
-    MOVE G6A, 93,  90, 120, 105, 106, 100
-    MOVE G6D,103,  76, 145,  93, 104, 100
+    SPEED 15
+    MOVE G6A, 93,  90, 120, 105, 100, 100
+    MOVE G6D,103,  76, 145,  93, 103, 100
     WAIT
 
-    SPEED 12
+    SPEED 15
     MOVE G6A, 102,  77, 145, 93, 100, 100
-    MOVE G6D,90,  80, 140,  95, 107, 100
+    MOVE G6D,90,  80, 140,  95, 106, 100
     WAIT
 
     SPEED 15
@@ -1637,8 +1637,6 @@ RX_EXIT:
     WAIT
 
     SPEED 8
-
-    GOSUB 골프공자세
 
     GOTO RX_EXIT
 
@@ -2998,14 +2996,14 @@ RX_EXIT:
 고개90도오른쪽옆으로10:
 
     GOSUB 기본자세0
-    SPEED 12
+     SPEED 15
     MOVE G6D, 93,  90, 120, 103, 99, 100
-    MOVE G6A,103,  76, 145,  91, 102, 100
+    MOVE G6A,103,  76, 145,  91, 103, 100
     WAIT
 
-    SPEED 12
+    SPEED 15
     MOVE G6D, 102,  77, 145, 93, 100, 100
-    MOVE G6A,90,  80, 140,  95, 107, 100
+    MOVE G6A,90,  80, 140,  95, 102, 100
     WAIT
 
     SPEED 15
@@ -3024,14 +3022,14 @@ RX_EXIT:
 고개90도왼쪽옆으로10:
 
     GOSUB 기본자세0
-    SPEED 12
+    SPEED 15
     MOVE G6A, 93,  90, 120, 103, 99, 100
-    MOVE G6D,103,  76, 145,  91, 102, 100
+    MOVE G6D,103,  76, 145,  91, 103, 100
     WAIT
 
-    SPEED 12
+    SPEED 15
     MOVE G6A, 102,  77, 145, 93, 100, 100
-    MOVE G6D,90,  80, 140,  95, 107, 100
+    MOVE G6D,90,  80, 140,  95, 102, 100
     WAIT
 
     SPEED 15
