@@ -119,7 +119,10 @@ void uart1_buffer_write(unsigned char *buf, int size)
 	int ret;
 
 	while (uart_tx_buf_full(UART1) == 1);
+	
+	printf("ret : %d\n", ret);
 	ret = uart_write(UART1, buf, size);
+	printf("ret : %d\n", ret);
 	if (ret < 0) {
 		printf("Maybe UART Buffer is Full!\n");
 	}
@@ -129,6 +132,7 @@ void uart1_buffer_read(unsigned char *buf, int size)
 {
 	int rx_len = 0;
 	int rx_cnt = 0;
+
 
 	while (1) {
 		rx_cnt += rx_len;
@@ -251,14 +255,15 @@ int main(void)
 	{
 		direct_camera_display_off();
 		int motion_count = 0;
+		DelayLoop(80000000);
 		while (1)//모션테스트
 		{
 			motion_count++;
 			printf("%d\n", motion_count);
-			Send_Command(0x03, 0xfc);
-			Send_Command(0x03, 0xfc);
-			Send_Command(0x03, 0xfc);
-			DelayLoop(100000000);
+			Send_Command(0x31, 0xce);
+			Send_Command(0x31, 0xce);
+			Send_Command(0x31, 0xce);
+			DelayLoop(50000000);
 		}
 
 		while (1)
