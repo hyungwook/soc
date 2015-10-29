@@ -81,7 +81,8 @@ MAIN:
         'GOTO 외각선오른쪽옆으로70
         'GOTO 앞으로덤블링2
         'GOTO 희영오르기
-        GOTO 앞으로덤블링3
+        'GOTO 계단왼발내리기2cm
+        GOTO 전진종종비비기
     ENDIF
 
 
@@ -89,26 +90,49 @@ MAIN:
     '************************************************
     '******************************************
 
-기본자세2:
-    'GOSUB GYRO_INIT
-    'GOSUB GYRO_ON
-    'GOSUB GYRO_ST
+기본자세0:
+    '자이로 꺼진 고개 90도(TH)
+    GOSUB GYRO_OFF
     MOVE G6A,101,  83, 137,  94, 100, 100
     MOVE G6D,101,  84, 137,  94, 100, 100
-    MOVE G6B,100,  28,  81, 100   , 100, 100
-    MOVE G6C,100 ,  32,  80, 100, 135, 100
+    MOVE G6B,100,  28,  81, 100	, 100, 100
+    MOVE G6C,100 ,  32,  80, 100, 190, 100
     WAIT
     RETURN
 
-    RETURN
-    '******************************************************
 
 기본자세:
     'GOSUB GYRO_INIT
     'GOSUB GYRO_ON
     'GOSUB GYRO_ST
+    GOSUB GYRO_OFF
+    MOVE G6A,101,  83, 137,  94, 100, 100
+    MOVE G6D,101,  84, 137,  94, 100, 100
+    MOVE G6B,100,  28,  81, 100	, 100, 100
+    MOVE G6C,100 ,  32,  80, 100, 135, 100
+    WAIT
+    RETURN
 
     'GOSUB GYRO_OFF
+
+
+기본자세2:
+    GOSUB GYRO_INIT
+    GOSUB GYRO_ON
+    GOSUB GYRO_ST
+
+    MOVE G6A,101,  83, 137,  94, 100, 100
+    MOVE G6D,101,  84, 137,  94, 100, 100
+    MOVE G6B,100,  28,  81, 100	, 100, 100
+    MOVE G6C,100 ,  32,  80, 100, 190, 100
+    WAIT
+    RETURN
+
+기본자세3:
+    GOSUB GYRO_INIT
+    GOSUB GYRO_ON
+    GOSUB GYRO_ST
+
     MOVE G6A,101,  83, 137,  94, 100, 100
     MOVE G6D,101,  84, 137,  94, 100, 100
     MOVE G6B,100,  28,  81, 100	, 100, 100
@@ -225,110 +249,6 @@ MAIN:
 
     DELAY 3000
     GOTO rx_exit
-전진종종비비기:
-    '    넘어진확인 = 0
-
-    GOSUB 기본자세
-    GOSUB GYRO_INIT
-    GOSUB GYRO_ON
-    GOSUB GYRO_ST
-    SPEED 10
-    HIGHSPEED SETON
-    GOSUB All_motor_mode3
-
-    '    IF 보행순서 = 0 THEN
-    '        보행순서 = 1
-    MOVE G6A,95,  76, 145,  93, 101
-    MOVE G6D,101,  77, 145,  93, 98
-    MOVE G6B,100,  35,,,,100
-    MOVE G6C,100,  35,, 100, 135
-    WAIT
-
-    '        GOTO 전진종종걸음_1
-    '    ELSE
-    '        보행순서 = 0
-    '        MOVE G6D,95,  76, 145,  93, 101
-    '        MOVE G6A,101,  77, 145,  93, 98
-    '        MOVE G6B,100,  35
-    '        MOVE G6C,100,  35
-    '        WAIT
-
-    '       GOTO 전진종종걸음_4
-    '    ENDIF
-
-
-    '**********************
-    FOR I = 0 TO 3
-전진종종비비기_1:
-        MOVE G6A,95,  95, 120, 100, 104
-        MOVE G6D,104,  77, 146,  91,  102
-        MOVE G6B, 80,,,,,100
-        MOVE G6C,120,,,100
-        WAIT
-
-
-전진종종비비기_2:
-        MOVE G6A,95,  85, 130, 103, 104
-        MOVE G6D,104,  79, 146,  89,  100
-        WAIT
-
-전진종종비비기_3:
-        MOVE G6A,103,   85, 130, 103,  100
-        MOVE G6D, 95,  79, 146,  89, 102
-        WAIT
-
-        '    GOSUB 앞뒤기울기측정
-        '    IF 넘어진확인 = 1 THEN
-        '        넘어진확인 = 0
-        '        GOTO MAIN
-        '    ENDIF
-        '
-        '    ERX 4800,A, 전진종종걸음_4
-        '    IF A <> A_old THEN  GOTO 전진종종걸음_멈춤
-
-        '*********************************
-
-전진종종비비기_4:
-        MOVE G6D,95,  95, 120, 100, 104
-        MOVE G6A,104,  77, 146,  91,  102
-        MOVE G6C, 80,,,100
-        MOVE G6B,120,,,,,100
-        WAIT
-
-
-전진종종비비기_5:
-        MOVE G6D,95,  85, 130, 103, 104
-        MOVE G6A,104,  79, 146,  89,  100
-        WAIT
-
-전진종종비비기_6:
-        MOVE G6D,103,   85, 130, 103,  100
-        MOVE G6A, 95,  79, 146,  89, 102
-        WAIT
-    NEXT I
-    '    GOSUB 앞뒤기울기측정
-    '    IF 넘어진확인 = 1 THEN
-    '        넘어진확인 = 0
-    '        GOTO MAIN
-    '    ENDIF
-    '
-    '    ERX 4800,A, 전진종종걸음_1
-    '    IF A <> A_old THEN  GOTO 전진종종걸음_멈춤
-
-전진종종비비기_멈춤:
-    HIGHSPEED SETOFF
-    SPEED 15
-    GOSUB 안정화자세
-    SPEED 10
-    GOSUB 기본자세
-
-
-
-    GOSUB Leg_motor_mode1
-    GOSUB GYRO_OFF'보행순서=0
-    GOTO RX_EXIT
-
-
 
 
 앞으로덤블링:
@@ -618,7 +538,6 @@ MAIN:
 계단왼발내리기2cm: ' GREEN USE
 
 
-
     GOSUB 기본자세
     GOSUB All_motor_mode3
 
@@ -631,7 +550,7 @@ MAIN:
 
     SPEED 6
     MOVE G6A, 90, 100, 115, 105, 114
-    MOVE G6D,113,  76, 145,  93,  94
+    MOVE G6D,115,  76, 145,  93,  93
     WAIT
 
     GOSUB Leg_motor_mode2
@@ -711,8 +630,115 @@ MAIN:
     GOSUB 기본자세
     GOSUB All_motor_Reset
 
+    'GOSUB 앞뒤기울기측정
+    DELAY 3000
 
     GOTO RX_EXIT
+
+전진종종비비기:
+    '    넘어진확인 = 0
+
+    GOSUB 기본자세
+    GOSUB GYRO_INIT
+    GOSUB GYRO_ON
+    GOSUB GYRO_ST
+    SPEED 15
+    HIGHSPEED SETON
+    GOSUB All_motor_mode3
+
+    '    IF 보행순서 = 0 THEN
+    '        보행순서 = 1
+    MOVE G6A,95,  76, 145,  93, 101
+    MOVE G6D,101,  77, 145,  93, 98
+    MOVE G6B,100,  35,,,,100
+    MOVE G6C,100,  35,, 100, 135
+    WAIT
+
+    '        GOTO 전진종종걸음_1
+    '    ELSE
+    '        보행순서 = 0
+    '        MOVE G6D,95,  76, 145,  93, 101
+    '        MOVE G6A,101,  77, 145,  93, 98
+    '        MOVE G6B,100,  35
+    '        MOVE G6C,100,  35
+    '        WAIT
+
+    '       GOTO 전진종종걸음_4
+    '    ENDIF
+
+
+    '**********************
+    FOR I = 0 TO 2
+전진종종비비기_1:
+        MOVE G6A,95,  95, 120, 100, 104
+        MOVE G6D,104,  77, 146,  91,  102
+        MOVE G6B, 80,,,,,100
+        MOVE G6C,120,,,100
+        WAIT
+
+
+전진종종비비기_2:
+        MOVE G6A,95,  85, 130, 103, 104
+        MOVE G6D,104,  79, 146,  89,  100
+        WAIT
+
+전진종종비비기_3:
+        MOVE G6A,103,   85, 130, 103,  100
+        MOVE G6D, 95,  79, 146,  89, 102
+        WAIT
+
+        '    GOSUB 앞뒤기울기측정
+        '    IF 넘어진확인 = 1 THEN
+        '        넘어진확인 = 0
+        '        GOTO MAIN
+        '    ENDIF
+        '
+        '    ERX 4800,A, 전진종종걸음_4
+        '    IF A <> A_old THEN  GOTO 전진종종걸음_멈춤
+
+        '*********************************
+
+전진종종비비기_4:
+        MOVE G6D,95,  95, 120, 100, 104
+        MOVE G6A,104,  77, 146,  91,  102
+        MOVE G6C, 80,,,100
+        MOVE G6B,120,,,,,100
+        WAIT
+
+
+전진종종비비기_5:
+        MOVE G6D,95,  85, 130, 103, 104
+        MOVE G6A,104,  79, 146,  89,  100
+        WAIT
+
+전진종종비비기_6:
+        MOVE G6D,103,   85, 130, 103,  100
+        MOVE G6A, 95,  79, 146,  89, 102
+        WAIT
+    NEXT I
+    '    GOSUB 앞뒤기울기측정
+    '    IF 넘어진확인 = 1 THEN
+    '        넘어진확인 = 0
+    '        GOTO MAIN
+    '    ENDIF
+    '
+    '    ERX 4800,A, 전진종종걸음_1
+    '    IF A <> A_old THEN  GOTO 전진종종걸음_멈춤
+
+전진종종비비기_멈춤:
+    HIGHSPEED SETOFF
+    SPEED 15
+    GOSUB 안정화자세
+    SPEED 10
+    GOSUB 기본자세
+
+
+
+    GOSUB Leg_motor_mode1
+    GOSUB GYRO_OFF'보행순서=0
+    DELAY 3000
+    GOTO RX_EXIT
+
 
 
 old오른쪽옆으로20:
@@ -1623,9 +1649,14 @@ GYRO_MIN:
     GYROSENSE G6A,100,50,50,50,50
     GYROSENSE G6D,100,50,50,50,50
     RETURN
-GYRO_ST:
+GYRO_STT:
     GYROSENSE G6A,5,,,5,
     GYROSENSE G6D,5,,,5,
+    RETURN
+
+GYRO_ST:
+    GYROSENSE G6A,120,50,40,30,100
+    GYROSENSE G6D,120,50,40,30,100
     RETURN
 
 
