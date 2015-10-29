@@ -97,8 +97,9 @@ MAIN:
         'GOTO 집고달리기
         'GOTO 전진종종걸음
         'GOTO 외각선오른쪽턴20
-
-        GOTO 앞으로덤블링
+        GOTO 전진종종비비기
+        'GOTO 전진앉아보행
+        'GOTO 앞으로덤블링
         'GOTO 허들넘기
         'GOTO 전진종종4걸
 
@@ -127,6 +128,66 @@ MAIN:
     '    GOSUB 기본자세
     '    ONE = 0
     '    GOTO MAIN
+
+
+
+
+전진앉아보행:
+    GOSUB All_motor_mode3
+    SPEED 4
+
+전진앉아보행_1:
+     FOR I = 0 TO 5
+        MOVE G6A,114, 143,  28, 142,  96, 100
+        MOVE G6D, 87, 135,  28, 155, 110, 100
+        WAIT
+
+
+        MOVE G6D,98, 126,  28, 160, 102, 100
+        MOVE G6A,98, 160,  28, 125, 102, 100
+        WAIT
+
+        '    ERX 4800, A, 전진앉아보행_2
+        '    SPEED 6
+        '    IF  물건집은상태 = 0 THEN
+        '        GOSUB 앉은자세
+        '    ELSE
+        '        MOVE G6A,100, 140,  28, 142, 100, 100
+        '        MOVE G6D,100, 140,  28, 142, 100, 100
+        '        WAIT
+        '        자세 = 1
+        '    ENDIF
+        '    GOSUB All_motor_Reset
+        '    GOTO RX_EXIT
+
+전진앉아보행_2:
+        MOVE G6D,113, 143,  28, 142,  96, 100
+        MOVE G6A, 87, 135,  28, 155, 110, 100
+        WAIT
+
+        MOVE G6A,98, 126,  28, 160, 102, 100
+        MOVE G6D,98, 160,  28, 125, 102, 100
+        WAIT
+
+        '    ERX 4800, A, 전진앉아보행_1
+        '    SPEED 6
+        '    IF  물건집은상태 = 0 THEN
+        '        GOSUB 앉은자세
+        '    ELSE
+        '        MOVE G6A,100, 140,  28, 142, 100, 100
+        '        MOVE G6D,100, 140,  28, 142, 100, 100
+        '        WAIT
+        '        자세 = 1
+        '    ENDIF
+    NEXT I
+    GOSUB 앉은자세
+
+    GOSUB All_motor_Reset
+
+    GOTO RX_EXIT
+
+
+
 계단왼발내리기2cm: ' GREEN USE
 
     GOSUB 기본자세
@@ -768,6 +829,8 @@ MAIN:
 
 전진종종비비기:
     '    넘어진확인 = 0
+
+    GOSUB 기본자세
     GOSUB GYRO_INIT
     GOSUB GYRO_ON
     GOSUB GYRO_ST
@@ -865,7 +928,7 @@ MAIN:
 
     GOSUB Leg_motor_mode1
     GOSUB GYRO_OFF'보행순서=0
-    GOTO MAIN
+      GOTO MAIN
 
 
 
