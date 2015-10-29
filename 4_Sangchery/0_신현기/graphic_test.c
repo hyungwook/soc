@@ -186,7 +186,7 @@ int main(void)
 	int ret, delta;
 	char input;
 	int b_loop = 0;
-	int stage = 4;
+	int stage = 5;
 	//노란함정 st=11로수정함
 
 	//외곽선
@@ -218,8 +218,8 @@ int main(void)
 	int cnt_st3 = 0;
 	int st3_right = 0, st3_left = 0;
 	//초록계단
-	int cnt4 = 0, motion4 = 0, st4_av_i = 0, st4_sum_i = 0, cnt4_b_w = 0, cnt4_green = 0;
-	int st4_left = 0, st4_right = 0, green4_l = 0, green4_r = 0, cnt_st4 = 0;
+	int cnt4 = 0, motion4 = 4, st4_av_i = 0, st4_sum_i = 0, cnt4_b_w = 0, cnt4_green = 0;
+	int st4_left = 0, st4_right = 0, green4_l = 0, green4_r = 0, cnt_st4 = 0, cnt4_1 = 0, cnt4_2 = 0;
 	float first_x = 0, first_y = 0, second_x = 0, second_y = 0, outline_x = 0, outline_y = 0;
 	//골프공
 	int motion5 = 0;
@@ -1300,6 +1300,12 @@ int main(void)
 				}
 				else if (motion4 == 4)
 				{//마지막 계단 내려가기 전에 평행맞추기
+					firsty = 0;
+					firstx = 0;
+					secondy = 0;
+					secondx = 0;
+					cnt4_1 = 0;
+					cnt4_2 = 0;
 					for (i = 0; i < 60; i++)
 						for (j = 40; j < 140; j++)
 							if (*(xxx + 180 * i + j) == 2)
@@ -1307,8 +1313,19 @@ int main(void)
 									|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j) == 3)
 									|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j - 1) == 3))
 								{
-									*(out_i + cnt_st4) = i;
-									*(out_j + cnt_st4) = j;
+									if (j < 90){
+										firsty += i;
+										firstx += j;
+										cnt4_1++;
+									}
+									else
+									{
+										secondy += i;
+										secondx += j;
+										cnt4_2++;
+									}
+									//*(out_i + cnt_st4) = i;
+									//*(out_j + cnt_st4) = j;
 									cnt_st4++;
 									*(lcd + 180 * i + j) = 0xf000;
 
@@ -1317,29 +1334,25 @@ int main(void)
 					draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
 					flip();
 
-					firsty = 0;
-					firstx = 0;
-					secondy = 0;
-					secondx = 0;
+					//for (i = 0; i < 5; i++)
+					//{
+					//	firsty += *(out_i + (cnt_st4 / 2) - 5 + i);
+					//	firstx += *(out_j + (cnt_st4 / 2) - 5 + i);
+					//	secondy += *(out_i + (cnt_st4 / 2) + i);
+					//	secondx += *(out_j + (cnt_st4 / 2) + i);
+					//}
 
-					for (i = 0; i < 5; i++)
-					{
-						firsty += *(out_i + (cnt_st4 / 2) - 5 + i);
-						firstx += *(out_j + (cnt_st4 / 2) - 5 + i);
-						secondy += *(out_i + (cnt_st4 / 2) + i);
-						secondx += *(out_j + (cnt_st4 / 2) + i);
-					}
-
-					first_y = (int)(firsty / 5);
-					first_x = (int)(firstx / 5);
-					second_y = (int)(secondy / 5);
-					second_x = (int)(secondx / 5);
+					first_y = (int)(firsty / cnt4_1+1);
+					first_x = (int)(firstx / cnt4_1+1);
+					second_y = (int)(secondy / cnt4_2+1);
+					second_x = (int)(secondx / cnt4_2+1);
 
 					outline_y = second_y - first_y;
 					outline_x = second_x - first_x;
 					degree = atan2(outline_y, outline_x) * 180 / 3.14;
 
 					printf("degree=%d\n", (int)degree);
+					goto GOUP;
 
 					if ((int)degree > 10 && (int)degree < 60)
 					{
