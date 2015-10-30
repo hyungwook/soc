@@ -1624,8 +1624,8 @@ qwer계단왼발내리기2cm: ' GREEN USE
     SPEED 15
     MOVE G6A,100, 128, 140, 147, 100, 100
     MOVE G6D,100, 128, 140, 147, 100, 100
-    MOVE G6B,140,  80,  20
-    MOVE G6C,140,  80,  20,,180
+    MOVE G6B,150,  80,  20
+    MOVE G6C,150,  80,  20,,180
     WAIT
 
 
@@ -1634,22 +1634,22 @@ qwer계단왼발내리기2cm: ' GREEN USE
     SPEED 15
     MOVE G6A,100,  128, 150, 147, 100, 100
     MOVE G6D,100,  128, 150, 147, 100, 100
-    MOVE G6B,150,  40,  70
-    MOVE G6C,150,  40,  70,,180
+    MOVE G6B,160,  40,  70
+    MOVE G6C,160,  40,  70,,180
     WAIT
 
     SPEED 15
     MOVE G6A,100,  128, 150, 147, 100, 100
     MOVE G6D,100,  128, 150, 147, 100, 100
-    MOVE G6B,150,  40,  70
-    MOVE G6C,150,  40,  70,,180
+    MOVE G6B,160,  40,  70
+    MOVE G6C,160,  40,  70,,180
     WAIT
 
     SPEED 15
     MOVE G6A,100,  56, 110,  26, 100, 100
     MOVE G6D,100,  128, 150, 147, 100, 100
-    MOVE G6B,150,  40,  70
-    MOVE G6C,150,  40,  70,,
+    MOVE G6B,160,  40,  70
+    MOVE G6C,160,  40,  70,,
     WAIT
 
     SPEED 15
@@ -1907,7 +1907,7 @@ qwer계단왼발내리기2cm: ' GREEN USE
 
     SPEED 10
     GOSUB 기본자세
-
+	GOSUB 앞뒤기울기측정
 
 
     GOTO main
@@ -2002,11 +2002,12 @@ qwer계단왼발내리기2cm: ' GREEN USE
 
     SPEED 10
     GOSUB 기본자세
-    '
+    DELAY 3000
+    GOTO 앞으로덤블링2
     ' GOSUB 앞뒤기울기측정
 
 
-    GOTO main
+    'GOTO main
 
 왼쪽덤블링:
     GOSUB Leg_motor_mode1
@@ -4175,3 +4176,56 @@ GYRO_ST:
 
     GOSUB Leg_motor_mode1
     GOTO RX_EXIT
+
+앞뒤기울기측정:
+    '  IF 기울기센서측정여부 = 0 THEN
+    '        RETURN
+    '    ENDIF
+    FOR i = 0 TO COUNT_MAX
+        A = AD(앞뒤기울기AD포트)	'기울기 앞뒤
+        IF A > 250 OR A < 5 THEN RETURN
+        IF A > MIN AND A < MAX THEN RETURN
+        DELAY 기울기확인시간
+    NEXT i
+
+    IF A < MIN THEN GOSUB 기울기앞
+
+    IF A > MAX THEN GOSUB 기울기뒤
+
+    '    GOSUB GOSUB_RX_EXIT
+
+    RETURN
+    '**************************************************
+기울기앞:
+    A = AD(앞뒤기울기AD포트)
+    'IF A < MIN THEN GOSUB 앞으로일어나기
+    IF A < MIN THEN  GOSUB 뒤로일어나기
+    RETURN
+
+기울기뒤:
+    A = AD(앞뒤기울기AD포트)
+    'IF A > MAX THEN GOSUB 뒤로일어나기
+    IF A > MAX THEN GOSUB 앞으로일어나기
+    RETURN
+    '**************************************************
+좌우기울기측정:
+    '  IF 기울기센서측정여부 = 0 THEN
+    '        RETURN
+    '    ENDIF
+    FOR i = 0 TO COUNT_MAX
+        B = AD(좌우기울기AD포트)	'기울기 좌우
+        IF B > 250 OR B < 5 THEN RETURN
+        IF B > MIN AND B < MAX THEN RETURN
+        DELAY 기울기확인시간
+    NEXT i
+
+    IF B < MIN OR B > MAX THEN
+        SPEED 8
+        MOVE G6B,140,  40,  80
+        MOVE G6C,140,  40,  80
+        WAIT
+        GOSUB 기본자세	
+        RETURN
+
+    ENDIF
+    RETURN
