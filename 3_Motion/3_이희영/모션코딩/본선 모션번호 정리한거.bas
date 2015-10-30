@@ -685,6 +685,33 @@ RX_EXIT:
     MOVE G6C,110
     WAIT
 
+    SPEED 보행속도
+    '왼발뻣어착지
+    MOVE G6A, 85,  44, 163, 113, 117
+    MOVE G6D,108,  77, 146,  93,  92
+    WAIT
+
+
+
+    SPEED 좌우속도
+    'GOSUB Leg_motor_mode3
+    '왼발중심이동
+    MOVE G6A,108,  76, 144, 100,  93
+    MOVE G6D,86, 93, 155,  71, 112
+    WAIT
+
+
+
+    SPEED 보행속도
+    'GOSUB Leg_motor_mode2
+    '오른발들기10
+    MOVE G6A,110,  77, 146,  93, 94
+    MOVE G6D,90, 100, 105, 110, 114
+    MOVE G6B,110
+    MOVE G6C,90
+    WAIT
+
+
     MOVE G6A,100,  83, 137,  93, 101, 100
     MOVE G6D,100,  84, 137,  93, 101, 100
     MOVE G6B,100,  28,  81, 100	, 100, 100
@@ -2333,7 +2360,7 @@ RX_EXIT:
     MOVE G6B,190,  50,  70
     MOVE G6C,190,  50,  70,,190
     WAIT
-
+	DELAY 50
 
     SPEED 20
     MOVE G6A,100, 110, 74,  65, 100, 100
@@ -2341,14 +2368,14 @@ RX_EXIT:
     MOVE G6B,190, 165, 115
     MOVE G6C,190, 165, 115
     WAIT
-    DELAY 200
+    'DELAY 200
     SPEED 13
     MOVE G6A,100, 171,  73,  15, 100, 100
     MOVE G6D,100, 170,  70,  15, 100, 100
     MOVE G6B,190, 180, 100
     MOVE G6C,190, 180, 100
     WAIT
-    DELAY 200
+    'DELAY 200
     SPEED 10
     MOVE G6A,100, 171,  30,  110, 100, 100
     MOVE G6D,100, 170,  30,  110, 100, 100
@@ -3252,16 +3279,123 @@ RX_EXIT:
     '*****************************************************
 
 고개90도오른쪽옆으로10:
+    GOSUB 기본자세0
+    SPEED 6
+    MOVE G6D, 93,  91, 120, 103, 105, 100
+    MOVE G6A,103,  76, 145,  91, 104, 100
+    WAIT
+
+    SPEED 3
+    MOVE G6D, 106,  90, 120, 104, 100, 100
+    MOVE G6A,87,  76, 145,  94, 104, 100
+    WAIT
+
+    SPEED 2
+    MOVE G6D, 109,  77, 145, 93, 105, 100
+    MOVE G6A,90,  90, 133,  93, 102, 100
+    WAIT
+
+    GOSUB GYRO_INIT
+    GOSUB GYRO_ON
+    GOSUB GYRO_STT
+
+    SPEED 2
+    MOVE G6D, 109,  77, 145, 92, 105, 100
+    MOVE G6A,90,  83, 137,  95, 103, 100
+    WAIT
+
+    SPEED 2
+    MOVE G6D, 107,  77, 145, 92, 105, 100
+    MOVE G6A,88,  80, 139,  93, 100, 100
+    WAIT
+
+    SPEED 2
+    MOVE G6D, 101,  77, 145, 93, 102, 100
+    MOVE G6A,97,  80, 140,  96, 98, 100
+    WAIT
+
+    SPEED 3
+    MOVE G6D, 100,  77, 145, 93, 100, 100
+    MOVE G6A,99,  80, 140,  96, 102, 100
+    WAIT
+
+    SPEED 5
+    MOVE G6D,98,  76, 145,  93, 100, 100
+    MOVE G6A,98,  76, 145,  93, 100, 100
+    WAIT
+
+    GOSUB GYRO_OFF
+
+    SPEED 8
+    GOSUB 기본자세0
+
+    GOTO RX_EXIT
+
+
+고개90도왼쪽옆으로10:
+    GOSUB 기본자세0
+    SPEED 6
+    MOVE G6A, 93,  91, 120, 103, 105, 100
+    MOVE G6D,103,  76, 145,  91, 104, 100
+    WAIT
+
+    SPEED 3
+    MOVE G6A, 106,  90, 120, 104, 100, 100
+    MOVE G6D,87,  76, 145,  94, 104, 100
+    WAIT
+
+    SPEED 2
+    MOVE G6A, 109,  77, 145, 93, 105, 100
+    MOVE G6D,90,  90, 133,  93, 102, 100
+    WAIT
+
+    GOSUB GYRO_INIT
+    GOSUB GYRO_ON
+    GOSUB GYRO_STT
+
+    SPEED 2
+    MOVE G6A, 109,  77, 145, 92, 105, 100
+    MOVE G6D,90,  83, 137,  95, 103, 100
+    WAIT
+
+    SPEED 2
+    MOVE G6A, 107,  77, 145, 92, 105, 100
+    MOVE G6D,88,  80, 139,  93, 100, 100
+    WAIT
+
+    SPEED 2
+    MOVE G6A, 101,  77, 145, 93, 102, 100
+    MOVE G6D,97,  80, 140,  96, 98, 100
+    WAIT
+
+    SPEED 3
+    MOVE G6A, 100,  77, 145, 93, 100, 100
+    MOVE G6D,99,  80, 140,  96, 102, 100
+    WAIT
+
+    SPEED 5
+    MOVE G6A,98,  76, 145,  93, 100, 100
+    MOVE G6D,98,  76, 145,  93, 100, 100
+    WAIT
+
+    GOSUB GYRO_OFF
+
+    SPEED 8
+    GOSUB 기본자세0
+
+    GOTO RX_EXIT
+    '***************************************************************
+초록색오른쪽옆으로10:
 
     GOSUB 기본자세0
     SPEED 12
-    MOVE G6D, 93,  90, 120, 104, 101, 100
-    MOVE G6A,103,  76, 145,  91, 103, 100
+    MOVE G6D, 93,  90, 120, 104, 105, 100
+    MOVE G6A,103,  76, 145,  91, 101, 100
     WAIT
 
     SPEED 12
     MOVE G6D, 102,  77, 145, 93, 100, 100
-    MOVE G6A,89,  80, 140,  95, 105, 100
+    MOVE G6A,89,  81, 140,  95, 103, 100
     WAIT
 
     SPEED 8
@@ -3272,21 +3406,20 @@ RX_EXIT:
     SPEED 8
 
     GOSUB 기본자세0
-
     GOTO RX_EXIT
-    '*************
 
-고개90도왼쪽옆으로10:
+
+초록색왼쪽옆으로10:
 
     GOSUB 기본자세0
     SPEED 12
-    MOVE G6A, 93,  90, 120, 104, 101, 100
-    MOVE G6D,103,  76, 145,  91, 103, 100
+    MOVE G6A, 93,  90, 120, 104, 105, 100
+    MOVE G6D,103,  76, 145,  91, 101, 100
     WAIT
 
     SPEED 12
     MOVE G6A, 102,  77, 145, 93, 100, 100
-    MOVE G6D,89,  80, 140,  95, 105, 100
+    MOVE G6D,89,  81, 140,  95, 103, 100
     WAIT
 
     SPEED 8
@@ -3297,10 +3430,7 @@ RX_EXIT:
     SPEED 8
 
     GOSUB 기본자세0
-
     GOTO RX_EXIT
-
-    '***************************************************************
 전진종종고개90도3걸음:
 
     GOSUB 기본자세0
@@ -3694,14 +3824,19 @@ KEY44:
 
     GOTO 왼발공차기
     GOTO MAIN
-KEY45: '함정장애물올라가기
-KEY46: '함정장애물내려가기
-KEY47:
+KEY45:
+    GOTO 초록색오른쪽옆으로10
+    GOTO MAIN
 
+KEY46:
+    GOTO 초록색왼쪽옆으로10
+    GOTO MAIN
+
+KEY47:
     GOTO 고개90도오른쪽옆으로10
     GOTO MAIN
-KEY48:
 
+KEY48:
     GOTO 고개90도왼쪽옆으로10
     GOTO MAIN
 KEY49:
