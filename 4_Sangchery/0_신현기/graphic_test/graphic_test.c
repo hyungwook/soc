@@ -186,7 +186,7 @@ int main(void)
 	int ret, delta;
 	char input;
 	int b_loop = 0;
-	int stage = 3;
+	int stage = 9;
 	//노란함정 st=11로수정함
 
 	//외곽선
@@ -218,7 +218,7 @@ int main(void)
 	int cnt_st3 = 0;
 	int st3_right = 0, st3_left = 0;
 	//초록계단
-	int cnt4 = 0, motion4 = 0, st4_av_i = 0, st4_sum_i = 0, cnt4_b_w = 0, cnt4_green = 0;
+	int cnt4 = 0, motion4 = 4, st4_av_i = 0, st4_sum_i = 0, cnt4_b_w = 0, cnt4_green = 0;
 	int st4_left = 0, st4_right = 0, green4_l = 0, green4_r = 0, cnt_st4 = 0, cnt4_1 = 0, cnt4_2 = 0;
 	float first_x = 0, first_y = 0, second_x = 0, second_y = 0, outline_x = 0, outline_y = 0;
 	//골프공
@@ -1312,12 +1312,17 @@ int main(void)
 					secondx = 0;
 					cnt4_1 = 0;
 					cnt4_2 = 0;
+					first_x = 0;
+					first_y = 0;
+					second_x = 0;
+					second_y = 0;
+					degree = 0;
 					for (i = 0; i < 60; i++)
 						for (j = 40; j < 140; j++)
 							if (*(xxx + 180 * i + j) == 2)
-								if ((*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j + 1) == 3)
-									|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j) == 3)
-									|| (*(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j - 1) == 3))
+								if (*(xxx + 180 * i + j)  + *(xxx + 180 * (i - 1) + j) == 3
+									|| *(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j + 1) == 3
+									|| *(xxx + 180 * i + j) + *(xxx + 180 * (i - 1) + j - 1) == 3)
 								{
 									if (j < 90){
 										firsty += i;
@@ -1334,8 +1339,10 @@ int main(void)
 									//*(out_j + cnt_st4) = j;
 									cnt_st4++;
 									*(lcd + 180 * i + j) = 0xf000;
-
+									break;
 								}
+
+				
 					draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
 					draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
 					flip();
@@ -1355,10 +1362,10 @@ int main(void)
 
 					outline_y = second_y - first_y;
 					outline_x = second_x - first_x;
+					printf("outline x : %f, outline y : %f\n", outline_x, outline_y);
 					degree = atan2(outline_y, outline_x) * 180 / 3.14;
-
 					printf("degree=%d\n", (int)degree);
-					//goto GOUP;
+					goto GOUP;
 
 					if ((int)degree > 10 && (int)degree < 60)
 					{
@@ -2179,9 +2186,9 @@ int main(void)
 			else if (stage == 9)
 			{
 				//첫번째 바리케이트
-				printf("stage=%d\n", stage);
+				//printf("stage=%d\n", stage);
 				cnt2 = 0;
-				for (i = 30; i < 80; i++)
+				/*for (i = 30; i < 80; i++)
 				{
 					for (j = 40; j < 120; j++)
 					{
@@ -2194,13 +2201,62 @@ int main(void)
 						}
 
 					}
+				}*/
+				for (i = 25; i < 50; i++){
+					*(lcd + 180 * i + j) = 0x0000;
+					for (j = 40; j < 80; j++){
+
+						//검정이면
+						if (((int)*(red + i * 180 + j) < 10) && ((int)*(green + i * 180 + j) < 10)
+							&& ((int)*(blue + i * 180 + j) < 10) && ((int)*(v_compare + i * 180 + j) < 10))
+						{
+							*(lcd + 180 * i + j) = 0xf000;
+							if (j >= 79){
+								cnt2++;
+								break;
+							}
+								
+							continue;
+							
+						}
+						else {
+							if (j > 60)
+								cnt2++;
+							break;
+						}
+					}
 				}
+				for (i = 25; i < 50; i++){
+					for (j = 100; j < 140; j++){
+						//검정이면
+						if (((int)*(red + i * 180 + j) < 10) && ((int)*(green + i * 180 + j) < 10)
+							&& ((int)*(blue + i * 180 + j) < 10) && ((int)*(v_compare + i * 180 + j) < 10))
+						{
+							*(lcd + 180 * i + j) = 0xf000;
+							 if (j >= 139){
+								cnt2++;
+								break;
+							}
+							continue;
+						}
+						else {
+							if (j > 120)
+								cnt2++;
+							break;
+							
+						}
+					}
+				}
+				if (cnt2 > 40)
+					printf("barricade\n");
+				
 				draw_img_from_buffer(fpga_videodata, 0, 18, 0, 0, 1.77, 0);
 				draw_img_from_buffer(lcd, 0, 250, 0, 0, 1.77, 0);
 				flip();
 
 				printf("cnt2=%d\n", cnt2);
-
+				goto GOUP;
+				
 
 				if (motion7 == 0)
 				{
