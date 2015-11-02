@@ -85,7 +85,7 @@ MAIN:
 
         'GOTO 판위에서전진종종2걸음
         'GOTO 판위에서전진보행50
-        DELAY 5000
+        DELAY 6000
         'GOTO 전진보행50
         'GOTO 계단왼발내리기2cm
         'GOTO 고개90도전진보행
@@ -99,7 +99,7 @@ MAIN:
         'GOTO 외각선오른쪽턴20
         'GOTO 전진종종비비기
         'GOTO 전진앉아보행
-        GOTO 앞으로덤블링3
+        GOTO 앞으로덤블링
         'GOTO 허들넘기
         'GOTO 전진종종4걸
 
@@ -1591,11 +1591,117 @@ qwer계단왼발내리기2cm: ' GREEN USE
     GOSUB GYRO_OFF
     ONE = 0
     GOTO MAIN
-
-
-
-
 앞으로덤블링:
+
+    SPEED 8
+    MOVE G6A,100, 155,  27, 140, 100, 100
+    MOVE G6D,100, 155,  27, 140, 100, 100
+    MOVE G6B,160,  30,  85,,,
+    MOVE G6C,160,  30,  85,,190
+    WAIT
+
+    SPEED 8	
+    MOVE G6A, 100, 145,  55, 165, 100, 100
+    MOVE G6D, 100, 145,  55, 165, 100, 100
+    MOVE G6B,185,  10, 97
+    MOVE G6C,185,  10, 100
+    WAIT
+
+
+    SPEED 8
+    MOVE G6A,100, 152, 110, 140, 100, 100
+    MOVE G6D,100, 152, 110, 140, 100, 100
+    MOVE G6B,130,  80,  20,,,
+    MOVE G6C,130,  80,  20,,190
+    WAIT
+
+    SPEED 15
+    MOVE G6A,100, 128, 140, 147, 100, 100
+    MOVE G6D,100, 128, 140, 147, 100, 100
+    MOVE G6B,140,  80,  20
+    MOVE G6C,140,  80,  20,,190
+    WAIT
+
+
+
+
+    SPEED 20
+    MOVE G6A,100,  128, 150, 147, 100, 100
+    MOVE G6D,100,  128, 150, 147, 100, 100
+    MOVE G6B,150,  50,  70
+    MOVE G6C,155,  50,  70,,190
+    WAIT
+
+    SPEED 20
+    MOVE G6A,100,  128, 150, 147, 100, 100
+    MOVE G6D,100,  128, 150, 147, 100, 100
+    MOVE G6B,150,  50,  70
+    MOVE G6C,155,  50,  70,,190
+    WAIT
+
+
+
+
+    SPEED 20
+    MOVE G6A,100,  56, 110,  26, 100, 100
+    MOVE G6D,100,  128, 150, 147, 100, 100
+    MOVE G6B,150,  50,  70
+    MOVE G6C,155,  50,  70,,190
+    WAIT
+
+    SPEED 20
+    MOVE G6A,100,  60, 110,  15, 100, 100
+    MOVE G6D,100,  60, 110, 15, 100, 100
+    MOVE G6B,150,  50,  70
+    MOVE G6C,155,  50,  70,,190
+    WAIT
+
+    SPEED 20
+    MOVE G6A,100,  60, 110,  15, 100, 100
+    MOVE G6D,100,  60, 110, 15, 100, 100
+    MOVE G6B,169,  50,  68
+    MOVE G6C,171,  50,  70
+    WAIT
+    DELAY 200
+    SPEED 20
+    MOVE G6A,100,  60, 110,  10, 100, 100
+    MOVE G6D,100,  60, 110,  10, 100, 100
+    MOVE G6B,190,  50,  70
+    MOVE G6C,190,  50,  70,,190
+    WAIT
+
+	DELAY 50
+    SPEED 20
+    MOVE G6A,100, 110, 74,  65, 100, 100
+    MOVE G6D,100, 110, 70,  65, 100, 100
+    MOVE G6B,190, 165, 115
+    MOVE G6C,190, 165, 115
+    WAIT
+    DELAY 200
+    SPEED 13
+    MOVE G6A,100, 171,  73,  15, 100, 100
+    MOVE G6D,100, 170,  70,  15, 100, 100
+    MOVE G6B,190, 180, 100
+    MOVE G6C,190, 180, 100
+    WAIT
+    DELAY 200
+    SPEED 10
+    MOVE G6A,100, 171,  30,  110, 100, 100
+    MOVE G6D,100, 170,  30,  110, 100, 100
+    MOVE G6B,190,  40,  60
+    MOVE G6C,190,  40,  60
+    WAIT
+    DELAY 200
+    SPEED 13
+    GOSUB 앉은자세
+
+    SPEED 10
+    GOSUB 기본자세
+    GOTO rx_exit
+
+
+
+앞으로덤블링4:
 
     SPEED 8
     MOVE G6A,100, 155,  27, 140, 100, 100
@@ -1608,14 +1714,14 @@ qwer계단왼발내리기2cm: ' GREEN USE
     MOVE G6A, 100, 145,  55, 165, 100, 100
     MOVE G6D, 100, 145,  55, 165, 100, 100
     MOVE G6B,185,  10, 97
-    MOVE G6C,185,  10, 100
+    MOVE G6C,189,  10, 100
     WAIT
 
     SPEED 8	
     MOVE G6A, 100, 145,  55, 165, 100, 100
     MOVE G6D, 100, 145,  55, 165, 100, 100
     MOVE G6B,185,  10, 97
-    MOVE G6C,185,  10, 100
+    MOVE G6C,189,  10, 100
     WAIT
 
     SPEED 8
@@ -1634,20 +1740,14 @@ qwer계단왼발내리기2cm: ' GREEN USE
 
 
 
-
+    DELAY 1000
     SPEED 20
     MOVE G6A,100,  128, 150, 147, 100, 100
     MOVE G6D,100,  128, 150, 147, 100, 100
     MOVE G6B,150,  40,  70
     MOVE G6C,150,  40,  70,,180
     WAIT
-
-    SPEED 20
-    MOVE G6A,100,  128, 150, 147, 100, 100
-    MOVE G6D,100,  128, 150, 147, 100, 100
-    MOVE G6B,150,  40,  70
-    MOVE G6C,150,  40,  70,,180
-    WAIT
+    'DELAY 1000
 
     SPEED 20
     MOVE G6A,100,  56, 110,  26, 100, 100
@@ -1655,27 +1755,41 @@ qwer계단왼발내리기2cm: ' GREEN USE
     MOVE G6B,150,  40,  70
     MOVE G6C,150,  40,  70,,
     WAIT
-
+    'ELAY 1000
     SPEED 20
     MOVE G6D,100,  60, 110,  15, 100, 100
     MOVE G6A,100,  60, 110, 15, 100, 100
-    MOVE G6C,170,  41,  68
-    MOVE G6B,170,  40,  70
+    MOVE G6C,150,  41,  68
+    MOVE G6B,150,  40,  70
+    WAIT
+    SPEED 20
+    MOVE G6D,100,  60, 110,  15, 100, 100
+    MOVE G6A,100,  60, 110, 15, 100, 100
+    MOVE G6C,152,  40,  68
+    MOVE G6B,151,  40,  65
+    WAIT
+    SPEED 20
+    MOVE G6A,100,  60, 110,  10, 100, 100
+    MOVE G6D,100,  60, 110,  10, 100, 100
+    MOVE G6B,172,  40,  68
+    MOVE G6C,173,  40,  65,,190
     WAIT
 
     SPEED 20
     MOVE G6A,100,  60, 110,  10, 100, 100
     MOVE G6D,100,  60, 110,  10, 100, 100
-    MOVE G6B,190,  40,  70
-    MOVE G6C,190,  40,  70,,190
+    MOVE G6B,190,  40,  10
+    MOVE G6C,190,  40,  10,,190
     WAIT
 
+
     SPEED 20
-    MOVE G6A,100,  60, 110,  10, 100, 100
-    MOVE G6D,100,  60, 110,  10, 100, 100
-    MOVE G6B,190,  40,  70
-    MOVE G6C,190,  40,  70,,190
+    MOVE G6A,100, 110, 74,  65, 100, 100
+    MOVE G6D,100, 110, 70,  65, 100, 100
+    MOVE G6B,190, 165, 10
+    MOVE G6C,190, 165, 10
     WAIT
+
 
     SPEED 20
     MOVE G6A,100, 110, 74,  65, 100, 100
@@ -1683,7 +1797,6 @@ qwer계단왼발내리기2cm: ' GREEN USE
     MOVE G6B,190, 165, 115
     MOVE G6C,190, 165, 115
     WAIT
-
     SPEED 20
     MOVE G6A,100, 171,  73,  15, 100, 100
     MOVE G6D,100, 170,  70,  15, 100, 100
@@ -1722,8 +1835,8 @@ qwer계단왼발내리기2cm: ' GREEN USE
     SPEED 8	
     MOVE G6A, 100, 155,  60, 165, 100, 100
     MOVE G6D, 100, 157,  55, 165, 100, 100
-    MOVE G6B,185,  40, 70
-    MOVE G6C,185,  40, 70
+    MOVE G6B,185,  20, 70
+    MOVE G6C,185,  20, 70
     WAIT
 
 
@@ -1737,13 +1850,6 @@ qwer계단왼발내리기2cm: ' GREEN USE
 
 
 
-
-    SPEED 15
-    MOVE G6A,100,  71, 177, 162, 100, 100
-    MOVE G6D,100,  71, 177, 162, 100, 100
-    MOVE G6B,170,  40,  70
-    MOVE G6C,170,  40,  70,
-    WAIT
 
     SPEED 15
     MOVE G6A,100,  56, 110,  26, 100, 100
@@ -1793,7 +1899,7 @@ qwer계단왼발내리기2cm: ' GREEN USE
 
     SPEED 10
     GOSUB 기본자세
-
+    GOSUB 앞뒤기울기측정
 
 
     GOTO main
@@ -1827,7 +1933,7 @@ qwer계단왼발내리기2cm: ' GREEN USE
     MOVE G6A,100, 78, 140, 147, 100, 100
     MOVE G6D,100, 78, 140, 147, 100, 100
     MOVE G6B,150,  80,  40
-    MOVE G6C,150,  80,  40,,190
+    MOVE G6C,150,  90,  40,,190
     WAIT
 
 
@@ -1836,29 +1942,29 @@ qwer계단왼발내리기2cm: ' GREEN USE
     SPEED 20
     MOVE G6A,100,  56, 110,  26, 100, 100
     MOVE G6D,100,  128, 150, 147, 100, 100
-    MOVE G6B,150,  50,  70
-    MOVE G6C,150,  50,  70,,190
+    MOVE G6B,150,  55,  70
+    MOVE G6C,150,  55,  70,,190
     WAIT
 
     SPEED 20
     MOVE G6A,100,  60, 110,  15, 100, 100
     MOVE G6D,100,  60, 110, 15, 100, 100
-    MOVE G6B,150,  50,  70
-    MOVE G6C,150,  50,  70,,190
+    MOVE G6B,150,  55,  70
+    MOVE G6C,150,  55,  70,,190
     WAIT
 
     SPEED 20
     MOVE G6A,100,  60, 110,  15, 100, 100
     MOVE G6D,100,  60, 110, 15, 100, 100
-    MOVE G6B,169,  51,  68
-    MOVE G6C,171,  50,  70
+    MOVE G6B,169,  55,  68
+    MOVE G6C,171,  55,  70
     WAIT
     DELAY 200
     SPEED 20
     MOVE G6A,100,  60, 110,  10, 100, 100
     MOVE G6D,100,  60, 110,  10, 100, 100
-    MOVE G6B,190,  50,  70
-    MOVE G6C,190,  50,  70,,190
+    MOVE G6B,190,  55,  70
+    MOVE G6C,190,  55,  70,,190
     WAIT
     DELAY 200
 
@@ -1888,11 +1994,12 @@ qwer계단왼발내리기2cm: ' GREEN USE
 
     SPEED 10
     GOSUB 기본자세
-    '
+    DELAY 3000
+    GOTO 앞으로덤블링2
     ' GOSUB 앞뒤기울기측정
 
 
-    GOTO main
+    'GOTO main
 
 왼쪽덤블링:
     GOSUB Leg_motor_mode1
@@ -4061,3 +4168,35 @@ GYRO_ST:
 
     GOSUB Leg_motor_mode1
     GOTO RX_EXIT
+
+앞뒤기울기측정:
+    '  IF 기울기센서측정여부 = 0 THEN
+    '        RETURN
+    '    ENDIF
+    FOR i = 0 TO COUNT_MAX
+        A = AD(앞뒤기울기AD포트)	'기울기 앞뒤
+        IF A > 250 OR A < 5 THEN RETURN
+        IF A > MIN AND A < MAX THEN RETURN
+        DELAY 기울기확인시간
+    NEXT i
+
+    IF A < MIN THEN GOSUB 기울기앞
+
+    IF A > MAX THEN GOSUB 기울기뒤
+
+    '    GOSUB GOSUB_RX_EXIT
+
+    RETURN
+    '**************************************************
+기울기앞:
+    A = AD(앞뒤기울기AD포트)
+    'IF A < MIN THEN GOSUB 앞으로일어나기
+    IF A < MIN THEN  GOSUB 뒤로일어나기
+    RETURN
+
+기울기뒤:
+    A = AD(앞뒤기울기AD포트)
+    'IF A > MAX THEN GOSUB 뒤로일어나기
+    IF A > MAX THEN GOSUB 앞으로일어나기
+    RETURN
+    '**************************************************
